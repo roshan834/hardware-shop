@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 import { getProducts, deleteProduct } from '../services/productService'
-import { useAuth } from '../context/AuthContext'        // 👈 add
+import { useAuth } from '../context/AuthContext'        //  add
 
 const Products = () => {
 
@@ -13,7 +13,7 @@ const Products = () => {
   const [pageSize, setPageSize] = useState(10)
 
   const navigate = useNavigate()
-  const { role } = useAuth()                           // 👈 add
+  const { role } = useAuth()                           //  add
 
   const loadProducts = async () => {
     const { data, count } = await getProducts(currentPage, pageSize, search)
@@ -84,7 +84,7 @@ const Products = () => {
                 <th>Category</th>
                 <th>Brand</th>
                 <th>Qty</th>
-                {role === "admin" && <th>Purchase</th>}  {/* 👈 admin only */}
+                {role === "admin" && <th>Purchase</th>}  {/*  admin only */}
                 <th>Price</th>
                 <th>Action</th>
               </tr>
