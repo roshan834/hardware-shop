@@ -11,6 +11,10 @@ import Webcam from 'react-webcam'
 
 
 const AddProduct = () => {
+
+  const galleryRef = useRef(null)
+const cameraRef = useRef(null)
+
   const navigate = useNavigate()
   const { role } = useAuth()
   const webcamRef = useRef(null)

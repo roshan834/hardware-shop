@@ -7,6 +7,9 @@ import { uploadImage } from '../services/uploadService'
 import Webcam from 'react-webcam'
 
 const EditProduct = () => {
+  const galleryRef = useRef(null)
+const cameraRef = useRef(null)
+
   const { id } = useParams()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
