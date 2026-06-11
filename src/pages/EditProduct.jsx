@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 import { supabase } from '../config/supabase'
-import { useAuth } from '../context/AuthContext'   // 👈 add this
+import { useAuth } from '../context/AuthContext'
+import { uploadImage } from '../services/uploadService'   // 👈 missing import added
 
 const EditProduct = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
-  const { role } = useAuth()                       // 👈 add this
+  const { role } = useAuth()
 
   const [form, setForm] = useState({
     product_code: '',
@@ -21,6 +22,7 @@ const EditProduct = () => {
     quantity: '',
     reorder_level: '',
     location: '',
+    image_url: '',
     image_file: null
   })
 
@@ -42,9 +44,10 @@ const EditProduct = () => {
     setForm({
       ...data,
       purchase_price: data.purchase_price ?? '',
-      selling_price: data.selling_price ?? '',
-      quantity: data.quantity ?? '',
-      reorder_level: data.reorder_level ?? ''
+      selling_price:  data.selling_price  ?? '',
+      quantity:       data.quantity       ?? '',
+      reorder_level:  data.reorder_level  ?? '',
+      image_file:     null                      // always reset file input
     })
 
     setLoading(false)
@@ -60,23 +63,33 @@ const EditProduct = () => {
     let imageUrl = form.image_url
 
     if (form.image_file) {
-      const { url, error } = await uploadImage(form.image_file)
-      if (error) {
-        alert('Image upload failed')
+      if (!form.product_code) {
+        alert('Product code is required for image upload')
         return
       }
+
+      const { url, error } = await uploadImage(form.image_file, form.product_code)
+
+      if (error) {
+        alert('Image upload failed: ' + error.message)
+        return
+      }
+
       imageUrl = url
     }
+
+    // 👇 never send image_file to Supabase — destructure it out
+    const { image_file, ...rest } = form
 
     const { error } = await supabase
       .from('products')
       .update({
-        ...form,
-        image_url: imageUrl,
+        ...rest,
+        image_url:      imageUrl,
         purchase_price: Number(form.purchase_price),
-        selling_price: Number(form.selling_price),
-        quantity: Number(form.quantity),
-        reorder_level: Number(form.reorder_level)
+        selling_price:  Number(form.selling_price),
+        quantity:       Number(form.quantity),
+        reorder_level:  Number(form.reorder_level)
       })
       .eq('id', id)
 

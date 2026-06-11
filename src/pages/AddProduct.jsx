@@ -54,59 +54,69 @@ const AddProduct = () => {
     }
   }
 
-  const submit = async (e) => {
-    e.preventDefault()
+      const submit = async (e) => {
+      e.preventDefault()
 
-    try {
-      setLoading(true)
+      try {
+        setLoading(true)
 
-      let imageUrl = form.image_url
+        let imageUrl = form.image_url
 
-      // Upload image to Supabase Storage
-      if (form.image_file) {
-        const { url, error } = await uploadImage(form.image_file)
+        // Upload image to Supabase Storage
+        if (form.image_file) {
+
+          // 👇 add this check
+          if (!form.product_code) {
+            alert('Enter product code before uploading image')
+            setLoading(false)
+            return
+          }
+
+          const { url, error } = await uploadImage(form.image_file, form.product_code)
+
+          if (error) {
+            alert('Image upload failed')
+            setLoading(false)
+            return
+          }
+
+          imageUrl = url
+        }
+
+        // rest stays exactly the same...
+        const payload = {
+          product_code:   form.product_code,
+          barcode:        form.barcode,
+          product_name:   form.product_name,
+          category:       form.category,
+          brand:          form.brand,
+          unit:           form.unit,
+          purchase_price: Number(form.purchase_price),
+          selling_price:  Number(form.selling_price),
+          quantity:       Number(form.quantity),
+          reorder_level:  Number(form.reorder_level),
+          location:       form.location,
+          image_url:      imageUrl
+        }
+
+        const { error } = await addProduct(payload)
+
+        setLoading(false)
 
         if (error) {
-          alert('Image upload failed')
-          setLoading(false)
+          alert(error.message)
           return
         }
 
-        imageUrl = url
+        alert('Product Added Successfully')
+        navigate('/products')
+
+      } catch (err) {
+        console.error(err)
+        setLoading(false)
+        alert('Something went wrong')
       }
-
-      const payload = {
-        product_code: form.product_code,
-        barcode: form.barcode,
-        product_name: form.product_name,
-        category: form.category,
-        brand: form.brand,
-        unit: form.unit,
-        purchase_price: Number(form.purchase_price),
-        selling_price: Number(form.selling_price),
-        quantity: Number(form.quantity),
-        reorder_level: Number(form.reorder_level),
-        location: form.location,
-        image_url: imageUrl
-      }
-
-      const { error } = await addProduct(payload)
-
-      setLoading(false)
-
-      if (error) {
-        alert(error.message)
-        return
-      }
-
-      alert('Product Added Successfully')
-      navigate('/products')
-    } catch (err) {
-      console.error(err)
-      setLoading(false)
-      alert('Something went wrong')
     }
-  }
 
   return (
     <div className="layout">

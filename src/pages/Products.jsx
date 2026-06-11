@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 import { getProducts, deleteProduct } from '../services/productService'
+import { useAuth } from '../context/AuthContext'        // 👈 add
 
 const Products = () => {
 
@@ -12,6 +13,7 @@ const Products = () => {
   const [pageSize, setPageSize] = useState(10)
 
   const navigate = useNavigate()
+  const { role } = useAuth()                           // 👈 add
 
   const loadProducts = async () => {
     const { data, count } = await getProducts(currentPage, pageSize, search)
@@ -24,7 +26,7 @@ const Products = () => {
   }, [currentPage, pageSize, search])
 
   const removeProduct = async (e, id) => {
-    e.stopPropagation()                    // prevent row click firing
+    e.stopPropagation()
     if (!window.confirm('Delete Product?')) return
     await deleteProduct(id)
     loadProducts()
@@ -82,6 +84,7 @@ const Products = () => {
                 <th>Category</th>
                 <th>Brand</th>
                 <th>Qty</th>
+                {role === "admin" && <th>Purchase</th>}  {/* 👈 admin only */}
                 <th>Price</th>
                 <th>Action</th>
               </tr>
@@ -95,24 +98,34 @@ const Products = () => {
                     onClick={() => navigate(`/products/view/${product.id}`)}
                     className="clickable-row"
                   >
-                    <td>
-                      {product.image_url ? (
-                        <img
-                          src={product.image_url}
-                          alt={product.product_name}
-                          className="product-image"
-                        />
-                      ) : (
-                        <div className="no-image">📦</div>
-                      )}
-                    </td>
+           
+                  <td>
+                    {(() => {
+                      const imgUrl = //product.image_url ||
+                        `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/product-images/${product.product_code}.jpeg`
+
+                      return (
+                        <>
+                          <img
+                            src={imgUrl}
+                            alt={product.product_name}
+                            className="product-image"
+                            onError={(e) => {
+                              e.target.style.display = "none"
+                              e.target.nextSibling.style.display = "flex"
+                            }}
+                          />
+                          <div className="no-image" style={{ display: "none" }}>📦</div>
+                        </>
+                      )
+                    })()}
+                  </td>
                     <td>{product.product_code}</td>
                     <td>{product.product_name}</td>
                     <td>{product.category}</td>
                     <td>{product.brand}</td>
                     <td>
-                      {/* Low stock badge */}
-                      {product.quantity <= 5 ? (
+                      {product.quantity <= product.reorder_level ? (
                         <span className="badge-low-stock">
                           {product.quantity} ⚠️
                         </span>
@@ -120,10 +133,15 @@ const Products = () => {
                         product.quantity
                       )}
                     </td>
+
+                    {/* Purchase Price — admin only */}
+                    {role === "admin" && (
+                      <td>₹{Number(product.purchase_price || 0).toLocaleString('en-IN')}</td>
+                    )}
+
                     <td>₹{Number(product.selling_price).toLocaleString('en-IN')}</td>
 
                     <td onClick={(e) => e.stopPropagation()}>
-                      {/* stopPropagation on the whole Action cell */}
                       <Link
                         to={`/products/edit/${product.id}`}
                         className="btn-primary"
@@ -144,7 +162,9 @@ const Products = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="8">No Products Found</td>
+                  <td colSpan={role === "admin" ? "9" : "8"}>
+                    No Products Found
+                  </td>
                 </tr>
               )}
             </tbody>

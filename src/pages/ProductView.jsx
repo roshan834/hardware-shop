@@ -2,35 +2,17 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../config/supabase";
 import Sidebar from "../components/Sidebar";
-import { useAuth } from "../context/AuthContext" 
+import { useAuth } from "../context/AuthContext";
 
 const ProductView = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { role } = useAuth()       // 1. add this state
+  const { role } = useAuth();
 
-  // 2. add fetchRole here
-  const fetchRole = async () => {
-    const { data: { user } } = await supabase.auth.getUser()
-    // console.log("Auth user:", user?.id, user?.email)
-    if (!user) return
-
-    const { data, error } = await supabase
-      .from("users")
-      .select("role")
-      .eq("id", user.id)
-      .single()
-
-    // console.log("Role:", data, error)
-    setRole(data?.role || "staff")
-  }
-
-  // 3. call fetchRole inside useEffect
   useEffect(() => {
     fetchProduct();
-    fetchRole();     // 👈 add this
   }, [id]);
 
   const fetchProduct = async () => {
@@ -57,7 +39,11 @@ const ProductView = () => {
 
   if (loading) return <div className="loader">Loading...</div>;
   if (!product) return null;
+  // build image URL from storage if image_url is empty
+  const imageUrl = //product.image_url ||
+    `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/product-images/${product.product_code}.jpeg`
 
+    
   return (
     <div className="layout">
       <Sidebar />
@@ -82,28 +68,32 @@ const ProductView = () => {
 
         <div className="form-card">
 
+
+          {/* Image */}
           <div style={{ textAlign: "center", marginBottom: "25px" }}>
-            {product.image_url ? (
-              <img
-                src={product.image_url}
-                alt={product.product_name}
-                style={{
-                  width: "160px", height: "160px",
-                  objectFit: "cover", borderRadius: "12px",
-                  border: "1px solid #ddd",
-                }}
-              />
-            ) : (
-              <div style={{
+            <img
+              src={imageUrl}
+              alt={product.product_name}
+              style={{
                 width: "160px", height: "160px",
-                background: "#f1f5f9", borderRadius: "12px",
-                display: "flex", alignItems: "center",
-                justifyContent: "center", fontSize: "48px",
-                margin: "0 auto",
-              }}>
-                📦
-              </div>
-            )}
+                objectFit: "cover", borderRadius: "12px",
+                border: "1px solid #ddd",
+              }}
+              onError={(e) => {
+                // fallback to emoji if image fails to load
+                e.target.style.display = "none"
+                e.target.nextSibling.style.display = "flex"
+              }}
+            />
+            <div style={{
+              display: "none",
+              width: "160px", height: "160px",
+              background: "#f1f5f9", borderRadius: "12px",
+              alignItems: "center", justifyContent: "center",
+              fontSize: "48px", margin: "0 auto",
+            }}>
+              📦
+            </div>
           </div>
 
           <div className="view-grid">
@@ -138,7 +128,7 @@ const ProductView = () => {
               <span className="view-value">{product.unit || "—"}</span>
             </div>
 
-            {/* 4. purchase price — admin only */}
+            {/* Purchase Price — admin only */}
             {role === "admin" && (
               <div className="view-field">
                 <span className="view-label">🔒 Purchase Price</span>

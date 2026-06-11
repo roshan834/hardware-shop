@@ -57,3 +57,23 @@ export const updateProduct = async (id, product) => {
     .update(product)
     .eq('id', id)
 }
+
+//  get public image URL from storage bucket
+export const getImageUrl = (productCode, ext = null) => {
+  if (!productCode) return null
+
+  // if ext provided, use it directly
+  if (ext) {
+    const { data } = supabase.storage
+      .from('products')
+      .getPublicUrl(`${productCode}.${ext}`)
+    return data.publicUrl
+  }
+
+  // try jpg by default
+  const { data } = supabase.storage
+    .from('products')
+    .getPublicUrl(`${productCode}.jpg`)
+
+  return data.publicUrl
+}
