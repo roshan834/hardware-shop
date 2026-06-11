@@ -534,3 +534,72 @@ tr:hover { background: #f8fafc; }
   .product-image,
   .no-image { width: 44px; height: 44px; font-size: 18px; }
 }
+
+
+/* =========================
+   HAMBURGER BUTTON
+========================= */
+
+.hamburger {
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1000;
+  background: #0f172a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 20px;
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+}
+
+.sidebar .active-link {
+  background: #1e293b;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+  .hamburger {
+    display: flex;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 260px;
+    height: 100vh;
+    z-index: 999;
+    transition: left 0.25s ease;
+    overflow-y: auto;
+  }
+
+  .sidebar.sidebar-open {
+    left: 0;
+  }
+
+  .content {
+    padding-top: 65px;
+  }
+
+  /* layout stays row since sidebar is now fixed/out of flow */
+  .layout {
+    flex-direction: row;
+  }
+}
