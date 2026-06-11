@@ -13,12 +13,12 @@ import Webcam from 'react-webcam'
 const AddProduct = () => {
 
   const galleryRef = useRef(null)
-const cameraRef = useRef(null)
+  const cameraRef = useRef(null)
 
   const navigate = useNavigate()
   const { role } = useAuth()
   const webcamRef = useRef(null)
-const [showCamera, setShowCamera] = useState(false)
+  const [showCamera, setShowCamera] = useState(false)
 
   const [loading, setLoading] = useState(false)
   const [preview, setPreview] = useState(null)       //  image preview state
@@ -59,15 +59,15 @@ const [showCamera, setShowCamera] = useState(false)
   }
 
   const dataURLtoFile = (dataurl, filename) => {
-  const arr = dataurl.split(',')
-  const mime = arr[0].match(/:(.*?);/)[1]
-  const bstr = atob(arr[1])
+    const arr = dataurl.split(',')
+    const mime = arr[0].match(/:(.*?);/)[1]
+    const bstr = atob(arr[1])
 
-  let n = bstr.length
-  const u8arr = new Uint8Array(n)
+    let n = bstr.length
+    const u8arr = new Uint8Array(n)
 
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n)
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n)
     }
 
     return new File([u8arr], filename, {
@@ -76,26 +76,26 @@ const [showCamera, setShowCamera] = useState(false)
   }
 
   const capturePhoto = () => {
-  const imageSrc = webcamRef.current.getScreenshot()
+    const imageSrc = webcamRef.current.getScreenshot()
 
-  if (!imageSrc) {
-    alert('Unable to capture image')
-    return
-  }
+    if (!imageSrc) {
+      alert('Unable to capture image')
+      return
+    }
 
-  setPreview(imageSrc)
+    setPreview(imageSrc)
 
-  const file = dataURLtoFile(
-    imageSrc,
-    `${form.product_code || Date.now()}.jpg`
-  )
+    const file = dataURLtoFile(
+      imageSrc,
+      `${form.product_code || Date.now()}.jpg`
+    )
 
-  setForm(prev => ({
-    ...prev,
-    image_file: file
-  }))
+    setForm(prev => ({
+      ...prev,
+      image_file: file
+    }))
 
-  setShowCamera(false)
+    setShowCamera(false)
   }
 
   const submit = async (e) => {
@@ -125,18 +125,18 @@ const [showCamera, setShowCamera] = useState(false)
       }
 
       const payload = {
-        product_code:   form.product_code,
-        barcode:        form.barcode,
-        product_name:   form.product_name,
-        category:       form.category,
-        brand:          form.brand,
-        unit:           form.unit,
+        product_code: form.product_code,
+        barcode: form.barcode,
+        product_name: form.product_name,
+        category: form.category,
+        brand: form.brand,
+        unit: form.unit,
         purchase_price: Number(form.purchase_price),
-        selling_price:  Number(form.selling_price),
-        quantity:       Number(form.quantity),
-        reorder_level:  Number(form.reorder_level),
-        location:       form.location,
-        image_url:      imageUrl
+        selling_price: Number(form.selling_price),
+        quantity: Number(form.quantity),
+        reorder_level: Number(form.reorder_level),
+        location: form.location,
+        image_url: imageUrl
       }
 
       const { error } = await addProduct(payload)
@@ -309,62 +309,62 @@ const [showCamera, setShowCamera] = useState(false)
 
             {/* Product Image */}
             <div className="form-group">
-  <label>Product Image</label>
+              <label>Product Image</label>
 
-  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-    
-    {/* GALLERY BUTTON */}
-            <button
-              type="button"
-              className="btn-success"
-              onClick={() => galleryRef.current?.click()}
-            >
-              🖼️ Gallery
-            </button>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
 
-            {/* CAMERA BUTTON */}
-            <button
-              type="button"
-              className="btn-primary"
-              onClick={() => cameraRef.current?.click()}
-            >
-              📷 Camera
-            </button>
-          </div>
+                {/* GALLERY BUTTON */}
+                <button
+                  type="button"
+                  className="btn-success"
+                  onClick={() => galleryRef.current?.click()}
+                >
+                  🖼️ Gallery
+                </button>
 
-          {/* HIDDEN GALLERY INPUT */}
-          <input
-            ref={galleryRef}
-            type="file"
-            accept="image/*"
-            style={{ display: 'none' }}
-            onChange={handleImageChange}
-          />
+                {/* CAMERA BUTTON */}
+                <button
+                  type="button"
+                  className="btn-primary"
+                  onClick={() => setShowCamera(true)}
+                >
+                  📷 Take Photo
+                </button>
+              </div>
 
-          {/* HIDDEN CAMERA INPUT */}
-          <input
-            ref={cameraRef}
-            type="file"
-            accept="image/*"
-            capture="environment"
-            style={{ display: 'none' }}
-            onChange={handleImageChange}
-          />
+              {/* HIDDEN GALLERY INPUT */}
+              <input
+                ref={galleryRef}
+                type="file"
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={handleImageChange}
+              />
 
-          {/* PREVIEW */}
-          {preview && (
-            <img
-              src={preview}
-              alt="preview"
-              style={{
-                width: '180px',
-                marginTop: '10px',
-                borderRadius: '8px',
-                border: '1px solid #ddd'
-              }}
-            />
-          )}
-        </div>
+              {/* HIDDEN CAMERA INPUT */}
+              <input
+                ref={cameraRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                style={{ display: 'none' }}
+                onChange={handleImageChange}
+              />
+
+              {/* PREVIEW */}
+              {preview && (
+                <img
+                  src={preview}
+                  alt="preview"
+                  style={{
+                    width: '180px',
+                    marginTop: '10px',
+                    borderRadius: '8px',
+                    border: '1px solid #ddd'
+                  }}
+                />
+              )}
+            </div>
 
           </div>
 
@@ -379,61 +379,61 @@ const [showCamera, setShowCamera] = useState(false)
           </button>
 
 
-            {showCamera && (
+          {showCamera && (
+            <div
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'rgba(0,0,0,0.8)',
+                zIndex: 9999,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <Webcam
+                ref={webcamRef}
+                audio={false}
+                screenshotFormat="image/jpeg"
+                videoConstraints={{
+                  facingMode: 'environment'
+                }}
+                style={{
+                  width: '90%',
+                  maxWidth: '500px',
+                  borderRadius: '10px'
+                }}
+              />
+
               <div
                 style={{
-                  position: 'fixed',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  background: 'rgba(0,0,0,0.8)',
-                  zIndex: 9999,
+                  marginTop: '20px',
                   display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center'
+                  gap: '10px'
                 }}
               >
-                <Webcam
-                  ref={webcamRef}
-                  audio={false}
-                  screenshotFormat="image/jpeg"
-                  videoConstraints={{
-                    facingMode: 'environment'
-                  }}
-                  style={{
-                    width: '90%',
-                    maxWidth: '500px',
-                    borderRadius: '10px'
-                  }}
-                />
-
-                <div
-                  style={{
-                    marginTop: '20px',
-                    display: 'flex',
-                    gap: '10px'
-                  }}
+                <button
+                  type="button"
+                  className="btn-success"
+                  onClick={capturePhoto}
                 >
-                  <button
-                    type="button"
-                    className="btn-success"
-                    onClick={capturePhoto}
-                  >
-                    Capture
-                  </button>
+                  Capture
+                </button>
 
-                  <button
-                    type="button"
-                    className="btn-danger"
-                    onClick={() => setShowCamera(false)}
-                  >
-                    Cancel
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  className="btn-danger"
+                  onClick={() => setShowCamera(false)}
+                >
+                  Cancel
+                </button>
               </div>
-            )}
+            </div>
+          )}
         </form>
       </div>
     </div>

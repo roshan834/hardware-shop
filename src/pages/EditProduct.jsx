@@ -8,7 +8,7 @@ import Webcam from 'react-webcam'
 
 const EditProduct = () => {
   const galleryRef = useRef(null)
-const cameraRef = useRef(null)
+  const cameraRef = useRef(null)
 
   const { id } = useParams()
   const navigate = useNavigate()
@@ -51,10 +51,10 @@ const cameraRef = useRef(null)
     setForm({
       ...data,
       purchase_price: data.purchase_price ?? '',
-      selling_price:  data.selling_price  ?? '',
-      quantity:       data.quantity       ?? '',
-      reorder_level:  data.reorder_level  ?? '',
-      image_file:     null
+      selling_price: data.selling_price ?? '',
+      quantity: data.quantity ?? '',
+      reorder_level: data.reorder_level ?? '',
+      image_file: null
     })
 
     setPreview(data.image_url || null)             //  set existing image as preview
@@ -74,89 +74,89 @@ const cameraRef = useRef(null)
   }
 
   const dataURLtoFile = (dataurl, filename) => {
-  const arr = dataurl.split(',')
-  const mime = arr[0].match(/:(.*?);/)[1]
-  const bstr = atob(arr[1])
+    const arr = dataurl.split(',')
+    const mime = arr[0].match(/:(.*?);/)[1]
+    const bstr = atob(arr[1])
 
-  let n = bstr.length
-  const u8arr = new Uint8Array(n)
+    let n = bstr.length
+    const u8arr = new Uint8Array(n)
 
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n)
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n)
+    }
+
+    return new File([u8arr], filename, {
+      type: mime
+    })
   }
 
-  return new File([u8arr], filename, {
-    type: mime
-  })
-}
+  const capturePhoto = () => {
+    const imageSrc = webcamRef.current.getScreenshot()
 
-const capturePhoto = () => {
-  const imageSrc = webcamRef.current.getScreenshot()
+    if (!imageSrc) {
+      alert('Unable to capture image')
+      return
+    }
 
-  if (!imageSrc) {
-    alert('Unable to capture image')
-    return
+    setPreview(imageSrc)
+
+    const file = dataURLtoFile(
+      imageSrc,
+      `${form.product_code || Date.now()}.jpg`
+    )
+
+    setForm(prev => ({
+      ...prev,
+      image_file: file
+    }))
+
+    setShowCamera(false)
   }
-
-  setPreview(imageSrc)
-
-  const file = dataURLtoFile(
-    imageSrc,
-    `${form.product_code || Date.now()}.jpg`
-  )
-
-  setForm(prev => ({
-    ...prev,
-    image_file: file
-  }))
-
-  setShowCamera(false)
-}
 
   const handleSubmit = async (e) => {
-  e.preventDefault()
+    e.preventDefault()
 
-  let imageUrl = form.image_url
+    let imageUrl = form.image_url
 
-  if (form.image_file) {
-    if (!form.product_code) {
-      alert('Product code is required for image upload')
-      return
+    if (form.image_file) {
+      if (!form.product_code) {
+        alert('Product code is required for image upload')
+        return
+      }
+
+      const { url, error } = await uploadImage(form.image_file, form.product_code)
+
+      if (error) {
+        alert('Image upload failed: ' + error.message)
+        return
+      }
+
+      imageUrl = url
     }
 
-    const { url, error } = await uploadImage(form.image_file, form.product_code)
+    // 👇 remove id and image_file from update payload
+    const { id: _id, image_file, created_at, last_updated, ...rest } = form
+
+    const { error } = await supabase
+      .from('products')
+      .update({
+        ...rest,
+        image_url: imageUrl,
+        purchase_price: Number(form.purchase_price),
+        selling_price: Number(form.selling_price),
+        quantity: Number(form.quantity),
+        reorder_level: Number(form.reorder_level)
+      })
+      .eq('id', id)
 
     if (error) {
-      alert('Image upload failed: ' + error.message)
+      alert(error.message)
       return
     }
 
-    imageUrl = url
+    alert('Product updated successfully')
+    navigate('/products')
   }
-
-  // 👇 remove id and image_file from update payload
-  const { id: _id, image_file, created_at, last_updated, ...rest } = form
-
-  const { error } = await supabase
-    .from('products')
-    .update({
-      ...rest,
-      image_url:      imageUrl,
-      purchase_price: Number(form.purchase_price),
-      selling_price:  Number(form.selling_price),
-      quantity:       Number(form.quantity),
-      reorder_level:  Number(form.reorder_level)
-    })
-    .eq('id', id)
-
-  if (error) {
-    alert(error.message)
-    return
-  }
-
-  alert('Product updated successfully')
-  navigate('/products')
-}
 
   if (loading) {
     return (
@@ -189,53 +189,53 @@ const capturePhoto = () => {
           <div className="form-grid">
 
             <div className="form-group">
-                <label>Product Image</label>
+              <label>Product Image</label>
 
-                <div
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '10px',
+                  flexWrap: 'wrap',
+                  marginBottom: '10px'
+                }}
+              >
+                <button
+                  type="button"
+                  className="btn-primary"
+                  onClick={() => setShowCamera(true)}
+                >
+                  📷 Take Photo
+                </button>
+
+                <label
+                  className="btn-success"
                   style={{
-                    display: 'flex',
-                    gap: '10px',
-                    flexWrap: 'wrap',
-                    marginBottom: '10px'
+                    cursor: 'pointer'
                   }}
                 >
-                  <button
-                    type="button"
-                    className="btn-primary"
-                    onClick={() => setShowCamera(true)}
-                  >
-                    📷 Take Photo
-                  </button>
+                  🖼️ Choose From Gallery
 
-                  <label
-                    className="btn-success"
-                    style={{
-                      cursor: 'pointer'
-                    }}
-                  >
-                    🖼️ Choose From Gallery
-
-                    <input
-                      type="file"
-                      accept="image/*"
-                      style={{ display: 'none' }}
-                      onChange={handleImageChange}
-                    />
-                  </label>
-                </div>
-
-                {preview && (
-                  <img
-                    src={preview}
-                    alt="Preview"
-                    style={{
-                      width: '150px',
-                      borderRadius: '8px',
-                      border: '1px solid #ddd'
-                    }}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={handleImageChange}
                   />
-                )}
+                </label>
               </div>
+
+              {preview && (
+                <img
+                  src={preview}
+                  alt="Preview"
+                  style={{
+                    width: '150px',
+                    borderRadius: '8px',
+                    border: '1px solid #ddd'
+                  }}
+                />
+              )}
+            </div>
 
             <div className="form-group">
               <label>Product Code</label>
@@ -353,60 +353,60 @@ const capturePhoto = () => {
           </button>
 
           {showCamera && (
+            <div
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'rgba(0,0,0,0.8)',
+                zIndex: 9999,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <Webcam
+                ref={webcamRef}
+                audio={false}
+                screenshotFormat="image/jpeg"
+                videoConstraints={{
+                  facingMode: 'environment'
+                }}
+                style={{
+                  width: '90%',
+                  maxWidth: '500px',
+                  borderRadius: '10px'
+                }}
+              />
+
               <div
                 style={{
-                  position: 'fixed',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  background: 'rgba(0,0,0,0.8)',
-                  zIndex: 9999,
+                  marginTop: '20px',
                   display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center'
+                  gap: '10px'
                 }}
               >
-                <Webcam
-                  ref={webcamRef}
-                  audio={false}
-                  screenshotFormat="image/jpeg"
-                  videoConstraints={{
-                    facingMode: 'environment'
-                  }}
-                  style={{
-                    width: '90%',
-                    maxWidth: '500px',
-                    borderRadius: '10px'
-                  }}
-                />
-
-                <div
-                  style={{
-                    marginTop: '20px',
-                    display: 'flex',
-                    gap: '10px'
-                  }}
+                <button
+                  type="button"
+                  className="btn-success"
+                  onClick={capturePhoto}
                 >
-                  <button
-                    type="button"
-                    className="btn-success"
-                    onClick={capturePhoto}
-                  >
-                    Capture
-                  </button>
+                  Capture
+                </button>
 
-                  <button
-                    type="button"
-                    className="btn-danger"
-                    onClick={() => setShowCamera(false)}
-                  >
-                    Cancel
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  className="btn-danger"
+                  onClick={() => setShowCamera(false)}
+                >
+                  Cancel
+                </button>
               </div>
-            )}
+            </div>
+          )}
         </form>
 
       </div>
