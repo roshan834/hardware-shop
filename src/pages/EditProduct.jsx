@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 import { supabase } from '../config/supabase'
 import { useAuth } from '../context/AuthContext'
 import { uploadImage } from '../services/uploadService'
+import Webcam from 'react-webcam'
 
 const EditProduct = () => {
   const { id } = useParams()
@@ -11,6 +12,8 @@ const EditProduct = () => {
   const [loading, setLoading] = useState(true)
   const [preview, setPreview] = useState(null)    //  add preview state
   const { role } = useAuth()
+  const webcamRef = useRef(null)
+  const [showCamera, setShowCamera] = useState(false)
 
   const [form, setForm] = useState({
     product_code: '',
@@ -66,6 +69,46 @@ const EditProduct = () => {
     setForm({ ...form, image_file: file })
     setPreview(URL.createObjectURL(file))          //  show new image preview
   }
+
+  const dataURLtoFile = (dataurl, filename) => {
+  const arr = dataurl.split(',')
+  const mime = arr[0].match(/:(.*?);/)[1]
+  const bstr = atob(arr[1])
+
+  let n = bstr.length
+  const u8arr = new Uint8Array(n)
+
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n)
+  }
+
+  return new File([u8arr], filename, {
+    type: mime
+  })
+}
+
+const capturePhoto = () => {
+  const imageSrc = webcamRef.current.getScreenshot()
+
+  if (!imageSrc) {
+    alert('Unable to capture image')
+    return
+  }
+
+  setPreview(imageSrc)
+
+  const file = dataURLtoFile(
+    imageSrc,
+    `${form.product_code || Date.now()}.jpg`
+  )
+
+  setForm(prev => ({
+    ...prev,
+    image_file: file
+  }))
+
+  setShowCamera(false)
+}
 
   const handleSubmit = async (e) => {
   e.preventDefault()
@@ -143,28 +186,53 @@ const EditProduct = () => {
           <div className="form-grid">
 
             <div className="form-group">
-              <label>Product Image</label>
+                <label>Product Image</label>
 
-              {/*  shows old image or new preview */}
-              {preview && (
-                <img
-                  src={preview}
-                  alt="product"
+                <div
                   style={{
-                    width: '80px',
-                    marginBottom: '10px',
-                    borderRadius: '8px',
-                    border: '1px solid #ddd'
+                    display: 'flex',
+                    gap: '10px',
+                    flexWrap: 'wrap',
+                    marginBottom: '10px'
                   }}
-                />
-              )}
+                >
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={() => setShowCamera(true)}
+                  >
+                    📷 Take Photo
+                  </button>
 
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}       //  use handleImageChange
-              />
-            </div>
+                  <label
+                    className="btn-success"
+                    style={{
+                      cursor: 'pointer'
+                    }}
+                  >
+                    🖼️ Choose From Gallery
+
+                    <input
+                      type="file"
+                      accept="image/*"
+                      style={{ display: 'none' }}
+                      onChange={handleImageChange}
+                    />
+                  </label>
+                </div>
+
+                {preview && (
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    style={{
+                      width: '150px',
+                      borderRadius: '8px',
+                      border: '1px solid #ddd'
+                    }}
+                  />
+                )}
+              </div>
 
             <div className="form-group">
               <label>Product Code</label>
@@ -280,6 +348,62 @@ const EditProduct = () => {
           <button type="submit" className="btn-success">
             Update Product
           </button>
+
+          {showCamera && (
+              <div
+                style={{
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  background: 'rgba(0,0,0,0.8)',
+                  zIndex: 9999,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <Webcam
+                  ref={webcamRef}
+                  audio={false}
+                  screenshotFormat="image/jpeg"
+                  videoConstraints={{
+                    facingMode: 'environment'
+                  }}
+                  style={{
+                    width: '90%',
+                    maxWidth: '500px',
+                    borderRadius: '10px'
+                  }}
+                />
+
+                <div
+                  style={{
+                    marginTop: '20px',
+                    display: 'flex',
+                    gap: '10px'
+                  }}
+                >
+                  <button
+                    type="button"
+                    className="btn-success"
+                    onClick={capturePhoto}
+                  >
+                    Capture
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn-danger"
+                    onClick={() => setShowCamera(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
         </form>
 
       </div>
