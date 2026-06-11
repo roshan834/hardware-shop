@@ -8,8 +8,7 @@ import { uploadImage } from '../services/uploadService'
 import { useAuth } from '../context/AuthContext'
 import Webcam from 'react-webcam'
 
-const galleryRef = useRef(null)
-const cameraRef = useRef(null)
+
 
 const AddProduct = () => {
   const navigate = useNavigate()
