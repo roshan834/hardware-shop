@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 import { getProducts, deleteProduct } from '../services/productService'
 import { useAuth } from '../context/AuthContext'        //  add
+import { useLocation } from 'react-router-dom'
+import { getCategories } from '../services/productService'
 
 const Products = () => {
 
@@ -11,19 +13,36 @@ const Products = () => {
   const [totalRecords, setTotalRecords] = useState(0)
   const [search, setSearch] = useState('')
   const [pageSize, setPageSize] = useState(10)
+  const location = useLocation()
+  const [categories, setCategories] = useState([])
+
+  const query = new URLSearchParams(location.search)
+
+  const filter = query.get('filter') || ''
+  const category = query.get('category') || ''
 
   const navigate = useNavigate()
   const { role } = useAuth()                           //  add
 
   const loadProducts = async () => {
-    const { data, count } = await getProducts(currentPage, pageSize, search)
+    const { data, count } = await getProducts({
+      page: currentPage,
+      pageSize,
+      search,
+      filter,
+      category
+    })
+
     setProducts(data || [])
     setTotalRecords(count || 0)
   }
 
-  useEffect(() => {
+
+
+    useEffect(() => {
     loadProducts()
-  }, [currentPage, pageSize, search])
+  }, [currentPage, pageSize, search, filter, category])
+
 
   const removeProduct = async (e, id) => {
     e.stopPropagation()
@@ -31,6 +50,15 @@ const Products = () => {
     await deleteProduct(id)
     loadProducts()
   }
+
+    const loadCategories = async () => {
+    const { data } = await getCategories()
+    setCategories(data || [])
+  }
+
+  useEffect(() => {
+    loadCategories()
+  }, [])  
 
   const totalPages = Math.ceil(totalRecords / pageSize)
 
@@ -49,30 +77,50 @@ const Products = () => {
         </div>
 
         <div className="toolbar">
-          <input
-            type="text"
-            placeholder="Search product..."
-            className="search-box"
-            value={search}
-            onChange={(e) => {
-              setCurrentPage(1)
-              setSearch(e.target.value)
-            }}
-          />
-          <select
-            value={pageSize}
-            onChange={(e) => {
-              setCurrentPage(1)
-              setPageSize(Number(e.target.value))
-            }}
-            className="page-size"
-          >
-            <option value={10}>10</option>
-            <option value={25}>25</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-        </div>
+
+            {/* SEARCH */}
+            <input
+              type="text"
+              placeholder="Search product..."
+              value={search}
+              onChange={(e) => {
+                setCurrentPage(1)
+                setSearch(e.target.value)
+              }}
+            />
+
+            {/* CATEGORY FILTER */}
+              <select
+                value={category}
+                onChange={(e) => {
+                  const value = e.target.value.trim()
+                  navigate(`/products?category=${value}`)
+                }}
+              >
+                <option value="">All Categories</option>
+
+                {categories.map((cat, index) => (
+                  <option key={index} value={cat.trim()}>
+                    {cat.trim()}
+                  </option>
+                ))}
+              </select>
+
+            {/* PAGE SIZE */}
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                setCurrentPage(1)
+                setPageSize(Number(e.target.value))
+              }}
+            >
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+            </select>
+
+          </div>
+
 
         <div className="table-container">
           <table>

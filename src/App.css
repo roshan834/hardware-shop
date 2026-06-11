@@ -182,3 +182,14 @@
     border-right-color: var(--border);
   }
 }
+
+/* dashboard */
+
+.card.clickable {
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.card.clickable:hover {
+  transform: scale(1.05);
+}

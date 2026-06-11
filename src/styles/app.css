@@ -648,6 +648,17 @@ tr:hover { background: #f8fafc; }
 
 /* product view  */
 
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .page-header > div {
+    justify-content: flex-start;
+  }
+}
+
 .clickable-row {
   cursor: pointer;
   transition: background 0.15s;
@@ -665,3 +676,247 @@ tr:hover { background: #f8fafc; }
   font-size: 13px;
   font-weight: 600;
 }
+/* =========================
+   TOOLBAR CONTAINER (PRO UI)
+========================= */
+.toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 15px 0;
+  padding: 14px;
+
+  /* gradient background */
+  background: linear-gradient(135deg, #f8faff, #eef2ff);
+
+  border-radius: 14px;
+  border: 1px solid rgba(79, 70, 229, 0.15);
+
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* =========================
+   INPUT + SELECT BASE STYLE
+========================= */
+.toolbar input,
+.toolbar select {
+  height: 42px;
+  padding: 8px 12px;
+
+  border-radius: 10px;
+  border: 3px solid #a2a2a5;
+
+  font-size: 14px;
+  outline: none;
+
+  background: #ffffff;
+
+  transition: all 0.55s ease;
+  box-shadow: inset 0 0 0 transparent;
+}
+
+/* =========================
+   INPUT (SEARCH FIELD)
+========================= */
+.toolbar input {
+  flex: 1;
+  min-width: 180px;
+
+  border-left: 8px solid #6366f1;
+}
+
+/* =========================
+   SELECT STYLE
+========================= */
+.toolbar select {
+  min-width: 150px;
+  cursor: pointer;
+
+  border-left: 8px solid #06b6d4;
+}
+
+/* =========================
+   HOVER EFFECT
+========================= */
+.toolbar input:hover,
+.toolbar select:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 10px rgba(0,0,0,0.08);
+}
+
+/* =========================
+   FOCUS EFFECT (IMPORTANT)
+========================= */
+.toolbar input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+}
+
+.toolbar select:focus {
+  border-color: #06b6d4;
+  box-shadow: 0 0 0 3px rgba(6,182,212,0.2);
+}
+
+/* =========================
+   PLACEHOLDER STYLE
+========================= */
+.toolbar input::placeholder {
+  color: #9aa0b4;
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+  }
+
+  .toolbar input,
+  .toolbar select {
+    width: 100%;
+  }
+}
+
+
+/* ================= GLOBAL ================= */
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f4f6f9;
+  font-family: "Inter", sans-serif;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+/* ================= HEADER ================= */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* ================= BUTTONS ================= */
+.scan-btn {
+  background: #111827;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.scan-btn:hover {
+  background: #1f2937;
+}
+
+/* ================= CARDS ================= */
+.card {
+  background: white;
+  padding: 16px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  margin-bottom: 15px;
+}
+
+/* ================= INPUT ================= */
+.input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  outline: none;
+  font-size: 14px;
+}
+
+.input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+
+/* ================= GRID ================= */
+.billing-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+/* ================= TABLE ================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  padding: 10px;
+  background: #f9fafb;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* ================= SUMMARY ================= */
+.summary .row {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.summary .total {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* ================= BUTTONS ================= */
+.btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn.green {
+  background: #16a34a;
+  color: white;
+}
+
+.btn.blue {
+  background: #2563eb;
+  color: white;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .billing-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+

@@ -1,28 +1,38 @@
 import { supabase } from '../config/supabase'
 
-export const getProducts = async (
+export const getProducts = async ({
   page = 1,
   pageSize = 10,
-  search = ''
-) => {
+  search = '',
+  filter = '',
+  category = ''
+}) => {
+
+  let table = 'products'
+
+  if (filter === 'lowstock') {
+    table = 'low_stock_products'
+  }
+
+  let query = supabase
+    .from(table)
+    .select('*', { count: 'exact' })
+
+  if (search) {
+    query = query.ilike('product_name', `%${search}%`)
+  }
+
+   // CATEGORY FILTER
+  if (category) {
+    query = query.eq('category', category)
+  }
 
   const from = (page - 1) * pageSize
   const to = from + pageSize - 1
 
-  let query = supabase
-    .from('products')
-    .select('*', { count: 'exact' })
-    .eq('is_active', true)           //  only active products
-
-  if (search.trim() !== '') {
-    query = query.or(
-      `product_name.ilike.%${search}%,product_code.ilike.%${search}%,category.ilike.%${search}%,brand.ilike.%${search}%`
-    )
-  }
+  query = query.range(from, to)
 
   const { data, error, count } = await query
-    .order('id', { ascending: false })
-    .range(from, to)
 
   return { data, error, count }
 }
@@ -74,4 +84,29 @@ export const getImageUrl = (productCode, ext = null) => {
     .getPublicUrl(`${productCode}.jpg`)
 
   return data.publicUrl
+}
+
+export const getCategories = async () => {
+  const { data, error } = await supabase
+    .from('products')
+    .select('category')
+
+  if (error) return { data: [], error }
+
+  // remove null + duplicates
+  const categories = [
+    ...new Set(data.map(item => item.category).filter(Boolean))
+  ]
+
+  return { data: categories, error: null }
+}
+
+export const getProductsByBarcode = async (barcode) => {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("barcode", barcode)
+    .single()
+
+  return { data, error }
 }

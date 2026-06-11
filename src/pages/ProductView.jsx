@@ -3,6 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../config/supabase";
 import Sidebar from "../components/Sidebar";
 import { useAuth } from "../context/AuthContext";
+import Barcode from "react-barcode";
+import { toPng } from "html-to-image";
+import { useRef } from "react";
 
 const ProductView = () => {
   const { id } = useParams();
@@ -10,6 +13,19 @@ const ProductView = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const { role } = useAuth();
+  const barcodeRef = useRef(null);
+
+  const downloadBarcode = async () => {
+  if (!barcodeRef.current) return;
+
+  const dataUrl = await toPng(barcodeRef.current);
+
+  const link = document.createElement("a");
+  link.download = `${product.product_code || "barcode"}.png`;
+  link.href = dataUrl;
+  link.click();
+};
+
 
   useEffect(() => {
     fetchProduct();
@@ -63,38 +79,110 @@ const ProductView = () => {
             <button className="btn-danger" onClick={handleDelete}>
               Delete
             </button>
+            
           </div>
+          
         </div>
 
         <div className="form-card">
 
 
           {/* Image */}
-          <div style={{ textAlign: "center", marginBottom: "25px" }}>
-            <img
-              src={imageUrl}
-              alt={product.product_name}
-              style={{
-                width: "160px", height: "160px",
-                objectFit: "cover", borderRadius: "12px",
-                border: "1px solid #ddd",
-              }}
-              onError={(e) => {
-                // fallback to emoji if image fails to load
-                e.target.style.display = "none"
-                e.target.nextSibling.style.display = "flex"
-              }}
-            />
-            <div style={{
-              display: "none",
-              width: "160px", height: "160px",
-              background: "#f1f5f9", borderRadius: "12px",
-              alignItems: "center", justifyContent: "center",
-              fontSize: "48px", margin: "0 auto",
-            }}>
-              📦
+       {/* ================= IMAGE + BARCODE ROW ================= */}
+            <div
+            style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "25px",
+                flexWrap: "wrap",
+                marginBottom: "25px"
+            }}
+            >
+
+            {/* ================= PRODUCT IMAGE ================= */}
+            <div style={{ textAlign: "center" }}>
+                <img
+                src={imageUrl}
+                alt={product.product_name}
+                style={{
+                    width: "160px",
+                    height: "160px",
+                    objectFit: "cover",
+                    borderRadius: "12px",
+                    border: "1px solid #ddd",
+                }}
+                onError={(e) => {
+                    e.target.style.display = "none";
+                    e.target.nextSibling.style.display = "flex";
+                }}
+                />
+
+                <div
+                style={{
+                    display: "none",
+                    width: "160px",
+                    height: "160px",
+                    background: "#f1f5f9",
+                    borderRadius: "12px",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "48px",
+                    margin: "0 auto",
+                }}
+                >
+                📦
+                </div>
             </div>
-          </div>
+
+            {/* ================= BARCODE ================= */}
+            {product.barcode && (
+                <div
+                    ref={barcodeRef}
+                    style={{
+                    background: "#fff",
+                    padding: "10px 15px",
+                    borderRadius: "10px",
+                    border: "1px solid #eee",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                    textAlign: "center",
+                    }}
+                >
+                    <Barcode
+                    value={product.barcode}
+                    width={1.5}
+                    height={60}
+                    fontSize={14}
+                    />
+
+                    <div style={{ marginTop: "5px", fontSize: "12px", color: "#666" }}>
+                    {product.barcode}
+                    </div>
+
+                    {/* ================= DOWNLOAD BUTTON ================= */}
+                    <button
+                    onClick={downloadBarcode}
+                    style={{
+                        marginTop: "10px",
+                        padding: "6px 10px",
+                        fontSize: "12px",
+                        border: "none",
+                        borderRadius: "6px",
+                        background: "#4f46e5",
+                        color: "#fff",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "5px",
+                        justifyContent: "center"
+                    }}
+                    >
+                    ⬇ Download
+                    </button>
+                </div>
+                )}
+
+            </div>
 
           <div className="view-grid">
 
