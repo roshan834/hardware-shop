@@ -8,6 +8,9 @@ import { uploadImage } from '../services/uploadService'
 import { useAuth } from '../context/AuthContext'
 import Webcam from 'react-webcam'
 
+const galleryRef = useRef(null)
+const cameraRef = useRef(null)
+
 const AddProduct = () => {
   const navigate = useNavigate()
   const { role } = useAuth()
@@ -303,53 +306,62 @@ const [showCamera, setShowCamera] = useState(false)
 
             {/* Product Image */}
             <div className="form-group">
-              <label>Product Image</label>
+  <label>Product Image</label>
 
-              <div
-                style={{
-                  display: 'flex',
-                  gap: '10px',
-                  marginBottom: '10px',
-                  flexWrap: 'wrap'
-                }}
-              >
-                <button
-                  type="button"
-                  className="btn-primary"
-                  onClick={() => setShowCamera(true)}
-                >
-                  📷 Take Photo
-                </button>
+  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+    
+    {/* GALLERY BUTTON */}
+            <button
+              type="button"
+              className="btn-success"
+              onClick={() => galleryRef.current?.click()}
+            >
+              🖼️ Gallery
+            </button>
 
-                <label
-                  className="btn-success"
-                  style={{
-                    cursor: 'pointer'
-                  }}
-                >
-                  🖼️ Choose From Gallery
+            {/* CAMERA BUTTON */}
+            <button
+              type="button"
+              className="btn-primary"
+              onClick={() => cameraRef.current?.click()}
+            >
+              📷 Camera
+            </button>
+          </div>
 
-                  <input
-                    type="file"
-                    accept="image/*"
-                    style={{ display: 'none' }}
-                    onChange={handleImageChange}
-                  />
-                </label>
-              </div>
+          {/* HIDDEN GALLERY INPUT */}
+          <input
+            ref={galleryRef}
+            type="file"
+            accept="image/*"
+            style={{ display: 'none' }}
+            onChange={handleImageChange}
+          />
 
-              {preview && (
-                <img
-                  src={preview}
-                  alt="Preview"
-                  style={{
-                    width: '200px',
-                    borderRadius: '8px',
-                    border: '1px solid #ddd'
-                  }}
-                />
-              )}
-            </div>
+          {/* HIDDEN CAMERA INPUT */}
+          <input
+            ref={cameraRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            style={{ display: 'none' }}
+            onChange={handleImageChange}
+          />
+
+          {/* PREVIEW */}
+          {preview && (
+            <img
+              src={preview}
+              alt="preview"
+              style={{
+                width: '180px',
+                marginTop: '10px',
+                borderRadius: '8px',
+                border: '1px solid #ddd'
+              }}
+            />
+          )}
+        </div>
 
           </div>
 
