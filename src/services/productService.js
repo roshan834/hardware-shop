@@ -12,6 +12,7 @@ export const getProducts = async (
   let query = supabase
     .from('products')
     .select('*', { count: 'exact' })
+    .eq('is_active', true)           //  only active products
 
   if (search.trim() !== '') {
     query = query.or(
@@ -23,11 +24,7 @@ export const getProducts = async (
     .order('id', { ascending: false })
     .range(from, to)
 
-  return {
-    data,
-    error,
-    count
-  }
+  return { data, error, count }
 }
 
 export const addProduct = async (product) => {
@@ -36,10 +33,11 @@ export const addProduct = async (product) => {
     .insert([product])
 }
 
+// soft delete — set is_active to false
 export const deleteProduct = async (id) => {
   return await supabase
     .from('products')
-    .delete()
+    .update({ is_active: false })
     .eq('id', id)
 }
 

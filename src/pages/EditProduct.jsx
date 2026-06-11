@@ -3,12 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 import { supabase } from '../config/supabase'
 import { useAuth } from '../context/AuthContext'
-import { uploadImage } from '../services/uploadService'   // 👈 missing import added
+import { uploadImage } from '../services/uploadService'
 
 const EditProduct = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
+  const [preview, setPreview] = useState(null)    //  add preview state
   const { role } = useAuth()
 
   const [form, setForm] = useState({
@@ -47,8 +48,10 @@ const EditProduct = () => {
       selling_price:  data.selling_price  ?? '',
       quantity:       data.quantity       ?? '',
       reorder_level:  data.reorder_level  ?? '',
-      image_file:     null                      // always reset file input
+      image_file:     null
     })
+
+    setPreview(data.image_url || null)             //  set existing image as preview
 
     setLoading(false)
   }
@@ -57,50 +60,57 @@ const EditProduct = () => {
     loadProduct()
   }, [])
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    setForm({ ...form, image_file: file })
+    setPreview(URL.createObjectURL(file))          //  show new image preview
+  }
+
   const handleSubmit = async (e) => {
-    e.preventDefault()
+  e.preventDefault()
 
-    let imageUrl = form.image_url
+  let imageUrl = form.image_url
 
-    if (form.image_file) {
-      if (!form.product_code) {
-        alert('Product code is required for image upload')
-        return
-      }
-
-      const { url, error } = await uploadImage(form.image_file, form.product_code)
-
-      if (error) {
-        alert('Image upload failed: ' + error.message)
-        return
-      }
-
-      imageUrl = url
-    }
-
-    // 👇 never send image_file to Supabase — destructure it out
-    const { image_file, ...rest } = form
-
-    const { error } = await supabase
-      .from('products')
-      .update({
-        ...rest,
-        image_url:      imageUrl,
-        purchase_price: Number(form.purchase_price),
-        selling_price:  Number(form.selling_price),
-        quantity:       Number(form.quantity),
-        reorder_level:  Number(form.reorder_level)
-      })
-      .eq('id', id)
-
-    if (error) {
-      alert(error.message)
+  if (form.image_file) {
+    if (!form.product_code) {
+      alert('Product code is required for image upload')
       return
     }
 
-    alert('Product updated successfully')
-    navigate('/products')
+    const { url, error } = await uploadImage(form.image_file, form.product_code)
+
+    if (error) {
+      alert('Image upload failed: ' + error.message)
+      return
+    }
+
+    imageUrl = url
   }
+
+  // 👇 remove id and image_file from update payload
+  const { id: _id, image_file, created_at, last_updated, ...rest } = form
+
+  const { error } = await supabase
+    .from('products')
+    .update({
+      ...rest,
+      image_url:      imageUrl,
+      purchase_price: Number(form.purchase_price),
+      selling_price:  Number(form.selling_price),
+      quantity:       Number(form.quantity),
+      reorder_level:  Number(form.reorder_level)
+    })
+    .eq('id', id)
+
+  if (error) {
+    alert(error.message)
+    return
+  }
+
+  alert('Product updated successfully')
+  navigate('/products')
+}
 
   if (loading) {
     return (
@@ -134,19 +144,25 @@ const EditProduct = () => {
 
             <div className="form-group">
               <label>Product Image</label>
-              {form.image_url && (
+
+              {/*  shows old image or new preview */}
+              {preview && (
                 <img
-                  src={form.image_url}
+                  src={preview}
                   alt="product"
-                  style={{ width: '80px', marginBottom: '10px', borderRadius: '8px' }}
+                  style={{
+                    width: '80px',
+                    marginBottom: '10px',
+                    borderRadius: '8px',
+                    border: '1px solid #ddd'
+                  }}
                 />
               )}
+
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) =>
-                  setForm({ ...form, image_file: e.target.files[0] })
-                }
+                onChange={handleImageChange}       //  use handleImageChange
               />
             </div>
 
