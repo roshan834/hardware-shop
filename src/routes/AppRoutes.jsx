@@ -1,108 +1,88 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-import Login from '../pages/Login';
-import Dashboard from '../pages/Dashboard';
-import Products from '../pages/Products';
-import AddProduct from '../pages/AddProduct';
-import Billing from '../pages/Billing';
-import BillHistory from '../pages/BillHistory';
-import Reports from '../pages/Reports';
-import Users from '../pages/Users';
-import Profile from '../pages/Profile';
-import EditProduct from '../pages/EditProduct';
+import Login       from '../pages/Login'
+import Dashboard   from '../pages/Dashboard'
+import Products    from '../pages/Products'
+import AddProduct  from '../pages/AddProduct'
+import EditProduct from '../pages/EditProduct'
+import ProductView from '../pages/ProductView'
+import Billing     from '../pages/Billing'
+import BillHistory from '../pages/BillHistory'
+import Reports     from '../pages/Reports'
+import Users       from '../pages/Users'
+import Profile     from '../pages/Profile'
 
-import ProtectedRoute from '../components/ProtectedRoute';
+import ProtectedRoute from '../components/ProtectedRoute'
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
 
-  <Route path="/" element={<Login />} />
+        {/* Public */}
+        <Route path="/" element={<Login />} />
 
-  <Route
-    path="/dashboard"
-    element={
-      <ProtectedRoute>
-        <Dashboard />
-      </ProtectedRoute>
-    }
-  />
+        {/* Admin only */}
+        <Route path="/dashboard" element={
+          <ProtectedRoute adminOnly={true}>
+            <Dashboard />
+          </ProtectedRoute>
+        } />
 
-  <Route
-    path="/products"
-    element={
-      <ProtectedRoute>
-        <Products />
-      </ProtectedRoute>
-    }
-  />
+        <Route path="/users" element={
+          <ProtectedRoute adminOnly={true}>
+            <Users />
+          </ProtectedRoute>
+        } />
 
-  <Route
-    path="/products/add"
-    element={
-      <ProtectedRoute>
-        <AddProduct />
-      </ProtectedRoute>
-    }
-  />
+        <Route path="/profile" element={
+          <ProtectedRoute adminOnly={true}>
+            <Profile />
+          </ProtectedRoute>
+        } />
 
-  <Route
-    path="/billing"
-    element={
-      <ProtectedRoute>
-        <Billing />
-      </ProtectedRoute>
-    }
-  />
+        {/* All roles */}
+        <Route path="/products" element={
+          <ProtectedRoute>
+            <Products />
+          </ProtectedRoute>
+        } />
 
-  <Route
-    path="/bills"
-    element={
-      <ProtectedRoute>
-        <BillHistory />
-      </ProtectedRoute>
-    }
-  />
+        <Route path="/products/view/:id" element={
+          <ProtectedRoute>
+            <ProductView />
+          </ProtectedRoute>
+        } />
 
-  <Route
-    path="/reports"
-    element={
-      <ProtectedRoute>
-        <Reports />
-      </ProtectedRoute>
-    }
-  />
+        <Route path="/products/add" element={
+          <ProtectedRoute>
+            <AddProduct />
+          </ProtectedRoute>
+        } />
 
-  <Route
-    path="/users"
-    element={
-      <ProtectedRoute>
-        <Users />
-      </ProtectedRoute>
-    }
-  />
+        <Route path="/products/edit/:id" element={
+          <ProtectedRoute>
+            <EditProduct />
+          </ProtectedRoute>
+        } />
 
-  <Route
-    path="/profile"
-    element={
-      <ProtectedRoute>
-        <Profile />
-      </ProtectedRoute>
-    }
-  />
+        <Route path="/billing" element={
+          <ProtectedRoute>
+            <Billing />
+          </ProtectedRoute>
+        } />
 
+        <Route path="/bills" element={
+          <ProtectedRoute>
+            <BillHistory />
+          </ProtectedRoute>
+        } />
 
-  <Route
-  path="/products/edit/:id"
-  element={
-    <ProtectedRoute>
-      <EditProduct />
-    </ProtectedRoute>
-  }
-/>
-
-
+        <Route path="/reports" element={
+          <ProtectedRoute>
+            <Reports />
+          </ProtectedRoute>
+        } />
 
       </Routes>
     </BrowserRouter>

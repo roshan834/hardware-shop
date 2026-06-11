@@ -1,51 +1,36 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 import { getProducts, deleteProduct } from '../services/productService'
 
 const Products = () => {
 
   const [products, setProducts] = useState([])
-const [currentPage, setCurrentPage] = useState(1)
-const [totalRecords, setTotalRecords] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalRecords, setTotalRecords] = useState(0)
+  const [search, setSearch] = useState('')
+  const [pageSize, setPageSize] = useState(10)
 
-const [search, setSearch] = useState('')
-const [pageSize, setPageSize] = useState(10)
+  const navigate = useNavigate()
 
- const loadProducts = async () => {
+  const loadProducts = async () => {
+    const { data, count } = await getProducts(currentPage, pageSize, search)
+    setProducts(data || [])
+    setTotalRecords(count || 0)
+  }
 
-  const {
-    data,
-    count
-  } = await getProducts(
-    currentPage,
-    pageSize,
-    search
-  )
+  useEffect(() => {
+    loadProducts()
+  }, [currentPage, pageSize, search])
 
-  setProducts(data || [])
-  setTotalRecords(count || 0)
-}
-
-
-
-useEffect(() => {
-  loadProducts()
-}, [currentPage, pageSize, search])
-
-  const removeProduct = async (id) => {
-
-    if (!window.confirm('Delete Product?'))
-      return
-
+  const removeProduct = async (e, id) => {
+    e.stopPropagation()                    // prevent row click firing
+    if (!window.confirm('Delete Product?')) return
     await deleteProduct(id)
-
     loadProducts()
   }
 
-  const totalPages = Math.ceil(
-    totalRecords / pageSize
-  )
+  const totalPages = Math.ceil(totalRecords / pageSize)
 
   return (
     <div className="layout">
@@ -55,49 +40,40 @@ useEffect(() => {
       <div className="content">
 
         <div className="page-header">
-
           <h1>Products</h1>
-
-          <Link
-            to="/products/add"
-            className="btn-primary"
-          >
+          <Link to="/products/add" className="btn-primary">
             Add Product
           </Link>
-
         </div>
-        <div className="toolbar">
 
-        <input
+        <div className="toolbar">
+          <input
             type="text"
             placeholder="Search product..."
             className="search-box"
             value={search}
             onChange={(e) => {
-            setCurrentPage(1)
-            setSearch(e.target.value)
+              setCurrentPage(1)
+              setSearch(e.target.value)
             }}
-        />
-
-        <select
+          />
+          <select
             value={pageSize}
             onChange={(e) => {
-            setCurrentPage(1)
-            setPageSize(Number(e.target.value))
+              setCurrentPage(1)
+              setPageSize(Number(e.target.value))
             }}
             className="page-size"
-        >
+          >
             <option value={10}>10</option>
             <option value={25}>25</option>
             <option value={50}>50</option>
             <option value={100}>100</option>
-        </select>
-
+          </select>
         </div>
+
         <div className="table-container">
-
           <table>
-
             <thead>
               <tr>
                 <th>Image</th>
@@ -112,124 +88,96 @@ useEffect(() => {
             </thead>
 
             <tbody>
-
-              {
-                products.length > 0 ? (
-
-                  products.map(product => (
-
-                    <tr key={product.id}>
-
-                      <td>
-                        {
-                          product.image_url ? (
-                            <img
-                              src={product.image_url}
-                              alt={product.product_name}
-                              className="product-image"
-                            />
-                          ) : (
-                            <div className="no-image">
-                              📦
-                            </div>
-                          )
-                        }
-                      </td>
-
-                      <td>{product.product_code}</td>
-                      <td>{product.product_name}</td>
-                      <td>{product.category}</td>
-                      <td>{product.brand}</td>
-                      <td>{product.quantity}</td>
-                      <td>₹{product.selling_price}</td>
-
-                      <td>
-
-                        <Link
-                          to={`/products/edit/${product.id}`}
-                          className="btn-primary"
-                        >
-                          Edit
-                        </Link>
-
-                        {' '}
-
-                        <button
-                          className="btn-danger"
-                          onClick={() =>
-                            removeProduct(product.id)
-                          }
-                        >
-                          Delete
-                        </button>
-
-                      </td>
-
-                    </tr>
-
-                  ))
-
-                ) : (
-
-                  <tr>
-                    <td colSpan="8">
-                      No Products Found
+              {products.length > 0 ? (
+                products.map(product => (
+                  <tr
+                    key={product.id}
+                    onClick={() => navigate(`/products/view/${product.id}`)}
+                    className="clickable-row"
+                  >
+                    <td>
+                      {product.image_url ? (
+                        <img
+                          src={product.image_url}
+                          alt={product.product_name}
+                          className="product-image"
+                        />
+                      ) : (
+                        <div className="no-image">📦</div>
+                      )}
                     </td>
+                    <td>{product.product_code}</td>
+                    <td>{product.product_name}</td>
+                    <td>{product.category}</td>
+                    <td>{product.brand}</td>
+                    <td>
+                      {/* Low stock badge */}
+                      {product.quantity <= 5 ? (
+                        <span className="badge-low-stock">
+                          {product.quantity} ⚠️
+                        </span>
+                      ) : (
+                        product.quantity
+                      )}
+                    </td>
+                    <td>₹{Number(product.selling_price).toLocaleString('en-IN')}</td>
+
+                    <td onClick={(e) => e.stopPropagation()}>
+                      {/* stopPropagation on the whole Action cell */}
+                      <Link
+                        to={`/products/edit/${product.id}`}
+                        className="btn-primary"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Edit
+                      </Link>
+                      {' '}
+                      <button
+                        className="btn-danger"
+                        onClick={(e) => removeProduct(e, product.id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+
                   </tr>
-
-                )
-              }
-
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8">No Products Found</td>
+                </tr>
+              )}
             </tbody>
-
           </table>
-
         </div>
 
         <div className="pagination">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(currentPage - 1)}
+          >
+            Previous
+          </button>
 
+          {[...Array(totalPages)].map((_, index) => (
             <button
-                disabled={currentPage === 1}
-                onClick={() =>
-                setCurrentPage(currentPage - 1)
-                }
+              key={index}
+              className={currentPage === index + 1 ? 'active-page' : ''}
+              onClick={() => setCurrentPage(index + 1)}
             >
-                Previous
+              {index + 1}
             </button>
+          ))}
 
-            {
-                [...Array(totalPages)].map((_, index) => (
-
-                <button
-                    key={index}
-                    className={
-                    currentPage === index + 1
-                        ? 'active-page'
-                        : ''
-                    }
-                    onClick={() =>
-                    setCurrentPage(index + 1)
-                    }
-                >
-                    {index + 1}
-                </button>
-
-                ))
-            }
-
-            <button
-                disabled={currentPage === totalPages}
-                onClick={() =>
-                setCurrentPage(currentPage + 1)
-                }
-            >
-                Next
-            </button>
-
-            </div>
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(currentPage + 1)}
+          >
+            Next
+          </button>
+        </div>
 
       </div>
-
     </div>
   )
 }

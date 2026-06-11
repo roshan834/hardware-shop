@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 import { supabase } from '../config/supabase'
+import { useAuth } from '../context/AuthContext'   // 👈 add this
 
 const EditProduct = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
+  const { role } = useAuth()                       // 👈 add this
 
   const [form, setForm] = useState({
     product_code: '',
@@ -53,41 +55,39 @@ const EditProduct = () => {
   }, [])
 
   const handleSubmit = async (e) => {
-  e.preventDefault()
+    e.preventDefault()
 
-  let imageUrl = form.image_url
+    let imageUrl = form.image_url
 
-  if (form.image_file) {
-    const { url, error } = await uploadImage(form.image_file)
+    if (form.image_file) {
+      const { url, error } = await uploadImage(form.image_file)
+      if (error) {
+        alert('Image upload failed')
+        return
+      }
+      imageUrl = url
+    }
+
+    const { error } = await supabase
+      .from('products')
+      .update({
+        ...form,
+        image_url: imageUrl,
+        purchase_price: Number(form.purchase_price),
+        selling_price: Number(form.selling_price),
+        quantity: Number(form.quantity),
+        reorder_level: Number(form.reorder_level)
+      })
+      .eq('id', id)
 
     if (error) {
-      alert('Image upload failed')
+      alert(error.message)
       return
     }
 
-    imageUrl = url
+    alert('Product updated successfully')
+    navigate('/products')
   }
-
-  const { error } = await supabase
-    .from('products')
-    .update({
-      ...form,
-      image_url: imageUrl,
-      purchase_price: Number(form.purchase_price),
-      selling_price: Number(form.selling_price),
-      quantity: Number(form.quantity),
-      reorder_level: Number(form.reorder_level)
-    })
-    .eq('id', id)
-
-  if (error) {
-    alert(error.message)
-    return
-  }
-
-  alert('Product updated successfully')
-  navigate('/products')
-}
 
   if (loading) {
     return (
@@ -120,23 +120,21 @@ const EditProduct = () => {
           <div className="form-grid">
 
             <div className="form-group">
-            <label>Product Image</label>
-
-            {form.image_url && (
+              <label>Product Image</label>
+              {form.image_url && (
                 <img
-                src={form.image_url}
-                alt="product"
-                style={{ width: '80px', marginBottom: '10px', borderRadius: '8px' }}
+                  src={form.image_url}
+                  alt="product"
+                  style={{ width: '80px', marginBottom: '10px', borderRadius: '8px' }}
                 />
-            )}
-
-            <input
+              )}
+              <input
                 type="file"
                 accept="image/*"
                 onChange={(e) =>
-                setForm({ ...form, image_file: e.target.files[0] })
+                  setForm({ ...form, image_file: e.target.files[0] })
                 }
-            />
+              />
             </div>
 
             <div className="form-group">
@@ -189,16 +187,19 @@ const EditProduct = () => {
               />
             </div>
 
-            <div className="form-group">
-              <label>Purchase Price</label>
-              <input
-                type="number"
-                value={form.purchase_price}
-                onChange={(e) =>
-                  setForm({ ...form, purchase_price: e.target.value })
-                }
-              />
-            </div>
+            {/* Purchase Price — admin only */}
+            {role === "admin" && (
+              <div className="form-group">
+                <label>🔒 Purchase Price</label>
+                <input
+                  type="number"
+                  value={form.purchase_price}
+                  onChange={(e) =>
+                    setForm({ ...form, purchase_price: e.target.value })
+                  }
+                />
+              </div>
+            )}
 
             <div className="form-group">
               <label>Selling Price</label>
