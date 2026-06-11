@@ -9,6 +9,8 @@ import { uploadImage } from '../services/uploadService'
 import { useAuth } from '../context/AuthContext'
 
 const AddProduct = () => {
+
+  const fileInputRef = useRef(null)
   const navigate = useNavigate()
   const { role } = useAuth()
 
@@ -300,15 +302,21 @@ const AddProduct = () => {
               <div style={{ display: 'flex', gap: '10px' }}>
 
                 {/* GALLERY (FIXED FOR MOBILE) */}
-                <label className="btn-success">
-                  🖼️ Gallery
+                  <button
+                    type="button"
+                    className="btn-success"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    🖼️ Gallery
+                  </button>
+
                   <input
+                    ref={fileInputRef}
                     type="file"
                     accept="image/*"
-                    hidden
                     onChange={handleImageChange}
+                    style={{ display: 'none' }}
                   />
-                </label>
 
                 {/* CAMERA */}
                 <button
