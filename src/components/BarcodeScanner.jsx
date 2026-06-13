@@ -4,6 +4,7 @@ import { BrowserMultiFormatReader } from "@zxing/browser"
 const BarcodeScanner = ({ onScan, onClose }) => {
   const videoRef = useRef(null)
   const codeReader = useRef(null)
+  const lastScanRef = useRef("")
 
   useEffect(() => {
     codeReader.current = new BrowserMultiFormatReader()
@@ -22,9 +23,18 @@ const BarcodeScanner = ({ onScan, onClose }) => {
               },
           videoRef.current,
           (result, err) => {
-            if (result) {
-              onScan(result.getText())
-              stopScanner()
+              if (result) {
+              const code = result.getText()
+
+              if (lastScanRef.current === code) return
+
+              lastScanRef.current = code
+
+              onScan(code)
+
+              setTimeout(() => {
+                lastScanRef.current = ""
+              }, 1500)
             }
           }
         )

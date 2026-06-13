@@ -9,14 +9,44 @@ import { FaTrashAlt } from "react-icons/fa"
 const Billing = () => {
   const navigate = useNavigate()
 
-  const [cart, setCart] = useState(() => {
-    const savedCart = localStorage.getItem("cart")
-    return savedCart ? JSON.parse(savedCart) : []
-  })
+  const [userId, setUserId] = useState(null)
 
-    useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart))
-  }, [cart])
+  useEffect(() => {
+  const getUser = async () => {
+    const {
+      data: { user }
+    } = await supabase.auth.getUser()
+
+    if (user) {
+      setUserId(user.id)
+    }
+  }
+
+  getUser()
+}, [])
+
+  const [cart, setCart] = useState([])
+
+  useEffect(() => {
+    if (!userId) return
+
+    const savedCart = localStorage.getItem(
+      `cart_${userId}`
+    )
+
+    if (savedCart) {
+      setCart(JSON.parse(savedCart))
+    }
+  }, [userId])
+
+      useEffect(() => {
+    if (!userId) return
+
+    localStorage.setItem(
+      `cart_${userId}`,
+      JSON.stringify(cart)
+    )
+  }, [cart, userId])
 
   const [barcode, setBarcode] = useState("")
   const [showScanner, setShowScanner] = useState(false)
@@ -76,7 +106,7 @@ const Billing = () => {
   // ================= SCANNER RESULT =================
   const handleScan = async (code) => {
   await handleSearch(code)
-  setShowScanner(false)
+  // setShowScanner(false)
   }
 
   // ============remove item ============
@@ -137,7 +167,7 @@ const Billing = () => {
         alert("Bill Saved Successfully")
 
         setCart([])
-        localStorage.removeItem("cart")
+        localStorage.removeItem(`cart_${userId}`)
       } catch (err) {
         console.error(err)
         alert("Checkout Failed")
