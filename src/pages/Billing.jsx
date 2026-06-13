@@ -10,6 +10,12 @@ const Billing = () => {
   const navigate = useNavigate()
 
   const [userId, setUserId] = useState(null)
+  const [scanMessage, setScanMessage] = useState("")
+
+  const playBeep = () => {
+  const audio = new Audio("/beep.mp3")
+  audio.play()
+}
 
   useEffect(() => {
   const getUser = async () => {
@@ -93,6 +99,17 @@ const Billing = () => {
     }
 
     addToCart(data)
+
+    playBeep()
+
+    setScanMessage(
+      `${data.product_name} added to cart`
+    )
+
+    setTimeout(() => {
+      setScanMessage("")
+    }, 2000)
+
     setBarcode("")
   }
 
@@ -210,6 +227,12 @@ const Billing = () => {
             📷 Scan Barcode
           </button>
         </div>
+
+        {scanMessage && (
+          <div className="scan-success">
+            {scanMessage}
+          </div>
+        )}
 
         {/* INPUT SECTION */}
         <div className="card" style={{ display: "flex", gap: "10px" }}>
