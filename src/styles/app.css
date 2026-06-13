@@ -920,3 +920,278 @@ td {
 }
 
 
+
+/* =========================
+   BILLING PAGE
+========================= */
+
+.content {
+  padding: 20px;
+  background: #f4f7fb;
+  min-height: 100vh;
+}
+
+.content h1 {
+  margin-bottom: 20px;
+  color: #1e293b;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  border: 1px solid #e5e7eb;
+}
+
+/* =========================
+   SEARCH SECTION
+========================= */
+
+.card:first-of-type {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.card:first-of-type input {
+  flex: 1;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+.card input,
+.card select {
+  height: 46px;
+  border: 1px solid #dbe2ea;
+  border-radius: 10px;
+  padding: 0 14px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.card input:focus,
+.card select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+}
+
+/* =========================
+   CUSTOMER CARD
+========================= */
+
+.card:nth-of-type(2) {
+  display: grid;
+  grid-template-columns: 1fr 1fr 180px;
+  gap: 12px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn-primary {
+  background: linear-gradient(135deg,#2563eb,#1d4ed8);
+  color: #fff;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: .3s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(37,99,235,.25);
+}
+
+.btn-success {
+  background: linear-gradient(135deg,#16a34a,#15803d);
+  color: #fff;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 600;
+  margin-top: 15px;
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: white;
+  border: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+thead {
+  background: #2563eb;
+  color: white;
+}
+
+thead th {
+  padding: 14px;
+  text-align: left;
+  font-size: 14px;
+}
+
+tbody td {
+  padding: 14px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* =========================
+   QTY INPUT
+========================= */
+
+tbody input[type="number"] {
+  width: 70px;
+  text-align: center;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 6px;
+}
+
+/* =========================
+   BILL SUMMARY
+========================= */
+
+.card:last-of-type {
+  max-width: 400px;
+  margin-left: auto;
+  background: #ffffff;
+}
+
+.card:last-of-type h2 {
+  color: #0f172a;
+  margin-bottom: 15px;
+}
+
+.card:last-of-type h3 {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  color: #334155;
+}
+
+.card:last-of-type h2:last-child {
+  margin-top: 15px;
+  color: #16a34a;
+  font-size: 28px;
+}
+
+/* =========================
+   TOTAL BOX
+========================= */
+
+.bill-total {
+  border-top: 2px dashed #dbe2ea;
+  margin-top: 15px;
+  padding-top: 15px;
+}
+
+/* =========================
+   MOBILE TABLE SCROLL
+========================= */
+
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 10px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px) {
+
+  .card:nth-of-type(2) {
+    grid-template-columns: 1fr;
+  }
+
+  .card:last-of-type {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .content {
+    padding: 12px;
+  }
+
+  .content h1 {
+    font-size: 22px;
+  }
+
+  .card:first-of-type {
+    flex-direction: column;
+  }
+
+  .btn-primary {
+    width: 100%;
+  }
+
+  table {
+    min-width: 700px;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .content h1 {
+    font-size: 20px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .card input,
+  .card select {
+    width: 100%;
+  }
+
+  .btn-primary,
+  .btn-success {
+    width: 100%;
+  }
+}
+

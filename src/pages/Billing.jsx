@@ -68,6 +68,82 @@ const Billing = () => {
     handleSearch(code)
   }
 
+
+  // ========= Checkout ============
+
+
+  const checkout = async () => {
+    const invoice = "INV" + Date.now()
+
+    const { data: sale } = await supabase
+      .from("sales")
+      .insert({
+        invoice_no: invoice,
+        subtotal,
+        gst,
+        grand_total: total
+      })
+      .select()
+      .single()
+
+    for (let item of cart) {
+      await supabase.from("sale_items").insert({
+        sale_id: sale.id,
+        product_id: item.id,
+        product_name: item.product_name,
+        qty: item.qty,
+        price: item.selling_price,
+        total: item.qty * item.selling_price
+      })
+
+      await supabase.rpc("decrease_stock", {
+        pid: item.id,
+        qty: item.qty
+      })
+    }
+
+    alert("Bill Created Successfully")
+    setCart([])
+  }
+
+  // billing 
+
+
+
+  const printBill = () => {
+    const win = window.open("", "", "width=350,height=600")
+
+    win.document.write(`
+      <html>
+      <head>
+        <title>Invoice</title>
+        <style>
+          body { font-family: Arial; padding: 10px; }
+          h2 { text-align: center; }
+          .item { display:flex; justify-content:space-between; margin:5px 0; }
+          .total { font-weight:bold; font-size:18px; margin-top:10px; }
+        </style>
+      </head>
+      <body>
+        <h2>INVOICE</h2>
+        <p>${new Date().toLocaleString()}</p>
+        <hr/>
+        ${cart.map(i => `
+          <div class="item">
+            <span>${i.product_name} x ${i.qty}</span>
+            <span>₹${i.qty * i.selling_price}</span>
+          </div>
+        `).join("")}
+        <hr/>
+        <p class="total">Total: ₹${total}</p>
+      </body>
+      </html>
+    `)
+
+    win.print()
+    win.close()
+  }
+  
   // ================= TOTALS =================
   const subtotal = cart.reduce(
     (sum, i) => sum + i.selling_price * i.qty,
@@ -174,7 +250,18 @@ const Billing = () => {
           <p>Subtotal: ₹{subtotal}</p>
           <p>GST (18%): ₹{gst.toFixed(2)}</p>
           <h3>Total: ₹{total.toFixed(2)}</h3>
+
+
+            <button className="btn green" onClick={checkout}>
+              Generate Bill
+            </button>
+
+            <button className="btn blue" onClick={printBill}>
+              Print Bill
+            </button>
         </div>
+
+        
       </div>
 
       {/* SCANNER MODAL */}
