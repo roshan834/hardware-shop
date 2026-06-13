@@ -14,6 +14,7 @@ const ProductView = () => {
   const [loading, setLoading] = useState(true);
   const { role } = useAuth();
   const barcodeRef = useRef(null);
+  const [previewImage, setPreviewImage] = useState(null)
 
   const downloadBarcode = async () => {
   if (!barcodeRef.current) return;
@@ -103,19 +104,17 @@ const ProductView = () => {
             {/* ================= PRODUCT IMAGE ================= */}
             <div style={{ textAlign: "center" }}>
                 <img
-                src={imageUrl}
-                alt={product.product_name}
-                style={{
+                  src={imageUrl}
+                  alt={product.product_name}
+                  onClick={() => setPreviewImage(imageUrl)}
+                  style={{
                     width: "160px",
                     height: "160px",
                     objectFit: "cover",
                     borderRadius: "12px",
                     border: "1px solid #ddd",
-                }}
-                onError={(e) => {
-                    e.target.style.display = "none";
-                    e.target.nextSibling.style.display = "flex";
-                }}
+                    cursor: "zoom-in"
+                  }}
                 />
 
                 <div
@@ -138,14 +137,20 @@ const ProductView = () => {
             {/* ================= BARCODE ================= */}
             {product.barcode && (
                 <div
-                    ref={barcodeRef}
-                    style={{
+                  ref={barcodeRef}
+                  onClick={() =>
+                    setPreviewImage(
+                      `https://barcode.tec-it.com/barcode.ashx?data=${product.barcode}&code=Code128`
+                    )
+                  }
+                  style={{
                     background: "#fff",
                     padding: "10px 15px",
                     borderRadius: "10px",
                     border: "1px solid #eee",
                     boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
                     textAlign: "center",
+                    cursor: "zoom-in",
                     }}
                 >
                     <Barcode
@@ -283,6 +288,30 @@ const ProductView = () => {
           </div>
         </div>
       </div>
+      {previewImage && (
+        <div
+          className="image-preview-overlay"
+          onClick={() => setPreviewImage(null)}
+        >
+          <div
+            className="image-preview-box"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="preview-close"
+              onClick={() => setPreviewImage(null)}
+            >
+              ✕
+            </button>
+
+            <img
+              src={previewImage}
+              alt="Preview"
+              className="image-preview"
+            />
+          </div>
+        </div>
+      )}                                              
     </div>
   );
 };
