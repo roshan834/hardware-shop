@@ -630,7 +630,72 @@ tbody tr:hover { background: var(--gray-50); }
   padding:16px;
 }
 
+.table-wrapper{
+  width:100%;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
 
+@media (max-width:768px){
+
+  .cart-table{
+    min-width:650px;
+  }
+
+  .cart-table th{
+    padding:12px;
+    font-size:13px;
+    white-space:nowrap;
+  }
+
+  .cart-table td{
+    padding:12px;
+    font-size:13px;
+    white-space:nowrap;
+  }
+}
+
+@media (max-width:480px){
+
+  .cart-table{
+    min-width:600px;
+  }
+
+  .cart-table th,
+  .cart-table td{
+    padding:10px;
+    font-size:12px;
+  }
+}
+
+.delete-btn{
+  width:40px;
+  height:40px;
+
+  border:none;
+  border-radius:10px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  cursor:pointer;
+
+  background:#fee2e2;
+  color:#dc2626;
+
+  transition:.3s;
+}
+
+.delete-btn:hover{
+  background:#dc2626;
+  color:white;
+  transform:scale(1.05);
+}
+
+.delete-btn svg{
+  font-size:16px;
+}
 
  /* ===========bill summary =========== */
 

@@ -4,6 +4,7 @@ import Sidebar from "../components/Sidebar"
 import BarcodeScanner from "../components/BarcodeScanner"
 import { supabase } from "../config/supabase"
 import PrintInvoice from "../components/PrintInvoice"
+import { FaTrashAlt } from "react-icons/fa"
 
 const Billing = () => {
   const navigate = useNavigate()
@@ -206,7 +207,8 @@ const Billing = () => {
         <div className="card">
           <h2>Cart Items</h2>
 
-          <table className="cart-table">
+          <div className="table-wrapper">
+            <table className="cart-table">
             <thead>
               <tr>
                 <th>Product</th>
@@ -289,18 +291,20 @@ const Billing = () => {
                     </td>
 
                     <td>
-                      <button
-                        className="btn-danger"
-                        onClick={() => removeItem(item.id)}
-                      >
-                        Remove
-                      </button>
+                     <button
+                      className="delete-btn"
+                      onClick={() => removeItem(item.id)}
+                      title="Remove Product"
+                    >
+                      <FaTrashAlt />
+                    </button>
                     </td>
                   </tr>
                 ))
               )}
             </tbody>
-          </table>
+            </table>
+          </div>
         </div>
 
         {/* SUMMARY */}
