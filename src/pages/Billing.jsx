@@ -123,6 +123,7 @@ const Billing = () => {
   // ================= SCANNER RESULT =================
   const handleScan = async (code) => {
   await handleSearch(code)
+    alert("✅ Product Added To Cart")
   // setShowScanner(false)
   }
 
