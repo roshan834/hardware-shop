@@ -1,22 +1,31 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import Sidebar from "../components/Sidebar"
 import BarcodeScanner from "../components/BarcodeScanner"
 import { supabase } from "../config/supabase"
+import PrintInvoice from "../components/PrintInvoice"
 
 const Billing = () => {
   const navigate = useNavigate()
 
-  const [cart, setCart] = useState([])
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem("cart")
+    return savedCart ? JSON.parse(savedCart) : []
+  })
+
+    useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart))
+  }, [cart])
+
   const [barcode, setBarcode] = useState("")
   const [showScanner, setShowScanner] = useState(false)
 
   // ================= FETCH PRODUCT =================
-  const getProductByBarcode = async (code) => {
+    const getProductByBarcode = async (code) => {
     const { data, error } = await supabase
       .from("products")
       .select("*")
-      .eq("barcode", code)
+      .or(`barcode.eq.${code},product_code.eq.${code}`)
       .maybeSingle()
 
     return { data, error }
@@ -64,85 +73,77 @@ const Billing = () => {
   }
 
   // ================= SCANNER RESULT =================
-  const handleScan = (code) => {
-    handleSearch(code)
+  const handleScan = async (code) => {
+  await handleSearch(code)
+  setShowScanner(false)
   }
 
+  // ============remove item ============
+
+    const removeItem = (id) => {
+    setCart((prev) =>
+      prev.filter((item) => item.id !== id)
+    )
+  }
 
   // ========= Checkout ============
 
 
-  const checkout = async () => {
-    const invoice = "INV" + Date.now()
+      const checkout = async () => {
+      try {
+        if (cart.length === 0) {
+          alert("Cart is empty")
+          return
+        }
 
-    const { data: sale } = await supabase
-      .from("sales")
-      .insert({
-        invoice_no: invoice,
-        subtotal,
-        gst,
-        grand_total: total
-      })
-      .select()
-      .single()
+        const billNo = "BILL-" + Date.now()
 
-    for (let item of cart) {
-      await supabase.from("sale_items").insert({
-        sale_id: sale.id,
-        product_id: item.id,
-        product_name: item.product_name,
-        qty: item.qty,
-        price: item.selling_price,
-        total: item.qty * item.selling_price
-      })
+        const { data: bill, error } = await supabase
+          .from("bills")
+          .insert({
+            bill_no: billNo,
+            subtotal,
+            gst,
+            grand_total: total,
+            payment_mode: "cash"
+          })
+          .select()
+          .single()
 
-      await supabase.rpc("decrease_stock", {
-        pid: item.id,
-        qty: item.qty
-      })
+        if (error) {
+          alert(error.message)
+          return
+        }
+
+        for (const item of cart) {
+          await supabase
+            .from("bill_items")
+            .insert({
+              bill_id: bill.id,
+              product_id: item.id,
+              qty: item.qty,
+              price: item.selling_price
+            })
+
+          await supabase.rpc("decrease_stock", {
+            pid: item.id,
+            qty: item.qty
+          })
+        }
+
+        printBill()
+
+        alert("Bill Saved Successfully")
+
+        setCart([])
+        localStorage.removeItem("cart")
+      } catch (err) {
+        console.error(err)
+        alert("Checkout Failed")
+      }
     }
 
-    alert("Bill Created Successfully")
-    setCart([])
-  }
-
-  // billing 
-
-
-
-  const printBill = () => {
-    const win = window.open("", "", "width=350,height=600")
-
-    win.document.write(`
-      <html>
-      <head>
-        <title>Invoice</title>
-        <style>
-          body { font-family: Arial; padding: 10px; }
-          h2 { text-align: center; }
-          .item { display:flex; justify-content:space-between; margin:5px 0; }
-          .total { font-weight:bold; font-size:18px; margin-top:10px; }
-        </style>
-      </head>
-      <body>
-        <h2>INVOICE</h2>
-        <p>${new Date().toLocaleString()}</p>
-        <hr/>
-        ${cart.map(i => `
-          <div class="item">
-            <span>${i.product_name} x ${i.qty}</span>
-            <span>₹${i.qty * i.selling_price}</span>
-          </div>
-        `).join("")}
-        <hr/>
-        <p class="total">Total: ₹${total}</p>
-      </body>
-      </html>
-    `)
-
-    win.print()
-    win.close()
-  }
+ 
   
   // ================= TOTALS =================
   const subtotal = cart.reduce(
@@ -153,6 +154,14 @@ const Billing = () => {
   const gst = subtotal * 0.18
   const total = subtotal + gst
 
+    const printBill = PrintInvoice({
+    cart,
+    subtotal,
+    gst,
+    total
+  })
+
+  
   return (
     <div className="layout">
       <Sidebar />
@@ -189,6 +198,7 @@ const Billing = () => {
           >
             🔍 Search & Add to Cart
           </button>
+          
 
         </div>
 
@@ -196,46 +206,96 @@ const Billing = () => {
         <div className="card">
           <h2>Cart Items</h2>
 
-          <table>
+          <table className="cart-table">
             <thead>
               <tr>
                 <th>Product</th>
                 <th>Qty</th>
                 <th>Price</th>
                 <th>Total</th>
+                <th>Action</th>
+
               </tr>
             </thead>
 
             <tbody>
               {cart.length === 0 ? (
                 <tr>
-                  <td colSpan="4">No products added</td>
+                  <td colSpan="5">No products added</td>
                 </tr>
               ) : (
                 cart.map((item) => (
                   <tr key={item.id}>
-                    <td>{item.product_name}</td>
+                    <td>
+                      <div className="product-cell">
+                        <span>{item.product_name}</span>
+
+                        {item.qty > 1 && (
+                          <span className="added-badge">
+                            +{item.qty - 1}
+                          </span>
+                        )}
+                      </div>
+                    </td>
 
                     <td>
-                      <input
-                        type="number"
-                        min="1"
-                        value={item.qty}
-                        onChange={(e) => {
-                          const qty = Number(e.target.value)
-
+                    <div className="qty-box">
+                      <button
+                        className="qty-btn"
+                        onClick={() => {
                           setCart((prev) =>
                             prev.map((p) =>
-                              p.id === item.id ? { ...p, qty } : p
+                              p.id === item.id
+                                ? {
+                                    ...p,
+                                    qty: Math.max(1, p.qty - 1)
+                                  }
+                                : p
                             )
                           )
                         }}
-                      />
-                    </td>
+                      >
+                        -
+                      </button>
+
+                      <span className="qty-value">
+                        {item.qty}
+                      </span>
+
+                      <button
+                        className="qty-btn qty-plus"
+                        onClick={() => {
+                          setCart((prev) =>
+                            prev.map((p) =>
+                              p.id === item.id
+                                ? {
+                                    ...p,
+                                    qty: p.qty + 1
+                                  }
+                                : p
+                            )
+                          )
+                        }}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </td>
 
                     <td>₹{item.selling_price}</td>
 
-                    <td>₹{item.qty * item.selling_price}</td>
+                    <td>
+                      ₹{(item.qty * item.selling_price).toFixed(2)}
+                    </td>
+
+                    <td>
+                      <button
+                        className="btn-danger"
+                        onClick={() => removeItem(item.id)}
+                      >
+                        Remove
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}
@@ -244,20 +304,36 @@ const Billing = () => {
         </div>
 
         {/* SUMMARY */}
-        <div className="card">
-          <h2>Bill Summary</h2>
+     <div className="bill-summary">
+            <h2>🧾 Bill Summary</h2>
 
-          <p>Subtotal: ₹{subtotal}</p>
-          <p>GST (18%): ₹{gst.toFixed(2)}</p>
-          <h3>Total: ₹{total.toFixed(2)}</h3>
+            <div className="bill-row">
+              <span>Subtotal</span>
+              <strong>₹{subtotal.toFixed(2)}</strong>
+            </div>
+
+            <div className="bill-row">
+              <span>GST (18%)</span>
+              <strong>₹{gst.toFixed(2)}</strong>
+            </div>
+
+            <div className="bill-total">
+              ₹{total.toFixed(2)}
+            </div>
 
 
-            <button className="btn green" onClick={checkout}>
-              Generate Bill
+            <button
+              className="generate-btn"
+              onClick={checkout}
+            >
+              💳 Generate Bill
             </button>
 
-            <button className="btn blue" onClick={printBill}>
-              Print Bill
+            <button
+              className="print-btn"
+              onClick={printBill}
+            >
+              🖨️ Print Bill
             </button>
         </div>
 
@@ -273,6 +349,9 @@ const Billing = () => {
       )}
     </div>
   )
+
+  
 }
+
 
 export default Billing

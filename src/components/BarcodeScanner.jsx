@@ -12,8 +12,14 @@ const BarcodeScanner = ({ onScan, onClose }) => {
 
     const startScanner = async () => {
       try {
-        controls = await codeReader.current.decodeFromVideoDevice(
-          null,
+        controls = await codeReader.current.decodeFromConstraints(
+              {
+                video: {
+                  facingMode: {
+                    ideal: "environment"
+                  }
+                }
+              },
           videoRef.current,
           (result, err) => {
             if (result) {
