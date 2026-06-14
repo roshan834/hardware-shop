@@ -306,19 +306,24 @@ const Billing = () => {
         )}
 
         {/* INPUT SECTION */}
-        <div className="card" style={{ display: "flex", gap: "10px" }}>
-          <input
-            className="search-input"
-            placeholder="Scan or Enter Barcode..."
-            value={barcode}
-            onChange={(e) => setBarcode(e.target.value)}
-            onKeyDown={handleKeyDown}
-            style={{ flex: 1 }}
-          />
-          <button className="btn-primary" onClick={() => handleSearch(barcode)}>
-            🔍 Search & Add to Cart
-          </button>
-        </div>
+        <div className="barcode-scanner-card">
+        <input
+          className="search-input"
+          placeholder="Scan or Enter Barcode..."
+          value={barcode}
+          onChange={(e) => setBarcode(e.target.value)}
+          onKeyDown={handleKeyDown}
+          aria-label="Barcode input"
+        />
+        <button 
+          className="btn-primary btn-search"
+          onClick={() => handleSearch(barcode)}
+          aria-label="Search and add to cart"
+        >
+          <span className="search-icon">🔍</span>
+          <span className="search-text">Search & Add</span>
+        </button>
+      </div>
 
         {/* CART */}
         <div className="card">

@@ -583,6 +583,224 @@ tbody tr:hover { background: var(--gray-50); }
    12. BILLING PAGE
    ===================================================== */
 
+   /* =====================================================
+   BARCODE SCANNER CARD — FIXED HEIGHT
+   ===================================================== */
+
+.barcode-scanner-card {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  background: var(--surface);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-5);
+}
+
+.barcode-scanner-card .search-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0 var(--space-4);
+  height: 44px;
+  border: 1.5px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  font-family: var(--font);
+  background: var(--surface);
+  color: var(--gray-900);
+  outline: none;
+  transition: all var(--transition);
+  line-height: 44px;
+}
+
+.barcode-scanner-card .search-input:focus {
+  border-color: var(--blue-600);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.barcode-scanner-card .search-input::placeholder {
+  color: var(--gray-400);
+}
+
+.barcode-scanner-card .btn-search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  height: 44px;
+  padding: 0 var(--space-5);
+  min-width: fit-content;
+  white-space: nowrap;
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: 44px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--blue-600), var(--blue-700));
+  color: white;
+  cursor: pointer;
+  transition: all var(--transition);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.barcode-scanner-card .btn-search:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.35);
+}
+
+.barcode-scanner-card .btn-search:active {
+  transform: translateY(0);
+}
+
+.search-icon {
+  font-size: 18px;
+  display: inline-block;
+  line-height: 1;
+}
+
+.search-text {
+  display: inline;
+}
+
+/* =====================================================
+   TABLET (768px - 1023px)
+   ===================================================== */
+
+@media (max-width: 1023px) {
+  .barcode-scanner-card {
+    gap: var(--space-3);
+    padding: var(--space-4);
+  }
+
+  .barcode-scanner-card .search-input,
+  .barcode-scanner-card .btn-search {
+    height: 42px;
+    line-height: 42px;
+  }
+
+  .barcode-scanner-card .btn-search {
+    padding: 0 var(--space-4);
+  }
+}
+
+/* =====================================================
+   MOBILE (576px - 767px)
+   ===================================================== */
+
+@media (max-width: 767px) {
+  .barcode-scanner-card {
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    align-items: stretch;
+  }
+
+  .barcode-scanner-card .search-input {
+    width: 100%;
+    height: 44px;
+    line-height: 44px;
+    padding: 0 var(--space-3);
+    font-size: 14px;
+  }
+
+  .barcode-scanner-card .btn-search {
+    width: 100%;
+    height: 44px;
+    line-height: 44px;
+    padding: 0 var(--space-4);
+    font-size: var(--text-sm);
+  }
+
+  .search-text {
+    display: inline;
+  }
+
+  .search-icon {
+    font-size: 16px;
+  }
+}
+
+/* =====================================================
+   SMALL PHONE (≤ 575px)
+   ===================================================== */
+
+@media (max-width: 575px) {
+  .barcode-scanner-card {
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border-radius: var(--radius-sm);
+    align-items: stretch;
+  }
+
+  .barcode-scanner-card .search-input {
+    width: 100%;
+    height: 44px;
+    line-height: 44px;
+    padding: 0 var(--space-3);
+    font-size: 14px;
+    border-radius: var(--radius-sm);
+  }
+
+  .barcode-scanner-card .btn-search {
+    width: 100%;
+    height: 44px;
+    line-height: 44px;
+    padding: 0 var(--space-3);
+    font-size: 13px;
+    gap: var(--space-2);
+  }
+
+  .search-text {
+    display: none;
+  }
+
+  .search-icon {
+    font-size: 18px;
+  }
+}
+
+/* =====================================================
+   LANDSCAPE ORIENTATION
+   ===================================================== */
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .barcode-scanner-card {
+    flex-direction: row;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    margin-bottom: var(--space-2);
+  }
+
+  .barcode-scanner-card .search-input,
+  .barcode-scanner-card .btn-search {
+    height: 40px;
+    line-height: 40px;
+    font-size: 13px;
+  }
+}
+
+/* =====================================================
+   ACCESSIBILITY & FOCUS STATES
+   ===================================================== */
+
+.barcode-scanner-card .search-input:focus-visible,
+.barcode-scanner-card .btn-search:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: 2px;
+}
+
+/* High DPI */
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+  .barcode-scanner-card {
+    border-width: 0.5px;
+  }
+}
+
 .billing-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
