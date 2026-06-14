@@ -477,12 +477,219 @@ h3 { font-size: var(--text-lg);  font-weight: 600; color: var(--gray-900); }
 }
 
 /* =====================================================
-   8. TOOLBAR
+   BARCODE SCANNER CARD — MOBILE EQUAL HEIGHT
    ===================================================== */
 
-.toolbar {
+.barcode-scanner-card {
+  display: flex;
+  gap: var(--space-3);
+  align-items: stretch;
+  background: var(--surface);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-5);
+}
+
+.barcode-scanner-card .search-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0 var(--space-4);
+  height: 100%;
+  min-height: 44px;
+  border: 1.5px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  font-family: var(--font);
+  background: var(--surface);
+  color: var(--gray-900);
+  outline: none;
+  transition: all var(--transition);
+}
+
+.barcode-scanner-card .search-input:focus {
+  border-color: var(--blue-600);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.barcode-scanner-card .search-input::placeholder {
+  color: var(--gray-400);
+}
+
+.barcode-scanner-card .btn-search {
   display: flex;
   align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  height: 100%;
+  min-height: 44px;
+  padding: 0 var(--space-5);
+  min-width: fit-content;
+  white-space: nowrap;
+  font-size: var(--text-md);
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--blue-600), var(--blue-700));
+  color: white;
+  cursor: pointer;
+  transition: all var(--transition);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.barcode-scanner-card .btn-search:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.35);
+}
+
+.barcode-scanner-card .btn-search:active {
+  transform: translateY(0);
+}
+
+.search-icon {
+  font-size: 18px;
+  display: inline-block;
+}
+
+.search-text {
+  display: inline;
+}
+
+/* =====================================================
+   MOBILE (max-width: 767px) — EQUAL HEIGHT STACKED
+   ===================================================== */
+
+@media (max-width: 767px) {
+  .barcode-scanner-card {
+    flex-direction: row;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    align-items: stretch;
+  }
+
+  .barcode-scanner-card .search-input {
+    flex: 1;
+    width: auto;
+    min-height: 44px;
+    height: 44px;
+    padding: 0 var(--space-3);
+    font-size: 14px;
+  }
+
+  .barcode-scanner-card .btn-search {
+    width: auto;
+    height: 44px;
+    min-height: 44px;
+    padding: 0 var(--space-4);
+    font-size: var(--text-sm);
+  }
+
+  .search-text {
+    display: inline;
+  }
+
+  .search-icon {
+    font-size: 16px;
+  }
+}
+
+/* =====================================================
+   SMALL PHONE (≤ 575px) — STACKED WITH EQUAL HEIGHT
+   ===================================================== */
+
+@media (max-width: 575px) {
+  .barcode-scanner-card {
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border-radius: var(--radius-sm);
+    align-items: stretch;
+  }
+
+  .barcode-scanner-card .search-input {
+    width: 100%;
+    height: 44px;
+    min-height: 44px;
+    padding: 0 var(--space-3);
+    font-size: 14px;
+    border-radius: var(--radius-sm);
+  }
+
+  .barcode-scanner-card .btn-search {
+    width: 100%;
+    height: 44px;
+    min-height: 44px;
+    padding: 0 var(--space-3);
+    font-size: 13px;
+    gap: var(--space-1);
+  }
+
+  .search-text {
+    display: none;
+  }
+
+  .search-icon {
+    font-size: 18px;
+  }
+}
+
+/* =====================================================
+   LANDSCAPE ORIENTATION (Mobile)
+   ===================================================== */
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .barcode-scanner-card {
+    flex-direction: row;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    margin-bottom: var(--space-2);
+  }
+
+  .barcode-scanner-card .search-input,
+  .barcode-scanner-card .btn-search {
+    height: 40px;
+    min-height: 40px;
+    font-size: 13px;
+  }
+}
+
+/* =====================================================
+   ACCESSIBILITY & FOCUS STATES
+   ===================================================== */
+
+.barcode-scanner-card .search-input:focus-visible,
+.barcode-scanner-card .btn-search:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: 2px;
+}
+
+/* Touch device optimization */
+@media (hover: none) {
+  .barcode-scanner-card .search-input,
+  .barcode-scanner-card .btn-search {
+    min-height: 48px;
+  }
+}
+
+/* High DPI */
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+  .barcode-scanner-card {
+    border-width: 0.5px;
+  }
+}
+/* =====================================================
+   8. TOOLBAR
+   ===================================================== */
+/* =====================================================
+   TOOLBAR — EQUAL HEIGHT
+   ===================================================== */
+
+.toolbar.toolbar-equal-height {
+  display: flex;
+  align-items: stretch;
   flex-wrap: wrap;
   gap: var(--space-3);
   margin-bottom: var(--space-5);
@@ -493,10 +700,9 @@ h3 { font-size: var(--text-lg);  font-weight: 600; color: var(--gray-900); }
   box-shadow: var(--shadow-xs);
 }
 
-.toolbar input,
-.toolbar select,
-.page-size {
-  height: 42px;
+.toolbar-equal-height .toolbar-input,
+.toolbar-equal-height .toolbar-select {
+  height: 44px;
   padding: 0 var(--space-4);
   border: 1.5px solid var(--gray-300);
   border-radius: var(--radius-sm);
@@ -505,19 +711,154 @@ h3 { font-size: var(--text-lg);  font-weight: 600; color: var(--gray-900); }
   background: var(--surface);
   color: var(--gray-900);
   outline: none;
-  transition: border-color var(--transition), box-shadow var(--transition);
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
 }
 
-.toolbar input  { flex: 1; min-width: 180px; border-left: 3px solid var(--blue-600); }
-.toolbar select { min-width: 150px; border-left: 3px solid #06b6d4; cursor: pointer; }
+.toolbar-equal-height .toolbar-input {
+  flex: 1;
+  min-width: 180px;
+  border-left: 3px solid var(--blue-600);
+}
 
-.toolbar input:focus  { border-color: var(--blue-600); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
-.toolbar select:focus { border-color: #06b6d4;          box-shadow: 0 0 0 3px rgba(6,182,212,.12); }
-.toolbar input::placeholder { color: var(--gray-400); }
+.toolbar-equal-height .toolbar-select {
+  min-width: 150px;
+  cursor: pointer;
+  padding: 0 var(--space-3);
+}
 
-.page-size { border: 1.5px solid var(--gray-300); }
-.page-size:focus { border-color: var(--blue-600); outline: none; box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+.toolbar-equal-height .toolbar-input:focus,
+.toolbar-equal-height .toolbar-select:focus {
+  border-color: var(--blue-600);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  outline: none;
+}
 
+.toolbar-equal-height .toolbar-input::placeholder {
+  color: var(--gray-400);
+}
+
+/* =====================================================
+   TABLET (768px - 1023px)
+   ===================================================== */
+
+@media (max-width: 1023px) {
+  .toolbar.toolbar-equal-height {
+    gap: var(--space-3);
+    padding: var(--space-4);
+  }
+
+  .toolbar-equal-height .toolbar-input,
+  .toolbar-equal-height .toolbar-select {
+    height: 42px;
+  }
+}
+
+/* =====================================================
+   MOBILE (576px - 767px)
+   ===================================================== */
+
+@media (max-width: 767px) {
+  .toolbar.toolbar-equal-height {
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    align-items: stretch;
+  }
+
+  .toolbar-equal-height .toolbar-input,
+  .toolbar-equal-height .toolbar-select {
+    width: 100%;
+    height: 44px;
+    padding: 0 var(--space-3);
+    font-size: 14px;
+    min-width: 0;
+  }
+
+  .toolbar-equal-height .toolbar-input {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .toolbar-equal-height .toolbar-select {
+    min-width: 0;
+  }
+}
+
+/* =====================================================
+   SMALL PHONE (≤ 575px)
+   ===================================================== */
+
+@media (max-width: 575px) {
+  .toolbar.toolbar-equal-height {
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border-radius: var(--radius-sm);
+    align-items: stretch;
+  }
+
+  .toolbar-equal-height .toolbar-input,
+  .toolbar-equal-height .toolbar-select {
+    width: 100%;
+    height: 44px;
+    padding: 0 var(--space-3);
+    font-size: 13px;
+    min-width: 0;
+    border-radius: var(--radius-sm);
+  }
+
+  .toolbar-equal-height .toolbar-input {
+    flex: 1;
+    border-left: 3px solid var(--blue-600);
+  }
+}
+
+/* =====================================================
+   LANDSCAPE ORIENTATION
+   ===================================================== */
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .toolbar.toolbar-equal-height {
+    flex-direction: row;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    margin-bottom: var(--space-2);
+  }
+
+  .toolbar-equal-height .toolbar-input,
+  .toolbar-equal-height .toolbar-select {
+    height: 40px;
+    font-size: 12px;
+  }
+}
+
+/* =====================================================
+   ACCESSIBILITY & FOCUS STATES
+   ===================================================== */
+
+.toolbar-equal-height .toolbar-input:focus-visible,
+.toolbar-equal-height .toolbar-select:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: 2px;
+}
+
+/* Touch device optimization */
+@media (hover: none) {
+  .toolbar-equal-height .toolbar-input,
+  .toolbar-equal-height .toolbar-select {
+    min-height: 48px;
+  }
+}
+
+/* High DPI */
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+  .toolbar.toolbar-equal-height {
+    border-width: 0.5px;
+  }
+}
 /* =====================================================
    9. TABLE
    ===================================================== */

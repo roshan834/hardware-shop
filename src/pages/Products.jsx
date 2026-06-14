@@ -76,50 +76,52 @@ const Products = () => {
           </Link>
         </div>
 
-        <div className="toolbar">
+        <div className="toolbar toolbar-equal-height">
 
-            {/* SEARCH */}
-            <input
-              type="text"
-              placeholder="Search product..."
-              value={search}
-              onChange={(e) => {
-                setCurrentPage(1)
-                setSearch(e.target.value)
-              }}
-            />
+  {/* SEARCH */}
+  <input
+    type="text"
+    placeholder="Search product..."
+    value={search}
+    onChange={(e) => {
+      setCurrentPage(1)
+      setSearch(e.target.value)
+    }}
+    className="toolbar-input"
+  />
 
-            {/* CATEGORY FILTER */}
-              <select
-                value={category}
-                onChange={(e) => {
-                  const value = e.target.value.trim()
-                  navigate(`/products?category=${value}`)
-                }}
-              >
-                <option value="">All Categories</option>
+  {/* CATEGORY FILTER */}
+  <select
+    value={category}
+    onChange={(e) => {
+      const value = e.target.value.trim()
+      navigate(`/products?category=${value}`)
+    }}
+    className="toolbar-select"
+  >
+    <option value="">All Categories</option>
+    {categories.map((cat, index) => (
+      <option key={index} value={cat.trim()}>
+        {cat.trim()}
+      </option>
+    ))}
+  </select>
 
-                {categories.map((cat, index) => (
-                  <option key={index} value={cat.trim()}>
-                    {cat.trim()}
-                  </option>
-                ))}
-              </select>
+  {/* PAGE SIZE */}
+  <select
+    value={pageSize}
+    onChange={(e) => {
+      setCurrentPage(1)
+      setPageSize(Number(e.target.value))
+    }}
+    className="toolbar-select"
+  >
+    <option value={10}>10</option>
+    <option value={25}>25</option>
+    <option value={50}>50</option>
+  </select>
 
-            {/* PAGE SIZE */}
-            <select
-              value={pageSize}
-              onChange={(e) => {
-                setCurrentPage(1)
-                setPageSize(Number(e.target.value))
-              }}
-            >
-              <option value={10}>10</option>
-              <option value={25}>25</option>
-              <option value={50}>50</option>
-            </select>
-
-          </div>
+</div>
 
 
         <div className="table-container">
