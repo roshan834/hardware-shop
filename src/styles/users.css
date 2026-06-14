@@ -1,0 +1,80 @@
+.user-toolbar{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.search-input{
+  flex:1;
+  min-width:250px;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:8px;
+}
+
+.add-user-btn{
+  background:#2563eb;
+  color:#fff;
+  border:none;
+  padding:12px 18px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.add-user-btn:hover{
+  opacity:.9;
+}
+
+.table-container{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th{
+  background:#2563eb;
+  color:#fff;
+  padding:12px;
+  text-align:left;
+}
+
+td{
+  padding:12px;
+  border-bottom:1px solid #eee;
+}
+
+td select{
+  padding:8px;
+  border:1px solid #ddd;
+  border-radius:6px;
+}
+
+.edit-btn{
+  background:#22c55e;
+  color:white;
+  border:none;
+  padding:8px 12px;
+  border-radius:6px;
+}
+
+@media(max-width:768px){
+
+  .user-toolbar{
+    flex-direction:column;
+  }
+
+  .search-input,
+  .add-user-btn{
+    width:100%;
+  }
+
+  th,
+  td{
+    font-size:12px;
+    padding:8px;
+  }
+}
