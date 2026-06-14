@@ -915,18 +915,21 @@ tbody tr:hover { background: var(--gray-50); }
 /* =====================================================
    10. PAGINATION
    ===================================================== */
+/* =====================================================
+   PAGINATION — MOBILE RESPONSIVE
+   ===================================================== */
 
 .pagination {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-1) + 2px;
+  gap: 5px;
   justify-content: center;
   margin-top: var(--space-5);
-  gap: 5px;
+  padding: 0 var(--space-2);
 }
 
 .pagination button {
-  padding: 7px 13px;
+  padding: 8px 12px;
   border: 1.5px solid var(--gray-200);
   border-radius: var(--radius-xs);
   cursor: pointer;
@@ -937,12 +940,173 @@ tbody tr:hover { background: var(--gray-50); }
   color: var(--gray-600);
   min-height: 36px;
   min-width: 36px;
-  transition: background var(--transition), border-color var(--transition), color var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
 }
 
-.pagination button:hover  { background: var(--gray-100); border-color: var(--gray-300); }
-.pagination .active-page  { background: var(--blue-600); color: white; border-color: var(--blue-600); }
+.pagination button:hover {
+  background: var(--gray-100);
+  border-color: var(--gray-300);
+  transform: translateY(-1px);
+}
 
+.pagination button:active {
+  transform: translateY(0);
+}
+
+.pagination .active-page {
+  background: var(--blue-600);
+  color: white;
+  border-color: var(--blue-600);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* =====================================================
+   TABLET (768px - 1023px)
+   ===================================================== */
+
+@media (max-width: 1023px) {
+  .pagination {
+    gap: 4px;
+    margin-top: var(--space-4);
+  }
+
+  .pagination button {
+    padding: 7px 11px;
+    min-height: 36px;
+    min-width: 36px;
+    font-size: 13px;
+  }
+}
+
+/* =====================================================
+   MOBILE (576px - 767px)
+   ===================================================== */
+
+@media (max-width: 767px) {
+  .pagination {
+    gap: 4px;
+    margin-top: var(--space-4);
+    padding: 0 var(--space-2);
+  }
+
+  .pagination button {
+    padding: 6px 10px;
+    min-height: 34px;
+    min-width: 34px;
+    font-size: 12px;
+    border-radius: var(--radius-xs);
+  }
+
+  /* Hide ellipsis on mobile */
+  .pagination button:contains("...") {
+    display: none;
+  }
+}
+
+/* =====================================================
+   SMALL PHONE (≤ 575px)
+   ===================================================== */
+
+@media (max-width: 575px) {
+  .pagination {
+    gap: 3px;
+    margin-top: var(--space-3);
+    padding: 0 var(--space-2);
+  }
+
+  .pagination button {
+    padding: 5px 8px;
+    min-height: 32px;
+    min-width: 32px;
+    font-size: 11px;
+    border-radius: 4px;
+  }
+
+  /* Show only current, prev, next on small phones */
+  .pagination button:not(.active-page):not(:first-child):not(:last-child) {
+    display: none;
+  }
+
+  .pagination .active-page {
+    min-width: 40px;
+  }
+}
+
+/* =====================================================
+   COMPACT PAGINATION (alternative for very small screens)
+   ===================================================== */
+
+@media (max-width: 480px) {
+  .pagination {
+    gap: 2px;
+    margin-top: var(--space-2);
+  }
+
+  .pagination button {
+    padding: 4px 6px;
+    min-height: 30px;
+    min-width: 30px;
+    font-size: 10px;
+  }
+
+  /* Show only prev, current, next */
+  .pagination button:nth-child(n+4):nth-last-child(n+4) {
+    display: none;
+  }
+}
+
+/* =====================================================
+   LANDSCAPE ORIENTATION
+   ===================================================== */
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .pagination {
+    gap: 3px;
+    margin-top: var(--space-2);
+  }
+
+  .pagination button {
+    padding: 4px 8px;
+    min-height: 30px;
+    min-width: 30px;
+    font-size: 11px;
+  }
+}
+
+/* =====================================================
+   ACCESSIBILITY
+   ===================================================== */
+
+.pagination button:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: 2px;
+}
+
+/* Touch device optimization */
+@media (hover: none) {
+  .pagination button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 8px 12px;
+  }
+}
+
+/* High DPI */
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+  .pagination {
+    border-width: 0.5px;
+  }
+}
 /* =====================================================
    11. FORMS
    ===================================================== */
