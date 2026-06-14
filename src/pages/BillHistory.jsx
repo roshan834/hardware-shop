@@ -196,6 +196,9 @@ const BillHistory = () => {
             <option value="credit">
               Credit
             </option>
+             <option value="partial">
+              Partial
+            </option>
           </select>
           <div className="date-filter-group">
           <div className="date-field">

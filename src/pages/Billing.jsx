@@ -308,7 +308,7 @@ const Billing = () => {
         {/* INPUT SECTION */}
         <div className="card" style={{ display: "flex", gap: "10px" }}>
           <input
-            className="input"
+            className="search-input"
             placeholder="Scan or Enter Barcode..."
             value={barcode}
             onChange={(e) => setBarcode(e.target.value)}
