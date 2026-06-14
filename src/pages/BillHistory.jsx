@@ -3,6 +3,8 @@ import Sidebar from "../components/Sidebar"
 import { supabase } from "../config/supabase"
 import { toast } from "react-toastify"
 import { useNavigate } from "react-router-dom"
+import { FaDownload } from "react-icons/fa"
+import PrintInvoice from "../components/PrintInvoice"
 
 const BillHistory = () => {
   const [bills, setBills] = useState([])
@@ -17,6 +19,21 @@ const BillHistory = () => {
   const [collectedAmount, setCollectedAmount] =useState("")
   const [collectionMode, setCollectionMode] =useState("cash") 
   const navigate = useNavigate()
+
+  const handleDownload = (invoice) => {
+      const printInvoice = PrintInvoice({
+        cart: invoice.items,
+        subtotal: invoice.subtotal,
+        gst: invoice.gst,
+        total: invoice.total,
+        customer: invoice.customer,
+        phone: invoice.phone
+      })
+
+      printInvoice()
+    }
+
+
 
   useEffect(() => {
     fetchBills()
@@ -145,6 +162,8 @@ const BillHistory = () => {
     await fetchBills()
     toast.success("Payment Collected Successfully 🎉")
   }
+
+      
 
   return (
     <div className="layout">
@@ -350,6 +369,23 @@ const BillHistory = () => {
                                 Collect
                               </button>
                             )}
+
+                             <button
+                                onClick={() =>
+                                  PrintInvoice({
+                                    cart: bill.items || [],   // or bill.products depending on your DB
+                                    subtotal: Number(bill.subtotal),
+                                    gst: Number(bill.gst),
+                                    total: Number(bill.grand_total),
+                                    customer: bill.customer_name,
+                                    phone: bill.customer_phone
+                                  })()
+                                }
+                                className="text-blue-600 hover:text-blue-800"
+                                title="Download Invoice"
+                              >
+                                <FaDownload />
+                              </button>
 
                           </div>
                         </td>

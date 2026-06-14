@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import Sidebar from "../components/Sidebar"
 import { supabase } from "../config/supabase"
+import jsPDF from "jspdf"
+import autoTable from "jspdf-autotable"
 
 const PaymentHistory = () => {
   const { billId } = useParams()
@@ -14,16 +16,179 @@ const PaymentHistory = () => {
     fetchBill()
   }, [])
 
-  const fetchBill = async () => {
-    const { data, error } = await supabase
-      .from("bills")
-      .select("*")
-      .eq("id", billId)
-      .single()
+        const handleDownloadPDF = () => {
+  if (!bill) return
 
-    if (!error) setBill(data)
+  const doc = new jsPDF()
+  const pageWidth = doc.internal.pageSize.getWidth()
+
+  // =========================
+  // HEADER (CENTER)
+  // =========================
+  doc.setFontSize(18)
+  doc.setFont("helvetica", "bold")
+  doc.text("NEELKANTH ENTERPRISES", pageWidth / 2, 15, { align: "center" })
+
+  doc.setFontSize(10)
+  doc.setFont("helvetica", "normal")
+  doc.text("Kandivali West, Mumbai", pageWidth / 2, 21, { align: "center" })
+  doc.text("Mobile: 8286357442", pageWidth / 2, 26, { align: "center" })
+  doc.text("Email: contact.webtechgenz@gmail.com", pageWidth / 2, 31, { align: "center" })
+
+  // dashed line
+  doc.setLineDash([2, 2], 0)
+  doc.line(10, 35, pageWidth - 10, 35)
+  doc.setLineDash([])
+
+  // =========================
+  // TITLE
+  // =========================
+  doc.setFontSize(14)
+  doc.setFont("helvetica", "bold")
+  doc.text("TAX INVOICE", pageWidth / 2, 42, { align: "center" })
+
+  // =========================
+  // INVOICE INFO ROW
+  // =========================
+  doc.setFontSize(10)
+  doc.setFont("helvetica", "normal")
+
+  doc.text(`Invoice No: ${bill.bill_no}`, 10, 50)
+  doc.text(
+    `Date: ${new Date(bill.created_at).toLocaleString()}`,
+    pageWidth - 10,
+    50,
+    { align: "right" }
+  )
+
+  // dashed line
+  doc.setLineDash([2, 2], 0)
+  doc.line(10, 54, pageWidth - 10, 54)
+  doc.setLineDash([])
+
+  // =========================
+  // ITEMS TABLE (MATCH STYLE)
+  // =========================
+  const tableData =
+    bill.items?.map((item) => [
+      item.products?.product_name || "Item",
+      item.qty,
+      `₹${Number(item.price).toFixed(2)}`,
+      `₹${(item.qty * item.price).toFixed(2)}`
+    ]) || []
+
+  autoTable(doc, {
+    startY: 60,
+    head: [["Item", "Qty", "Rate", "Amount"]],
+    body: tableData,
+    theme: "plain",
+    styles: {
+      fontSize: 10,
+      cellPadding: 3,
+    },
+    headStyles: {
+      textColor: 0,
+      fontStyle: "bold",
+      lineWidth: 0.2,
+      lineColor: [0, 0, 0],
+    },
+    bodyStyles: {
+      lineWidth: 0.1,
+      lineColor: [200, 200, 200],
+    },
+  })
+
+  // =========================
+  // SUMMARY SECTION
+  // =========================
+  const finalY = doc.lastAutoTable.finalY + 10
+
+  const cgst = Number(bill.gst) / 2
+  const sgst = Number(bill.gst) / 2
+
+  doc.setFontSize(10)
+
+  doc.text(`Subtotal`, 130, finalY)
+  doc.text(`₹${Number(bill.subtotal).toFixed(2)}`, 180, finalY, { align: "right" })
+
+  doc.text(`CGST (9%)`, 130, finalY + 6)
+  doc.text(`₹${cgst.toFixed(2)}`, 180, finalY + 6, { align: "right" })
+
+  doc.text(`SGST (9%)`, 130, finalY + 12)
+  doc.text(`₹${sgst.toFixed(2)}`, 180, finalY + 12, { align: "right" })
+
+  // line above total
+  doc.line(130, finalY + 15, 200, finalY + 15)
+
+  // GRAND TOTAL
+  doc.setFontSize(14)
+  doc.setFont("helvetica", "bold")
+
+  doc.text(`Grand Total`, 130, finalY + 22)
+  doc.text(
+    `₹${Number(bill.grand_total).toFixed(2)}`,
+    180,
+    finalY + 22,
+    { align: "right" }
+  )
+
+  // =========================
+  // FOOTER
+  // =========================
+  doc.setFontSize(9)
+  doc.setFont("helvetica", "normal")
+
+  doc.text("Total Items: " + bill.items.length, 10, finalY + 35)
+  doc.text(
+    "Total Qty: " +
+      bill.items.reduce((s, i) => s + i.qty, 0),
+    10,
+    finalY + 40
+  )
+
+  doc.text("• Goods once sold will not be taken back.", 10, finalY + 50)
+  doc.text("• Please retain invoice for warranty.", 10, finalY + 55)
+  doc.text("• Thank you for shopping with us.", 10, finalY + 60)
+
+  doc.setFont("helvetica", "bold")
+  doc.text("NEELKANTH ENTERPRISES", pageWidth / 2, finalY + 75, {
+    align: "center",
+  })
+
+  doc.save(`Invoice_${bill.bill_no}.pdf`)
+}
+
+const fetchBill = async () => {
+  const { data: billData, error: billError } = await supabase
+    .from("bills")
+    .select("*")
+    .eq("id", billId)
+    .single()
+
+  if (billError) {
     setLoading(false)
+    return
   }
+
+  const { data: items, error: itemError } = await supabase
+    .from("bill_items")
+    .select(`
+      qty,
+      price,
+      product_id,
+      products (
+        product_name
+      )
+    `)
+    .eq("bill_id", billId)
+
+  if (!itemError) {
+    billData.items = items
+  }
+
+  setBill(billData)
+  setLoading(false)
+}
 
   const pendingAmount = bill?.pending_amount ?? 0
 
@@ -35,6 +200,26 @@ const PaymentHistory = () => {
 
         {/* ── Header ── */}
         <div className="page-header">
+
+            <div className="header-left">
+                <h1>Payment History</h1>
+                {bill && (
+                    <span className="header-sub">Bill #{bill.bill_no}</span>
+                )}
+                </div>
+
+                <div style={{ display: "flex", gap: "10px" }}>
+                <button className="btn-back" onClick={() => navigate(-1)}>
+                    ← Back
+                </button>
+
+                <button
+                    className="download-btn"
+                    onClick={handleDownloadPDF}
+                >
+                    ⬇ Download PDF
+                </button>
+                </div>
           <div className="header-left">
             <h1>Payment History</h1>
             {bill && (

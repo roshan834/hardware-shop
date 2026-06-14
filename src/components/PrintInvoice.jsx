@@ -2,9 +2,14 @@ const PrintInvoice = ({
   cart,
   subtotal,
   gst,
-  total
+  total,
+  customer,
+  phone
 }) => {
   const invoiceNo = `INV${Date.now()}`
+
+  const customerName = customer || "Walk-In Customer"
+  const customerPhone = phone || "-"
 
   const print = () => {
     const win = window.open("", "", "width=800,height=900")
@@ -13,6 +18,20 @@ const PrintInvoice = ({
       <html>
       <head>
         <title>Tax Invoice</title>
+
+        <div class="row">
+          <div>
+            <b>Customer:</b> ${customerName}
+            <br/>
+            <b>Phone:</b> ${customerPhone}
+          </div>
+
+          <div>
+            Invoice No: <b>${invoiceNo}</b>
+            <br/>
+            ${new Date().toLocaleString()}
+          </div>
+        </div>
 
         <style>
           *{
