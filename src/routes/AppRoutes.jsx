@@ -11,6 +11,7 @@ import BillHistory from '../pages/BillHistory'
 import Reports     from '../pages/Reports'
 import Users       from '../pages/Users'
 import Profile     from '../pages/Profile'
+import PaymentHistory from "../pages/PaymentHistory"
 
 import ProtectedRoute from '../components/ProtectedRoute'
 
@@ -84,7 +85,15 @@ const AppRoutes = () => {
           </ProtectedRoute>
         } />
 
+      <Route
+        path="/payment-history/:billId"
+        element={
+         <ProtectedRoute>
+          <PaymentHistory />
+        </ProtectedRoute>}
+      />
       </Routes>
+
     </BrowserRouter>
   )
 }

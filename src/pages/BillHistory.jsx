@@ -1,37 +1,474 @@
-import Sidebar from "../components/Sidebar";
+import { useEffect, useState } from "react"
+import Sidebar from "../components/Sidebar"
+import { supabase } from "../config/supabase"
+import { toast } from "react-toastify"
+import { useNavigate } from "react-router-dom"
 
 const BillHistory = () => {
+  const [bills, setBills] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  const [search, setSearch] = useState("")
+  const [paymentFilter, setPaymentFilter] = useState("")
+  const [fromDate, setFromDate] = useState("")
+  const [toDate, setToDate] = useState("")
+  const [showPendingModal, setShowPendingModal] =useState(false)
+  const [selectedBill, setSelectedBill] =useState(null)
+  const [collectedAmount, setCollectedAmount] =useState("")
+  const [collectionMode, setCollectionMode] =useState("cash") 
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    fetchBills()
+  }, [])
+
+  const fetchBills = async () => {
+    setLoading(true)
+
+    const { data, error } = await supabase
+      .from("bills")
+      .select("*")
+      .order("created_at", {
+        ascending: false
+      })
+
+    if (!error) {
+      setBills(data)
+    }
+
+    setLoading(false)
+  }
+
+  const openPendingModal = (bill) => {
+  setSelectedBill(bill)
+  setCollectedAmount("")
+  setCollectionMode("cash")
+  setShowPendingModal(true)
+  }
+
+  const closePendingModal = () => {
+    setShowPendingModal(false)
+    setSelectedBill(null)
+    setCollectedAmount("")
+  }
+
+  const filteredBills = bills.filter((bill) => {
+    const searchMatch =
+      bill.bill_no
+        ?.toLowerCase()
+        .includes(search.toLowerCase()) ||
+      bill.customer_name
+        ?.toLowerCase()
+        .includes(search.toLowerCase()) ||
+      bill.customer_phone
+        ?.toString()
+        .includes(search)
+
+    const paymentMatch =
+      paymentFilter === "" ||
+      bill.payment_mode === paymentFilter
+
+    const billDate = new Date(bill.created_at)
+
+    const fromMatch =
+      !fromDate ||
+      billDate >= new Date(fromDate)
+
+    const toMatch =
+      !toDate ||
+      billDate <=
+        new Date(toDate + "T23:59:59")
+
+    return (
+      searchMatch &&
+      paymentMatch &&
+      fromMatch &&
+      toMatch
+    )
+  })
+
+    const collectPayment = async () => {
+    if (!collectedAmount) {
+      toast.error("Enter amount")
+      return
+    }
+
+    const payment = Number(collectedAmount)
+
+    if (payment <= 0) {
+      toast.error("Invalid amount")
+      return
+    }
+
+    if (payment > selectedBill.pending_amount) {
+      toast.error("Amount exceeds pending balance")
+      return
+    }
+
+    const newPaid =
+      Number(selectedBill.paid_amount) +
+      payment
+
+    const newPending =
+      Number(selectedBill.pending_amount) -
+      payment
+
+    const updatedLogs = [
+      ...(selectedBill.payment_logs || []),
+      {
+        amount: payment,
+        payment_mode: collectionMode,
+        date: new Date().toISOString(),
+        note: "Pending Amount Collected"
+      }
+    ]
+
+    const { error } = await supabase
+      .from("bills")
+      .update({
+        paid_amount: newPaid,
+        pending_amount: Math.max(newPending, 0),
+        payment_logs: updatedLogs,
+        bill_status:
+          newPending <= 0
+            ? "completed"
+            : "pending"
+      })
+      .eq("id", selectedBill.id)
+
+    if (error) {
+      toast.error(error.message)
+      return
+    }
+
+    closePendingModal()
+    await fetchBills()
+    toast.success("Payment Collected Successfully 🎉")
+  }
+
   return (
     <div className="layout">
       <Sidebar />
 
       <div className="content">
-        <h1>Bill History</h1>
 
-        <div className="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Bill No</th>
-                <th>Customer</th>
-                <th>Total</th>
-                <th>Date</th>
-              </tr>
-            </thead>
+        <div className="page-header">
+          <h1>🧾 Bill History</h1>
+        </div>
 
-            <tbody>
-              <tr>
-                <td>BILL001</td>
-                <td>Walk-In Customer</td>
-                <td>₹0</td>
-                <td>{new Date().toLocaleDateString()}</td>
-              </tr>
-            </tbody>
-          </table>
+        {/* FILTERS */}
+
+        <div className="card filter-card">
+
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search Bill No / Customer / Phone"
+            value={search}
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
+          />
+
+          <select
+            className="filter-select"
+            value={paymentFilter}
+            onChange={(e) =>
+              setPaymentFilter(e.target.value)
+            }
+          >
+            <option value="">
+              All Payments
+            </option>
+
+            <option value="cash">
+              Cash
+            </option>
+
+            <option value="upi">
+              UPI
+            </option>
+
+            <option value="card">
+              Card
+            </option>
+
+            <option value="credit">
+              Credit
+            </option>
+          </select>
+          <div className="date-filter-group">
+          <div className="date-field">
+            <label>From Date</label>
+            <input
+              type="date"
+              className="date-input"
+              value={fromDate}
+              onChange={(e) =>
+                setFromDate(e.target.value)
+              }
+            />
+          </div>
+
+          <div className="date-field">
+            <label>To Date</label>
+            <input
+              type="date"
+              className="date-input"
+              value={toDate}
+              onChange={(e) =>
+                setToDate(e.target.value)
+              }
+            />
+          </div>
+        </div>
+
+          <button
+            className="clear-filter-btn"
+            onClick={() => {
+              setSearch("")
+              setPaymentFilter("")
+              setFromDate("")
+              setToDate("")
+            }}
+          >
+            Clear Filters
+          </button>
+
+        </div>
+
+        {/* COUNT */}
+
+        <div className="bill-count">
+          Total Bills Found: {filteredBills.length}
+        </div>
+
+        {/* TABLE */}
+
+        <div className="card">
+          <div className="table-wrapper">
+
+            <table className="bill-table">
+
+              <thead>
+                <tr>
+                  <th>Bill No</th>
+                  <th>Customer</th>
+                  <th>Phone</th>
+                  <th>Paid</th>
+                  <th>Pending</th>
+                  <th>Subtotal</th>
+                  <th>GST</th>
+                  <th>Total</th>
+                  <th>Payment</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                {loading ? (
+                  <tr>
+                    <td colSpan="9">
+                      Loading...
+                    </td>
+                  </tr>
+                ) : filteredBills.length === 0 ? (
+                  <tr>
+                    <td colSpan="9">
+                      No Bills Found
+                    </td>
+                  </tr>
+                ) : (
+                  filteredBills.map((bill) => (
+                    <tr key={bill.id}>
+
+                      <td>
+                        {bill.bill_no}
+                      </td>
+
+                      <td>
+                        {bill.customer_name ||
+                          "Walk-In Customer"}
+                      </td>
+
+                      <td>
+                        {bill.customer_phone ||
+                          "-"}
+                      </td>
+                      <td>₹{bill.paid_amount}</td>
+
+                      <td>
+                        ₹{bill.pending_amount}
+                      </td>
+
+                      
+
+                      <td>
+                        ₹
+                        {Number(
+                          bill.subtotal
+                        ).toFixed(2)}
+                      </td>
+
+                      <td>
+                        ₹
+                        {Number(
+                          bill.gst
+                        ).toFixed(2)}
+                      </td>
+
+                      <td>
+                        ₹
+                        {Number(
+                          bill.grand_total
+                        ).toFixed(2)}
+                      </td>
+
+                      <td>
+                        <span
+                          className={`payment-badge ${bill.payment_mode}`}
+                        >
+                          {bill.payment_mode}
+                        </span>
+                      </td>
+
+                      <td>
+                        <span
+                          className={`status-badge ${bill.bill_status}`}
+                        >
+                          {bill.bill_status}
+                        </span>
+                      </td>
+
+                      <td>
+                        {new Date(
+                          bill.created_at
+                        ).toLocaleString()}
+                      </td>
+                      <td>
+                          <div className="action-buttons">
+
+                            <button
+                              className="history-btn"
+                              onClick={() =>
+                                navigate(
+                                  `/payment-history/${bill.id}`
+                                )
+                              }
+                            >
+                              View
+                            </button>
+
+                            {bill.pending_amount > 0 && (
+                              <button
+                                className="collect-btn"
+                                onClick={() =>
+                                  openPendingModal(bill)
+                                }
+                              >
+                                Collect
+                              </button>
+                            )}
+
+                          </div>
+                        </td>
+
+                    </tr>
+                  ))
+                )}
+
+              </tbody>
+
+            </table>
+
+          </div>
+        </div>
+
+      </div>
+
+          {showPendingModal && selectedBill && (
+      <div className="modal-overlay">
+        <div className="checkout-modal">
+
+          <h2>Collect Pending Payment</h2>
+
+          <p>
+            Pending Amount:
+            ₹{selectedBill.pending_amount}
+          </p>
+
+          <input
+              type="number"
+              min="1"
+              max={selectedBill.pending_amount}
+              placeholder="Enter Amount"
+              value={collectedAmount}
+              onChange={(e) => {
+                const value = e.target.value
+
+                if (
+                  value === "" ||
+                  Number(value) <= selectedBill.pending_amount
+                ) {
+                  setCollectedAmount(value)
+                }
+              }}
+            />
+
+            {collectedAmount && (
+              <div
+                style={{
+                  marginTop: "10px",
+                  fontWeight: "600",
+                  color: "#ef4444"
+                }}
+              >
+                Remaining After Payment :
+                ₹
+                {(
+                  selectedBill.pending_amount -
+                  Number(collectedAmount)
+                ).toFixed(2)}
+              </div>
+            )}
+
+          <select
+            value={collectionMode}
+            onChange={(e) =>
+              setCollectionMode(e.target.value)
+            }
+          >
+            <option value="cash">Cash</option>
+            <option value="upi">UPI</option>
+            <option value="card">Card</option>
+          </select>
+
+          <div className="modal-buttons">
+
+            <button
+              className="confirm-btn"
+              onClick={collectPayment}
+            >
+              Save Payment
+            </button>
+
+            <button
+              className="cancel-btn"
+              onClick={closePendingModal}
+            >
+              Cancel
+            </button>
+
+          </div>
+
         </div>
       </div>
+    )}
     </div>
-  );
-};
+  )
+}
 
-export default BillHistory;
+export default BillHistory
