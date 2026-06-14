@@ -341,7 +341,87 @@ h3 { font-size: var(--text-lg);  font-weight: 600; color: var(--gray-900); }
 .btn-icon.delete:hover { background: #fecaca;          transform: scale(1.08); }
 
 /* Legacy aliases */
-.action-btn        { composes: btn-icon if supported, else inline-flex; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: none; border-radius: var(--radius-xs); cursor: pointer; font-size: 15px; transition: background var(--transition); }
+/* =====================================================
+   ACTION BUTTONS
+   ===================================================== */
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  font-size: 15px;
+  transition: all var(--transition);
+  background: var(--gray-100);
+  color: var(--gray-600);
+  flex-shrink: 0;
+}
+
+.action-btn:hover {
+  transform: scale(1.08);
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+.action-btn.edit {
+  background: var(--blue-50);
+  color: var(--blue-600);
+}
+
+.action-btn.edit:hover {
+  background: var(--blue-100);
+}
+
+.action-btn.delete {
+  background: var(--red-50);
+  color: var(--red-500);
+}
+
+.action-btn.delete:hover {
+  background: #fecaca;
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* =====================================================
+   RESPONSIVE ACTION BUTTONS
+   ===================================================== */
+
+@media (max-width: 767px) {
+  .action-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 575px) {
+  .action-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+}
+
+/* Touch device optimization */
+@media (hover: none) {
+  .action-btn {
+    min-width: 44px;
+    min-height: 44px;
+    width: 44px;
+    height: 44px;
+  }
+}
 .action-btn.edit   { background: var(--blue-50);  color: var(--blue-600); }
 .action-btn.delete { background: var(--red-50);   color: var(--red-500); }
 .action-btn.edit:hover   { background: var(--blue-100); }
