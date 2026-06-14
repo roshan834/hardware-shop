@@ -1,0 +1,960 @@
+/* =====================================================
+   REPORTS PAGE — COMPLETE MOBILE RESPONSIVE STYLESHEET
+   ===================================================== */
+
+/* =====================================================
+   REPORT CARDS — BOX STYLE WITH HORIZONTAL LAYOUT
+   ===================================================== */
+
+.report-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.report-card {
+  background: linear-gradient(135deg, var(--surface), var(--gray-50));
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+}
+
+.report-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--blue-600), var(--indigo-600));
+}
+
+.report-card::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.08), transparent);
+  border-radius: 50%;
+}
+
+.report-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+  border-color: var(--blue-300);
+}
+
+.report-card-content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-5);
+  position: relative;
+  z-index: 1;
+}
+
+.report-icon {
+  font-size: 40px;
+  min-width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--blue-50);
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+
+.report-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.report-card h4 {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--gray-400);
+  margin: 0;
+}
+
+.report-card h2 {
+  font-size: clamp(18px, 4vw, 26px);
+  font-weight: 700;
+  color: var(--gray-900);
+  margin: 0;
+  line-height: 1.1;
+}
+
+/* Color variants */
+.report-card:nth-child(1) {
+  border-top: 4px solid #10b981;
+}
+
+.report-card:nth-child(1) .report-icon {
+  background: #d1fae5;
+  color: #10b981;
+}
+
+.report-card:nth-child(2) {
+  border-top: 4px solid #f59e0b;
+}
+
+.report-card:nth-child(2) .report-icon {
+  background: #fef3c7;
+  color: #f59e0b;
+}
+
+.report-card:nth-child(3) {
+  border-top: 4px solid #3b82f6;
+}
+
+.report-card:nth-child(3) .report-icon {
+  background: var(--blue-50);
+  color: var(--blue-600);
+}
+
+.report-card:nth-child(4) {
+  border-top: 4px solid #ef4444;
+}
+
+.report-card:nth-child(4) .report-icon {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+/* =====================================================
+   REPORT GRID AND TABLES
+   ===================================================== */
+
+.report-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: var(--space-6);
+}
+
+.report-table-card {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-5);
+  border-bottom: 2px solid var(--gray-200);
+  padding-bottom: var(--space-4);
+  gap: var(--space-2);
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: clamp(18px, 4vw, 24px);
+  flex: 1;
+}
+
+.stock-count {
+  font-size: var(--text-sm);
+  background: var(--red-50);
+  color: var(--red-600);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* REPORT TABLE */
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-table thead {
+  background: linear-gradient(135deg, var(--brand-dark), #1a2f4e);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.report-table thead th {
+  color: white;
+  padding: 14px var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-align: left;
+  letter-spacing: 0.3px;
+}
+
+.report-table tbody td {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--gray-100);
+  font-size: var(--text-base);
+  color: var(--gray-900);
+}
+
+.report-table tbody tr {
+  transition: all var(--transition);
+}
+
+.report-table tbody tr:hover {
+  background: var(--gray-50);
+}
+
+.report-table .product-name {
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.report-table .product-qty,
+.report-table .product-stock {
+  text-align: right;
+  font-weight: 600;
+}
+
+.qty-badge {
+  background: var(--blue-50);
+  color: var(--blue-600);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  display: inline-block;
+}
+
+.stock-badge {
+  background: var(--amber-50);
+  color: var(--amber-900);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  display: inline-block;
+}
+
+.stock-badge.critical {
+  background: var(--red-50);
+  color: var(--red-600);
+}
+
+.no-data {
+  text-align: center;
+  color: var(--gray-400);
+  padding: var(--space-8) !important;
+  font-style: italic;
+}
+
+/* =====================================================
+   MOBILE CARD VIEW
+   ===================================================== */
+
+.mobile-report-list {
+  display: none;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.mobile-report-item {
+  background: var(--gray-50);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-200);
+  transition: all var(--transition);
+}
+
+.mobile-report-item:active {
+  background: var(--gray-100);
+}
+
+.mobile-report-item h4 {
+  margin: 0 0 var(--space-3);
+  font-size: 14px;
+  color: var(--gray-900);
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.mobile-report-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  gap: var(--space-2);
+}
+
+.mobile-report-row .label {
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
+.no-data-mobile {
+  text-align: center;
+  color: var(--gray-400);
+  padding: var(--space-6);
+  font-style: italic;
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--gray-300);
+}
+
+/* =====================================================
+   LOW STOCK PRODUCTS — VERTICAL SCROLL WITH PAGINATION
+   ===================================================== */
+
+.low-stock-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.low-stock-scroll-wrapper {
+  flex: 1;
+  min-height: 300px;
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-100);
+  margin-bottom: var(--space-4);
+}
+
+.low-stock-scroll-wrapper .table-wrapper {
+  border: none;
+  box-shadow: none;
+  overflow: visible;
+  margin: 0;
+  padding: 0;
+}
+
+.low-stock-scroll-wrapper .report-table {
+  margin: 0;
+}
+
+.low-stock-scroll-wrapper thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: linear-gradient(135deg, var(--brand-dark), #1a2f4e);
+}
+
+.low-stock-scroll-wrapper tbody tr {
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.low-stock-scroll-wrapper tbody tr:last-child {
+  border-bottom: none;
+}
+
+/* MOBILE SCROLLABLE LIST */
+.low-stock-mobile-list {
+  display: none;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1;
+  min-height: 300px;
+  max-height: 500px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 4px;
+  margin-bottom: var(--space-4);
+}
+
+.low-stock-mobile-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.low-stock-mobile-list::-webkit-scrollbar-track {
+  background: var(--gray-100);
+  border-radius: var(--radius-full);
+}
+
+.low-stock-mobile-list::-webkit-scrollbar-thumb {
+  background: var(--gray-400);
+  border-radius: var(--radius-full);
+}
+
+.low-stock-mobile-list::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-500);
+}
+
+.low-stock-mobile-list {
+  scrollbar-color: var(--gray-400) var(--gray-100);
+  scrollbar-width: thin;
+}
+
+/* =====================================================
+   PAGINATION STYLING
+   ===================================================== */
+
+.low-stock-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--gray-200);
+}
+
+.pagination-btn {
+  padding: 8px 12px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  font-family: var(--font);
+  font-weight: 500;
+  background: var(--surface);
+  color: var(--gray-600);
+  min-height: 36px;
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: var(--gray-100);
+  border-color: var(--gray-300);
+  transform: translateY(-1px);
+}
+
+.pagination-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.pagination-btn.active-page {
+  background: var(--blue-600);
+  color: white;
+  border-color: var(--blue-600);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+.pagination-btn.ellipsis-btn {
+  background: transparent;
+  border: none;
+  color: var(--gray-400);
+  font-weight: 600;
+  cursor: default;
+  padding: 8px 4px;
+}
+
+.pagination-btn.ellipsis-btn:hover {
+  background: transparent;
+  transform: none;
+}
+
+/* MOBILE PAGINATION */
+.mobile-pagination {
+  gap: var(--space-2);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--gray-200);
+}
+
+.page-info {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--gray-600);
+  padding: 8px 12px;
+  background: var(--gray-50);
+  border-radius: var(--radius-xs);
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--gray-200);
+}
+
+/* =====================================================
+   RESPONSIVE — TABLET (768px - 1023px)
+   ===================================================== */
+
+@media (max-width: 1023px) {
+  .report-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+
+  .report-card {
+    min-height: 110px;
+  }
+
+  .report-card-content {
+    gap: var(--space-3);
+    padding: var(--space-4);
+  }
+
+  .report-icon {
+    font-size: 36px;
+    min-width: 55px;
+    height: 55px;
+  }
+
+  .report-card h4 {
+    font-size: 10px;
+  }
+
+  .report-card h2 {
+    font-size: 20px;
+  }
+
+  .report-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .low-stock-scroll-wrapper {
+    min-height: 250px;
+    max-height: 500px;
+  }
+
+  .card-header {
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .stock-count {
+    font-size: 11px;
+    padding: 3px 10px;
+  }
+
+  .report-table thead th,
+  .report-table tbody td {
+    padding: 12px var(--space-3);
+    font-size: var(--text-sm);
+  }
+
+  .low-stock-pagination {
+    gap: 4px;
+  }
+
+  .pagination-btn {
+    padding: 7px 11px;
+    min-height: 36px;
+    min-width: 36px;
+    font-size: 13px;
+  }
+}
+
+/* =====================================================
+   RESPONSIVE — MOBILE (576px - 767px)
+   ===================================================== */
+
+@media (max-width: 767px) {
+  .report-cards {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .report-card {
+    min-height: 100px;
+  }
+
+  .report-card-content {
+    gap: var(--space-3);
+    padding: var(--space-4);
+  }
+
+  .report-icon {
+    font-size: 32px;
+    min-width: 50px;
+    height: 50px;
+  }
+
+  .report-card h4 {
+    font-size: 10px;
+  }
+
+  .report-card h2 {
+    font-size: 18px;
+  }
+
+  .report-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .report-table-card {
+    padding: var(--space-4);
+  }
+
+  .card-header {
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+  }
+
+  .card-header h2 {
+    font-size: 16px;
+  }
+
+  .stock-count {
+    font-size: 10px;
+    padding: 2px 8px;
+  }
+
+  /* Hide table on mobile */
+  .low-stock-scroll-wrapper {
+    display: none;
+  }
+
+  /* Show mobile list with scroll */
+  .low-stock-mobile-list {
+    display: flex;
+    min-height: 300px;
+    max-height: 450px;
+  }
+
+  .low-stock-mobile-list .mobile-report-item {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    padding: var(--space-3);
+    flex-shrink: 0;
+  }
+
+  .mobile-report-list {
+    display: flex;
+  }
+
+  .report-table {
+    display: none;
+  }
+
+  .qty-badge,
+  .stock-badge {
+    padding: 3px 10px;
+    font-size: 11px;
+  }
+
+  /* Mobile pagination */
+  .desktop-pagination {
+    display: none;
+  }
+
+  .mobile-pagination {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .pagination-btn {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .page-info {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+}
+
+/* =====================================================
+   RESPONSIVE — SMALL PHONE (≤ 575px)
+   ===================================================== */
+
+@media (max-width: 575px) {
+  .report-cards {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .report-card {
+    min-height: 90px;
+    border-radius: var(--radius-md);
+  }
+
+  .report-card::before {
+    height: 3px;
+  }
+
+  .report-card::after {
+    width: 80px;
+    height: 80px;
+  }
+
+  .report-card-content {
+    gap: var(--space-2);
+    padding: var(--space-3);
+  }
+
+  .report-icon {
+    font-size: 28px;
+    min-width: 45px;
+    height: 45px;
+  }
+
+  .report-info {
+    gap: 2px;
+  }
+
+  .report-card h4 {
+    font-size: 9px;
+    letter-spacing: 0.5px;
+  }
+
+  .report-card h2 {
+    font-size: 16px;
+  }
+
+  .report-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .report-table-card {
+    padding: var(--space-3);
+  }
+
+  .card-header {
+    margin-bottom: var(--space-3);
+    padding-bottom: var(--space-2);
+  }
+
+  .card-header h2 {
+    font-size: 14px;
+  }
+
+  .stock-count {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  .low-stock-mobile-list {
+    min-height: 250px;
+    max-height: 400px;
+    gap: var(--space-2);
+  }
+
+  .low-stock-mobile-list .mobile-report-item {
+    padding: var(--space-2);
+    margin-bottom: 0;
+  }
+
+  .mobile-report-item h4 {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  .mobile-report-row {
+    font-size: 11px;
+  }
+
+  .mobile-pagination {
+    gap: 6px;
+    padding-top: var(--space-2);
+  }
+
+  .pagination-btn {
+    padding: 6px 10px;
+    min-height: 32px;
+    min-width: 32px;
+    font-size: 12px;
+  }
+
+  .page-info {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+
+  .qty-badge,
+  .stock-badge {
+    padding: 2px 8px;
+    font-size: 10px;
+  }
+
+  .no-data-mobile {
+    padding: var(--space-4);
+    font-size: 12px;
+  }
+
+  .report-table thead th,
+  .report-table tbody td {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+}
+
+/* =====================================================
+   LANDSCAPE ORIENTATION
+   ===================================================== */
+
+@media (max-height: 600px) and (orientation: landscape) {
+  .report-cards {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  .report-card {
+    min-height: 80px;
+  }
+
+  .report-card-content {
+    gap: var(--space-2);
+    padding: var(--space-3);
+  }
+
+  .report-icon {
+    font-size: 24px;
+    min-width: 40px;
+    height: 40px;
+  }
+
+  .report-card h4 {
+    font-size: 9px;
+  }
+
+  .report-card h2 {
+    font-size: 14px;
+  }
+
+  .low-stock-scroll-wrapper {
+    min-height: 200px;
+    max-height: 350px;
+  }
+
+  .low-stock-mobile-list {
+    min-height: 200px;
+    max-height: 350px;
+  }
+
+  .card-header {
+    margin-bottom: var(--space-2);
+    padding-bottom: var(--space-2);
+  }
+
+  .low-stock-pagination {
+    gap: 3px;
+    padding-top: var(--space-2);
+  }
+
+  .pagination-btn {
+    padding: 4px 8px;
+    min-height: 30px;
+    min-width: 30px;
+    font-size: 11px;
+  }
+
+  .report-table thead th,
+  .report-table tbody td {
+    padding: 8px var(--space-2);
+    font-size: 11px;
+  }
+}
+
+/* =====================================================
+   CUSTOM SCROLLBAR STYLING
+   ===================================================== */
+
+.low-stock-scroll-wrapper::-webkit-scrollbar,
+.low-stock-mobile-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.low-stock-scroll-wrapper::-webkit-scrollbar-track,
+.low-stock-mobile-list::-webkit-scrollbar-track {
+  background: var(--gray-100);
+  border-radius: var(--radius-full);
+}
+
+.low-stock-scroll-wrapper::-webkit-scrollbar-thumb,
+.low-stock-mobile-list::-webkit-scrollbar-thumb {
+  background: var(--gray-400);
+  border-radius: var(--radius-full);
+  transition: background var(--transition);
+}
+
+.low-stock-scroll-wrapper::-webkit-scrollbar-thumb:hover,
+.low-stock-mobile-list::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-600);
+}
+
+/* =====================================================
+   HOVER EFFECTS
+   ===================================================== */
+
+@media (hover: hover) {
+  .report-card {
+    cursor: pointer;
+  }
+
+  .report-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .report-card:hover::after {
+    width: 120px;
+    height: 120px;
+    transition: all var(--transition);
+  }
+
+  .pagination-btn:focus-visible {
+    outline: 2px solid var(--blue-600);
+    outline-offset: 2px;
+  }
+}
+
+/* =====================================================
+   ACCESSIBILITY
+   ===================================================== */
+
+.report-card:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: 2px;
+}
+
+.low-stock-scroll-wrapper:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: 2px;
+}
+
+/* Smooth scrolling */
+@supports (scroll-behavior: smooth) {
+  .low-stock-scroll-wrapper,
+  .low-stock-mobile-list {
+    scroll-behavior: smooth;
+  }
+}
+
+/* High DPI */
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+  .report-card,
+  .report-table-card,
+  .mobile-report-item,
+  .low-stock-scroll-wrapper,
+  .low-stock-mobile-list {
+    border-width: 0.5px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
