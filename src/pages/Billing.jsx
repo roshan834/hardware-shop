@@ -5,6 +5,7 @@ import BarcodeScanner from "../components/BarcodeScanner"
 import { supabase } from "../config/supabase"
 import PrintInvoice from "../components/PrintInvoice"
 import { FaTrashAlt } from "react-icons/fa"
+import { toast } from "react-toastify"
 
 const Billing = () => {
   const navigate = useNavigate()
@@ -94,7 +95,7 @@ const Billing = () => {
     const { data, error } = await getProductByBarcode(cleanCode)
 
     if (error || !data) {
-      alert("Product not found")
+      toast.error("Product not found ❌")
       return
     }
 
@@ -123,7 +124,7 @@ const Billing = () => {
   // ================= SCANNER RESULT =================
   const handleScan = async (code) => {
   await handleSearch(code)
-    alert("✅ Product Added To Cart")
+    toast.success("Product Added To Cart 🛒")
   // setShowScanner(false)
   }
 
@@ -141,7 +142,7 @@ const Billing = () => {
       const checkout = async () => {
       try {
         if (cart.length === 0) {
-          alert("Cart is empty")
+          toast.error("Cart is empty")
           return
         }
 
@@ -160,7 +161,7 @@ const Billing = () => {
           .single()
 
         if (error) {
-          alert(error.message)
+          toast.error(error.message)
           return
         }
 
@@ -182,13 +183,13 @@ const Billing = () => {
 
         printBill()
 
-        alert("Bill Saved Successfully")
+        toast.success("Bill Saved Successfully 🎉")
 
         setCart([])
         localStorage.removeItem(`cart_${userId}`)
       } catch (err) {
         console.error(err)
-        alert("Checkout Failed")
+        toast.error("Checkout Failed ❌")
       }
     }
 
