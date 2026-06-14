@@ -159,86 +159,61 @@ const BillHistory = () => {
         {/* FILTERS */}
 
         <div className="card filter-card">
+  <input
+    type="text"
+    className="search-input"
+    placeholder="Search Bill No / Customer / Phone"
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+  />
 
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search Bill No / Customer / Phone"
-            value={search}
-            onChange={(e) =>
-              setSearch(e.target.value)
-            }
-          />
+  <select
+    className="filter-select"
+    value={paymentFilter}
+    onChange={(e) => setPaymentFilter(e.target.value)}
+  >
+    <option value="">All Payments</option>
+    <option value="cash">Cash</option>
+    <option value="upi">UPI</option>
+    <option value="card">Card</option>
+    <option value="credit">Credit</option>
+    <option value="partial">Partial</option>
+  </select>
 
-          <select
-            className="filter-select"
-            value={paymentFilter}
-            onChange={(e) =>
-              setPaymentFilter(e.target.value)
-            }
-          >
-            <option value="">
-              All Payments
-            </option>
+  <div className="date-filter-group">
+    <div className="date-field">
+      <label>From Date</label>
+      <input
+        type="date"
+        className="date-input"
+        value={fromDate}
+        onChange={(e) => setFromDate(e.target.value)}
+      />
+    </div>
 
-            <option value="cash">
-              Cash
-            </option>
+    <div className="date-field">
+      <label>To Date</label>
+      <input
+        type="date"
+        className="date-input"
+        value={toDate}
+        onChange={(e) => setToDate(e.target.value)}
+      />
+    </div>
+  </div>
 
-            <option value="upi">
-              UPI
-            </option>
-
-            <option value="card">
-              Card
-            </option>
-
-            <option value="credit">
-              Credit
-            </option>
-             <option value="partial">
-              Partial
-            </option>
-          </select>
-          <div className="date-filter-group">
-          <div className="date-field">
-            <label>From Date</label>
-            <input
-              type="date"
-              className="date-input"
-              value={fromDate}
-              onChange={(e) =>
-                setFromDate(e.target.value)
-              }
-            />
-          </div>
-
-          <div className="date-field">
-            <label>To Date</label>
-            <input
-              type="date"
-              className="date-input"
-              value={toDate}
-              onChange={(e) =>
-                setToDate(e.target.value)
-              }
-            />
-          </div>
-        </div>
-
-          <button
-            className="clear-filter-btn"
-            onClick={() => {
-              setSearch("")
-              setPaymentFilter("")
-              setFromDate("")
-              setToDate("")
-            }}
-          >
-            Clear Filters
-          </button>
-
-        </div>
+  <button
+    className="clear-filter-btn"
+    onClick={() => {
+      setSearch("");
+      setPaymentFilter("");
+      setFromDate("");
+      setToDate("");
+    }}
+  >
+    Clear Filters
+  </button>
+</div>
 
         {/* COUNT */}
 

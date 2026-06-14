@@ -1003,7 +1003,340 @@ tbody tr:hover { background: var(--gray-50); }
 /* =====================================================
    12. BILLING PAGE
    ===================================================== */
+/* =====================================================
+   FILTER CARD — MOBILE RESPONSIVE
+   ===================================================== */
 
+.filter-card {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  align-items: flex-end;
+  background: var(--surface);
+  padding: var(--space-5);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-xs);
+  margin-bottom: var(--space-5);
+}
+
+/* Search Input */
+.filter-card .search-input {
+  flex: 1;
+  min-width: 240px;
+  height: 44px;
+  padding: 0 var(--space-4);
+  border: 1.5px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  font-family: var(--font);
+  outline: none;
+  transition: all var(--transition);
+  border-left: 3px solid var(--blue-600);
+}
+
+.filter-card .search-input:focus {
+  border-color: var(--blue-600);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.filter-card .search-input::placeholder {
+  color: var(--gray-400);
+}
+
+/* Filter Select */
+.filter-card .filter-select {
+  height: 44px;
+  padding: 0 var(--space-3);
+  border: 1.5px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  font-family: var(--font);
+  background: var(--surface);
+  color: var(--gray-900);
+  outline: none;
+  cursor: pointer;
+  transition: all var(--transition);
+  min-width: 150px;
+}
+
+.filter-card .filter-select:focus {
+  border-color: var(--blue-600);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* Date Filter Group */
+.date-filter-group {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.date-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.date-field label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--gray-600);
+  letter-spacing: 0.2px;
+}
+
+.filter-card .date-input {
+  height: 44px;
+  padding: 0 var(--space-3);
+  border: 1.5px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  font-family: var(--font);
+  background: var(--surface);
+  color: var(--gray-900);
+  outline: none;
+  cursor: pointer;
+  transition: all var(--transition);
+  min-width: 160px;
+}
+
+.filter-card .date-input:focus {
+  border-color: var(--blue-600);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* Clear Button */
+.clear-filter-btn {
+  height: 44px;
+  padding: 0 var(--space-5);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--red-500);
+  color: white;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+  font-size: var(--text-md);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+}
+
+.clear-filter-btn:hover {
+  background: var(--red-600);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(239, 68, 68, 0.35);
+}
+
+.clear-filter-btn:active {
+  transform: translateY(0);
+}
+
+/* =====================================================
+   TABLET (768px - 1023px)
+   ===================================================== */
+
+@media (max-width: 1023px) {
+  .filter-card {
+    gap: var(--space-3);
+    padding: var(--space-4);
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-card .search-input,
+  .filter-card .filter-select,
+  .filter-card .date-input,
+  .clear-filter-btn {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .date-filter-group {
+    width: 100%;
+    flex-direction: row;
+    gap: var(--space-3);
+  }
+
+  .date-field {
+    flex: 1;
+  }
+
+  .filter-card .date-input {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* =====================================================
+   MOBILE (576px - 767px)
+   ===================================================== */
+
+@media (max-width: 767px) {
+  .filter-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+    padding: var(--space-4);
+  }
+
+  .filter-card .search-input {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    font-size: 14px;
+  }
+
+  .filter-card .filter-select {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    font-size: 14px;
+  }
+
+  .date-filter-group {
+    width: 100%;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: stretch;
+  }
+
+  .date-field {
+    width: 100%;
+    gap: 5px;
+  }
+
+  .filter-card .date-input {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    font-size: 14px;
+  }
+
+  .clear-filter-btn {
+    width: 100%;
+    height: 44px;
+    font-size: var(--text-md);
+  }
+}
+
+/* =====================================================
+   SMALL PHONE (≤ 575px)
+   ===================================================== */
+
+@media (max-width: 575px) {
+  .filter-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border-radius: var(--radius-sm);
+  }
+
+  .filter-card .search-input {
+    width: 100%;
+    height: 42px;
+    padding: 0 var(--space-3);
+    font-size: 13px;
+  }
+
+  .filter-card .filter-select {
+    width: 100%;
+    height: 42px;
+    padding: 0 var(--space-3);
+    font-size: 13px;
+  }
+
+  .date-filter-group {
+    width: 100%;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: stretch;
+  }
+
+  .date-field {
+    width: 100%;
+  }
+
+  .date-field label {
+    font-size: 12px;
+  }
+
+  .filter-card .date-input {
+    width: 100%;
+    height: 42px;
+    padding: 0 var(--space-3);
+    font-size: 13px;
+  }
+
+  .clear-filter-btn {
+    width: 100%;
+    height: 42px;
+    padding: 0 var(--space-3);
+    font-size: 12px;
+  }
+}
+
+/* =====================================================
+   LANDSCAPE ORIENTATION
+   ===================================================== */
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .filter-card {
+    flex-direction: row;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .filter-card .search-input,
+  .filter-card .filter-select,
+  .filter-card .date-input,
+  .clear-filter-btn {
+    height: 40px;
+    font-size: 12px;
+  }
+
+  .date-filter-group {
+    gap: var(--space-2);
+  }
+
+  .date-field label {
+    display: none;
+  }
+}
+
+/* =====================================================
+   ACCESSIBILITY & FOCUS STATES
+   ===================================================== */
+
+.filter-card .search-input:focus-visible,
+.filter-card .filter-select:focus-visible,
+.filter-card .date-input:focus-visible,
+.clear-filter-btn:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: 2px;
+}
+
+/* Touch device optimization */
+@media (hover: none) {
+  .filter-card .search-input,
+  .filter-card .filter-select,
+  .filter-card .date-input,
+  .clear-filter-btn {
+    min-height: 48px;
+  }
+}
+
+/* High DPI */
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+  .filter-card {
+    border-width: 0.5px;
+  }
+}
    /* =====================================================
    BARCODE SCANNER CARD — FIXED HEIGHT
    ===================================================== */
