@@ -1,76 +1,129 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { supabase } from '../config/supabase'
-import loginBack from '../assets/logincoverpage.jpeg'
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import { supabase } from "../config/supabase"
+import loginBack from "../assets/logincoverpage.jpeg"
 
 const Login = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const navigate = useNavigate()
+const [email, setEmail] = useState("")
+const [password, setPassword] = useState("")
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) {
-        navigate('/dashboard')
-      }
-    })
-  }, [navigate])
+const navigate = useNavigate()
 
-  const handleLogin = async (e) => {
-    e.preventDefault()
+// AUTO LOGIN
+useEffect(() => {
+const checkSession = async () => {
+const {
+data: { session }
+} = await supabase.auth.getSession()
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
 
-    if (error) {
-      alert(error.message)
-      return
-    }
+  if (!session) return
 
-    navigate('/dashboard')
+  const { data: userData } =
+    await supabase
+      .from("users")
+      .select("role")
+      .eq("id", session.user.id)
+      .single()
+
+  if (userData?.role === "agent") {
+    navigate("/agent/dashboard")
+  } else {
+    navigate("/dashboard")
   }
+}
 
-  return (
-            <div
-        className="login-container"
-        style={{
-            backgroundImage: `url(${loginBack})`
-        }}
-        >
-        <div className="login-overlay">
+checkSession()
 
-            <div className="login-card">
-            <h2>Hardware Shop Login</h2>
-            <p>Inventory & Billing Management</p>
 
-            <form onSubmit={handleLogin}>
-                <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                />
+}, [navigate])
 
-                <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                />
+// LOGIN
+const handleLogin = async (e) => {
+e.preventDefault()
 
-                <button type="submit">
-                Login
-                </button>
-            </form>
-            </div>
 
-        </div>
-        </div>
-  )
+const { error, data } =
+  await supabase.auth.signInWithPassword({
+    email,
+    password
+  })
+
+if (error) {
+  alert(error.message)
+  return
+}
+
+const { data: userData } =
+  await supabase
+    .from("users")
+    .select("role")
+    .eq("id", data.user.id)
+    .single()
+
+    console.log("Logged User Role:", userData?.role)
+
+if (userData?.role === "agent") {
+  navigate("/agent/dashboard")
+} else {
+  navigate("/dashboard")
+}
+
+
+}
+
+return (
+<div
+className="login-container"
+style={{
+backgroundImage: `url(${loginBack})`
+}}
+> <div className="login-overlay">
+
+
+    <div className="login-card">
+
+      <h2>
+        Hardware Shop Login
+      </h2>
+
+      <p>
+        Inventory & Billing Management
+      </p>
+
+      <form onSubmit={handleLogin}>
+
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) =>
+            setEmail(e.target.value)
+          }
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) =>
+            setPassword(e.target.value)
+          }
+        />
+
+        <button type="submit">
+          Login
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+
+)
 }
 
 export default Login
-
-

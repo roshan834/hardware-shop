@@ -1,0 +1,60 @@
+import { useEffect, useState } from "react"
+import { supabase } from "../config/supabase"
+
+const AgentProfile = () => {
+
+  const [agent, setAgent] =
+    useState(null)
+
+  useEffect(() => {
+    loadProfile()
+  }, [])
+
+  const loadProfile = async () => {
+
+    const agentId =
+      localStorage.getItem("agent_id")
+
+    const { data } = await supabase
+      .from("agents")
+      .select("*")
+      .eq("id", agentId)
+      .single()
+
+    setAgent(data)
+  }
+
+  if (!agent) return null
+
+  return (
+    <div className="content">
+
+      <h1>Profile</h1>
+
+      <div className="card">
+        <p>
+          <b>Name:</b>
+          {agent.name}
+        </p>
+
+        <p>
+          <b>Phone:</b>
+          {agent.phone}
+        </p>
+
+        <p>
+          <b>Email:</b>
+          {agent.email}
+        </p>
+
+        <p>
+          <b>Commission:</b>
+          {agent.commission_percent}%
+        </p>
+      </div>
+
+    </div>
+  )
+}
+
+export default AgentProfile

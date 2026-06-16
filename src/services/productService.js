@@ -1,5 +1,6 @@
 import { supabase } from '../config/supabase'
 
+/* ---------------- PRODUCTS LIST ---------------- */
 export const getProducts = async ({
   page = 1,
   pageSize = 10,
@@ -17,12 +18,12 @@ export const getProducts = async ({
   let query = supabase
     .from(table)
     .select('*', { count: 'exact' })
+    .eq('is_active', true)
 
   if (search) {
     query = query.ilike('product_name', `%${search}%`)
   }
 
-   // CATEGORY FILTER
   if (category) {
     query = query.eq('category', category)
   }
@@ -32,81 +33,84 @@ export const getProducts = async ({
 
   query = query.range(from, to)
 
-  const { data, error, count } = await query
-
-  return { data, error, count }
+  return await query
 }
 
+/* ---------------- ADD PRODUCT ---------------- */
 export const addProduct = async (product) => {
   return await supabase
     .from('products')
     .insert([product])
 }
 
-// soft delete — set is_active to false
+/* ---------------- SOFT DELETE ---------------- */
 export const deleteProduct = async (id) => {
   return await supabase
     .from('products')
-    .update({ is_active: false })
+    .update({ is_active: false, last_updated: new Date() })
     .eq('id', id)
 }
 
+/* ---------------- GET BY ID (FIXED) ---------------- */
 export const getProductById = async (id) => {
   return await supabase
     .from('products')
     .select('*')
     .eq('id', id)
+    .eq('is_active', true)
     .single()
 }
 
+/* ---------------- UPDATE ---------------- */
 export const updateProduct = async (id, product) => {
   return await supabase
     .from('products')
-    .update(product)
+    .update({
+      ...product,
+      last_updated: new Date()
+    })
     .eq('id', id)
 }
 
-//  get public image URL from storage bucket
-export const getImageUrl = (productCode, ext = null) => {
+/* ---------------- IMAGE URL (FIXED) ---------------- */
+export const getImageUrl = (productCode) => {
   if (!productCode) return null
 
-  // if ext provided, use it directly
-  if (ext) {
+  const formats = ['jpg', 'jpeg', 'png']
+
+  for (let ext of formats) {
     const { data } = supabase.storage
       .from('products')
       .getPublicUrl(`${productCode}.${ext}`)
-    return data.publicUrl
+
+    if (data?.publicUrl) return data.publicUrl
   }
 
-  // try jpg by default
-  const { data } = supabase.storage
-    .from('products')
-    .getPublicUrl(`${productCode}.jpg`)
-
-  return data.publicUrl
+  return null
 }
 
+/* ---------------- CATEGORIES (OPTIMIZED) ---------------- */
 export const getCategories = async () => {
   const { data, error } = await supabase
     .from('products')
     .select('category')
+    .eq('is_active', true)
 
-  if (error) return { data: [], error }
+  if (error) return { data: [] }
 
-  // remove null + duplicates
-  const categories = [
-    ...new Set(data.map(item => item.category).filter(Boolean))
-  ]
+  const unique = [...new Set(
+    data.map(p => p.category?.trim()).filter(Boolean)
+  )]
 
-  return { data: categories, error: null }
+  return { data: unique }
 }
 
+/* ---------------- BARCODE SEARCH (FIXED) ---------------- */
 export const getProductsByBarcode = async (barcode) => {
-  const { data, error } = await supabase
+  return await supabase
     .from("products")
     .select("*")
     .eq("barcode", barcode)
+    .eq("is_active", true)
     .single()
-
-  return { data, error }
 }

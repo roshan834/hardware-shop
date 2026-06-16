@@ -5,6 +5,9 @@ import { getProducts, deleteProduct } from '../services/productService'
 import { useAuth } from '../context/AuthContext'        //  add
 import { useLocation } from 'react-router-dom'
 import { getCategories } from '../services/productService'
+import { toast } from "react-toastify"
+import { supabase } from "../config/supabase"
+
 
 const Products = () => {
 
@@ -23,6 +26,63 @@ const Products = () => {
 
   const navigate = useNavigate()
   const { role } = useAuth()                           //  add
+  const [userId, setUserId] = useState(null)
+
+
+        useEffect(() => {
+        const getUser = async () => {
+          const {
+            data: { user }
+          } = await supabase.auth.getUser()
+
+          if (user) {
+            setUserId(user.id)
+          }
+        }
+
+        getUser()
+      }, [])
+
+
+    const addToCart = async (product) => {
+      const {
+        data: { user }
+      } = await supabase.auth.getUser()
+
+      if (!user) {
+        alert("Please login")
+        return
+      }
+
+      const { data: existing } = await supabase
+        .from("cart_items")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("product_id", product.id)
+        .maybeSingle()
+
+      if (existing) {
+        await supabase
+          .from("cart_items")
+          .update({
+            qty: existing.qty + 1
+          })
+          .eq("id", existing.id)
+      } else {
+        await supabase
+          .from("cart_items")
+          .insert({
+            user_id: user.id,
+            product_id: product.id,
+            qty: 1
+          })
+      }
+      window.dispatchEvent(
+        new Event("cartUpdated")
+      )
+      toast.success("Added To Cart 🛒")
+      
+    }
 
   const loadProducts = async () => {
     const { data, count } = await getProducts({
@@ -192,20 +252,32 @@ const Products = () => {
                     <td>₹{Number(product.selling_price).toLocaleString('en-IN')}</td>
 
                     <td onClick={(e) => e.stopPropagation()}>
-                      <Link
-                        to={`/products/edit/${product.id}`}
-                        className="btn-primary"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        Edit
-                      </Link>
-                      {' '}
-                      <button
-                        className="btn-danger"
-                        onClick={(e) => removeProduct(e, product.id)}
-                      >
-                        Delete
-                      </button>
+                      <div className="action-buttons">
+
+                        <button
+                          className="btn-cart"
+                          onClick={() => addToCart(product)}
+                        >
+                          🛒 Add
+                        </button>
+
+                        <Link
+                          to={`/products/edit/${product.id}`}
+                          className="btn-primary"
+                        >
+                          Edit
+                        </Link>
+
+                        <button
+                          className="btn-danger"
+                          onClick={(e) =>
+                            removeProduct(e, product.id)
+                          }
+                        >
+                          Delete
+                        </button>
+
+                      </div>
                     </td>
 
                   </tr>

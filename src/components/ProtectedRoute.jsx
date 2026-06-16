@@ -1,16 +1,44 @@
-import { Navigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { Navigate } from "react-router-dom"
+import { useAuth } from "../context/AuthContext"
 
-const ProtectedRoute = ({ children, adminOnly = false }) => {
-  const { session, role, loading } = useAuth()
+const ProtectedRoute = ({
+  children,
+  roles = []
+}) => {
+  const {
+    session,
+    role,
+    loading
+  } = useAuth()
 
-  if (loading) return <div className="loader">Loading...</div>
+  if (loading) {
+    return <div>Loading...</div>
+  }
 
-  // not logged in → go to login
-  if (!session) return <Navigate to="/" />
+  if (!session) {
+    return <Navigate to="/" replace />
+  }
 
-  // staff trying to access admin-only page → go to products
-  if (adminOnly && role !== "admin") return <Navigate to="/products" />
+  if (
+    roles.length > 0 &&
+    !roles.includes(role)
+  ) {
+    if (role === "agent") {
+      return (
+        <Navigate
+          to="/agent/dashboard"
+          replace
+        />
+      )
+    }
+
+    return (
+      <Navigate
+        to="/dashboard"
+        replace
+      />
+    )
+  }
 
   return children
 }

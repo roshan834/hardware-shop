@@ -153,6 +153,16 @@ const BillHistory = () => {
       })
       .eq("id", selectedBill.id)
 
+      // unlock commission
+      if (newPending <= 0) {
+        await supabase
+          .from("agent_commissions")
+          .update({
+            status: "withdrawable"
+          })
+          .eq("bill_id", selectedBill.id)
+      }
+
     if (error) {
       toast.error(error.message)
       return

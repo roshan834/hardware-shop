@@ -20,6 +20,54 @@ const Billing = () => {
   const [barcode, setBarcode] = useState("")
   const [showScanner, setShowScanner] = useState(false)
   const [partialAmount, setPartialAmount] =useState("")
+  const [agents, setAgents] = useState([])
+  const [selectedAgent, setSelectedAgent] = useState("")
+
+
+      const loadAgents = async () => {
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("role", "agent")
+        .order("name", { ascending: true })
+
+      if (!error) {
+        setAgents(data || [])
+      }
+    }
+
+    useEffect(() => {
+      loadAgents()
+    }, [])
+
+    const loadCart = async () => {
+      if (!userId) return
+
+      const { data, error } = await supabase
+        .from("cart_items")
+        .select(`
+          qty,
+          products (*)
+        `)
+        .eq("user_id", userId)
+
+      if (error) {
+        console.log(error)
+        return
+      }
+
+      const formatted =
+        data?.map((item) => ({
+          ...item.products,
+          qty: item.qty
+        })) || []
+
+      setCart(formatted)
+    }
+
+    useEffect(() => {
+    loadCart()
+  }, [userId])
 
   const playBeep = () => {
     const audio = new Audio("/beep.mp3")
@@ -34,17 +82,7 @@ const Billing = () => {
     getUser()
   }, [])
 
-  useEffect(() => {
-    if (!userId) return
-    const savedCart = localStorage.getItem(`cart_${userId}`)
-    if (savedCart) setCart(JSON.parse(savedCart))
-  }, [userId])
-
-  useEffect(() => {
-    if (!userId) return
-    localStorage.setItem(`cart_${userId}`, JSON.stringify(cart))
-  }, [cart, userId])
-
+ 
   // ================= FETCH PRODUCT =================
   const getProductByBarcode = async (code) => {
     const { data, error } = await supabase
@@ -56,17 +94,63 @@ const Billing = () => {
   }
 
   // ================= ADD TO CART =================
-  const addToCart = (product) => {
-    setCart((prev) => {
-      const exists = prev.find((i) => i.id === product.id)
-      if (exists) {
-        return prev.map((i) =>
-          i.id === product.id ? { ...i, qty: i.qty + 1 } : i
-        )
+    const addToCart = async (product) => {
+      const { data: existing } =
+        await supabase
+          .from("cart_items")
+          .select("*")
+          .eq("user_id", userId)
+          .eq("product_id", product.id)
+          .maybeSingle()
+
+      if (existing) {
+        await supabase
+          .from("cart_items")
+          .update({
+            qty: existing.qty + 1
+          })
+          .eq("id", existing.id)
+      } else {
+        await supabase
+          .from("cart_items")
+          .insert({
+            user_id: userId,
+            product_id: product.id,
+            qty: 1
+          })
       }
-      return [...prev, { ...product, qty: 1 }]
-    })
-  }
+
+      await loadCart()
+    }
+
+
+    // ==============increase function ============
+
+        const increaseQty = async (
+      productId
+    ) => {
+      const { data } =
+        await supabase
+          .from("cart_items")
+          .select("*")
+          .eq("user_id", userId)
+          .eq("product_id", productId)
+          .single()
+
+      await supabase
+        .from("cart_items")
+        .update({
+          qty: data.qty + 1
+        })
+        .eq("id", data.id)
+
+
+        window.dispatchEvent(
+        new Event("cartUpdated")
+      )
+
+      loadCart()
+    }
 
   // ================= HANDLE SEARCH =================
   const handleSearch = async (code) => {
@@ -96,9 +180,21 @@ const Billing = () => {
     toast.success("Product Added To Cart 🛒")
   }
 
-  const removeItem = (id) => {
-    setCart((prev) => prev.filter((item) => item.id !== id))
-  }
+  const removeItem = async (
+          productId
+        ) => {
+          await supabase
+            .from("cart_items")
+            .delete()
+            .eq("user_id", userId)
+            .eq("product_id", productId)
+
+          window.dispatchEvent(
+            new Event("cartUpdated")
+          )
+
+          loadCart()
+        }
 
   // ================= TOTALS =================
   const subtotal = cart.reduce((sum, i) => sum + i.selling_price * i.qty, 0)
@@ -164,6 +260,23 @@ const Billing = () => {
 
   // ================= CHECKOUT =================
   const checkout = async () => {
+
+    let commissionAmount = 0
+    let commissionPercent = 0
+
+    if (selectedAgent) {
+      const agent = agents.find(
+        (a) => a.id == selectedAgent
+      )
+
+      commissionPercent =
+        agent?.commission_percent || 0
+
+      commissionAmount =
+        (total * commissionPercent) / 100
+    }
+
+
     // step 3 — validate customer details if filled
     if (!validateCustomerDetails()) return
 
@@ -223,21 +336,23 @@ const Billing = () => {
           await supabase
             .from("bills")
             .insert({
-              bill_no: billNo,
-              customer_name:
-                customerName ||
-                "Walk-In Customer",
-              customer_phone:
-                customerPhone || null,
-              subtotal,
-              gst,
-              grand_total: total,
-              payment_mode: paymentMode,
-              paid_amount: paidAmount,
-              pending_amount: pendingAmount,
-              payment_logs: paymentLogs,
-              bill_status: billStatus
-            })
+                bill_no: billNo,
+                customer_name:
+                  customerName ||
+                  "Walk-In Customer",
+                customer_phone:
+                  customerPhone || null,
+                subtotal,
+                gst,
+                grand_total: total,
+                payment_mode: paymentMode,
+                paid_amount: paidAmount,
+                pending_amount: pendingAmount,
+                payment_logs: paymentLogs,
+                bill_status: billStatus,
+                agent_id:
+                  selectedAgent || null
+              })
             .select()
             .single()
 
@@ -246,12 +361,44 @@ const Billing = () => {
         return
       }
 
+      // =========================
+      // CREATE AGENT COMMISSION
+      // =========================
+
+      if (selectedAgent) {
+
+        const commissionStatus =
+          billStatus === "completed"
+            ? "withdrawable"
+            : "locked"
+
+        const { error: commissionError } =
+          await supabase
+            .from("commissions")
+            .insert({
+              agent_id: selectedAgent,
+              bill_id: bill.id,
+              commission_percent: commissionPercent,
+              commission_amount: commissionAmount,
+              status: commissionStatus
+            })
+
+        if (commissionError) {
+          console.error(
+            "Commission Error",
+            commissionError
+          )
+        }
+      }
+
       for (const item of cart) {
         await supabase
           .from("bill_items")
           .insert({
             bill_id: bill.id,
             product_id: item.id,
+            product_name: item.product_name,
+            product_code: item.product_code,
             qty: item.qty,
             price: item.selling_price
           })
@@ -268,8 +415,12 @@ const Billing = () => {
       setCustomerPhone("")
       setPaymentMode("cash")
       setPartialAmount("")
-      setCart([])
-      localStorage.removeItem(`cart_${userId}`)
+      await supabase
+          .from("cart_items")
+          .delete()
+          .eq("user_id", userId)
+
+        setCart([])
       toast.success("Bill Saved Successfully 🎉")
 
     } catch (err) {
@@ -286,6 +437,44 @@ const Billing = () => {
   setPartialAmount("")
   await checkout()
 }
+
+// ==============decrease quantity -=======================
+
+    const decreaseQty = async (
+      productId
+    ) => {
+      const { data } =
+        await supabase
+          .from("cart_items")
+          .select("*")
+          .eq("user_id", userId)
+          .eq("product_id", productId)
+          .single()
+
+      if (data.qty <= 1) {
+        // await supabase
+        //   .from("cart_items")
+        //   .delete()
+        //   .eq("id", data.id)
+
+        return
+      } else {
+        await supabase
+          .from("cart_items")
+          .update({
+            qty: data.qty - 1
+          })
+          .eq("id", data.id)
+      }
+
+      window.dispatchEvent(
+        new Event("cartUpdated")
+      )
+
+      loadCart()
+    }
+
+
 
   return (
     <div className="layout">
@@ -350,9 +539,7 @@ const Billing = () => {
                       <td>
                         <div className="product-cell">
                           <span>{item.product_name}</span>
-                          {item.qty > 1 && (
-                            <span className="added-badge">+{item.qty - 1}</span>
-                          )}
+                          
                         </div>
                       </td>
 
@@ -361,14 +548,8 @@ const Billing = () => {
                           <button
                             className="qty-btn"
                             onClick={() =>
-                              setCart((prev) =>
-                                prev.map((p) =>
-                                  p.id === item.id
-                                    ? { ...p, qty: Math.max(1, p.qty - 1) }
-                                    : p
-                                )
-                              )
-                            }
+                                decreaseQty(item.id)
+                              }
                           >
                             -
                           </button>
@@ -376,13 +557,7 @@ const Billing = () => {
                           <button
                             className="qty-btn qty-plus"
                             onClick={() =>
-                              setCart((prev) =>
-                                prev.map((p) =>
-                                  p.id === item.id
-                                    ? { ...p, qty: p.qty + 1 }
-                                    : p
-                                )
-                              )
+                              increaseQty(item.id)
                             }
                           >
                             +
@@ -519,7 +694,29 @@ const Billing = () => {
                       )}
               </div>
             )}
+            <div className="form-group">
+              <label>Agent</label>
 
+              <select
+                value={selectedAgent}
+                onChange={(e) =>
+                  setSelectedAgent(e.target.value)
+                }
+              >
+                <option value="">
+                  No Agent
+                </option>
+
+                {agents.map((agent) => (
+                  <option
+                    key={agent.id}
+                    value={agent.id}
+                  >
+                    {agent.name}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="form-group">
               <label>Payment Mode</label>
               <select
