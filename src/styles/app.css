@@ -3230,3 +3230,525 @@ tbody tr:hover { background: var(--gray-50); }
     font-size: var(--text-md);
   }
 }
+
+/* =====================================================
+   MOBILE PRODUCT CARDS
+   ===================================================== */
+
+.product-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.product-card {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-4);
+  cursor: pointer;
+  transition: box-shadow var(--transition), transform var(--transition);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.product-card:active {
+  transform: scale(0.99);
+  box-shadow: var(--shadow-md);
+}
+
+/* Top: image + info */
+.product-card-top {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.product-card-img {
+  width: 70px;
+  height: 70px;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--gray-200);
+}
+
+.product-card-img .product-image {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+.product-card-img .no-image {
+  width: 70px;
+  height: 70px;
+  font-size: 28px;
+}
+
+.product-card-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.product-card-name {
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--gray-900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-card-code {
+  font-size: var(--text-xs);
+  color: var(--blue-600);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.product-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.product-card-tag {
+  background: var(--gray-100);
+  color: var(--gray-600);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+/* Middle: price + stock */
+.product-card-middle {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--gray-100);
+  border-bottom: 1px solid var(--gray-100);
+  flex-wrap: wrap;
+}
+
+.product-card-price-box {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 80px;
+}
+
+.product-card-price-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--gray-400);
+}
+
+.product-card-price {
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--green-600);
+}
+
+.product-card-actions {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.product-card-actions .btn-cart,
+.product-card-actions .btn-primary,
+.product-card-actions .btn-danger {
+  flex: 1 !important;
+  font-size: 12px !important;
+  padding: 8px 4px !important;
+  text-align: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  min-width: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+
+/* ===============billing page ================= */
+
+/* =====================================================
+   MOBILE CART CARDS
+   ===================================================== */
+
+.cart-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.cart-card {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Top: name + delete */
+.cart-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.cart-card-name {
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--gray-900);
+  flex: 1;
+  line-height: 1.4;
+}
+
+/* Bottom: qty + prices */
+.cart-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--gray-100);
+}
+
+.cart-card-prices {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: right;
+}
+
+.cart-card-price-row {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.cart-card-label {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--gray-400);
+}
+
+.cart-card-price {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--gray-600);
+  min-width: 70px;
+  text-align: right;
+}
+
+.cart-card-total {
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--green-600);
+  min-width: 70px;
+  text-align: right;
+}
+
+/* ===================billing history ======================= */
+/* =====================================================
+   SHOW / HIDE BY SCREEN SIZE
+   ===================================================== */
+
+.desktop-only {
+  display: block !important;
+}
+
+.mobile-only {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: block !important;
+  }
+}
+
+
+/* =========================
+   GLOBAL THEME
+========================= */
+
+body {
+  background: #f4f7ff;
+  font-family: "Inter", sans-serif;
+  color: #1f2937;
+}
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+}
+
+/* =========================
+   CONTENT AREA
+========================= */
+
+.content {
+  flex: 1;
+  padding: 24px;
+  overflow-x: hidden;
+}
+
+.page-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #111827;
+}
+
+/* =========================
+   CARD DESIGN (GLASS STYLE)
+========================= */
+
+.card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+
+/* =========================
+   FILTER SECTION
+========================= */
+
+.filter-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.search-input,
+.filter-select,
+.date-input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  outline: none;
+  font-size: 14px;
+  background: #fff;
+  transition: 0.2s;
+}
+
+.search-input:focus,
+.filter-select:focus,
+.date-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+}
+
+.clear-filter-btn {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* =========================
+   TABLE STYLING
+========================= */
+
+.table-container {
+  overflow-x: auto;
+}
+
+.bill-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.bill-table thead {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+}
+
+.bill-table th {
+  padding: 14px;
+  text-align: left;
+  font-size: 13px;
+}
+
+.bill-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eef2ff;
+  font-size: 14px;
+}
+
+.bill-table tbody tr {
+  transition: 0.2s;
+}
+
+.bill-table tbody tr:hover {
+  background: #f1f5ff;
+}
+
+/* =========================
+   BADGES
+========================= */
+
+.payment-badge,
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* Payment colors */
+.payment-badge.cash { background: #dcfce7; color: #166534; }
+.payment-badge.upi { background: #dbeafe; color: #1e40af; }
+.payment-badge.card { background: #fef3c7; color: #92400e; }
+.payment-badge.credit { background: #ffe4e6; color: #9f1239; }
+
+/* Status */
+.status-badge.completed { background: #dcfce7; color: #166534; }
+.status-badge.pending { background: #fef3c7; color: #92400e; }
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+
+.action-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.action-buttons button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.action-buttons button:hover {
+  transform: scale(1.05);
+}
+
+.action-buttons button:first-child {
+  background: #6366f1;
+  color: white;
+}
+
+.collect-btn {
+  background: #10b981;
+  color: white;
+}
+
+.download-btn {
+  background: #f59e0b;
+  color: white;
+}
+
+/* =========================
+   MOBILE CARD UI
+========================= */
+
+.mobile-cards {
+  display: none;
+}
+
+.bill-card {
+  background: white;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  border: 1px solid #eef2ff;
+}
+
+.bill-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.bill-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px dashed #e5e7eb;
+  font-size: 13px;
+}
+
+.bill-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.bill-actions button {
+  flex: 1;
+  padding: 8px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+  .filter-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bill-table {
+    min-width: 700px;
+  }
+
+  .mobile-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .card.table-card {
+    display: none;
+  }
+}
+
