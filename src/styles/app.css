@@ -3946,3 +3946,78 @@ button {
     flex-direction: column;
   }
 }
+
+
+/* ==================== user page ======================= */
+
+
+/* ================= VIEW CONTROL ================= */
+.desktop-view {
+  display: block;
+}
+
+.mobile-view {
+  display: none;
+}
+
+/* ================= MOBILE CARDS ================= */
+.user-card {
+  background: white;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.badge.admin { background: #ffe0e0; color: red; }
+.badge.manager { background: #e0f0ff; color: #007bff; }
+.badge.staff { background: #e6ffe6; color: green; }
+
+.user-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+/* ================= STATUS BUTTON ================= */
+.active-btn {
+  background: green;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 6px;
+}
+
+.inactive-btn {
+  background: gray;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 6px;
+}
+
+.muted {
+  color: #aaa;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .desktop-view {
+    display: none;
+  }
+
+  .mobile-view {
+    display: block;
+  }
+}
