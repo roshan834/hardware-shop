@@ -192,13 +192,13 @@ const Sidebar = () => {
                   💰 Dashboard
                 </Link>
 
-                <Link
+                {/* <Link
                   className={isActive("/agent/commission")}
                   to="/agent/commission"
                   onClick={close}
                 >
                   💵 Commission
-                </Link>
+                </Link> */}
 
                 <Link
                   className={isActive("/agent/bills")}
@@ -208,13 +208,13 @@ const Sidebar = () => {
                   🧾 My Bills
                 </Link>
 
-                <Link
+                {/* <Link
                   className={isActive("/profile")}
                   to="/profile"
                   onClick={close}
                 >
                   👤 Profile
-                </Link>
+                </Link> */}
               </>
             )}
 

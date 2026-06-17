@@ -253,7 +253,7 @@ const BillHistory = () => {
         {/* TABLE */}
 
         <div className="card">
-          <div className="table-wrapper">
+          <div className="table-container">
 
             <table className="bill-table">
 
