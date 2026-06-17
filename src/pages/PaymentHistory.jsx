@@ -228,12 +228,7 @@ const fetchBill = async () => {
               </span>
             )}
           </div>
-          <button
-            className="btn-back"
-            onClick={() => navigate(-1)}
-          >
-            ← Back
-          </button>
+          
         </div>
 
         {loading ? (

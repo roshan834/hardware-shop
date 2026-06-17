@@ -363,33 +363,86 @@ const BillHistory = () => {
       </div>
 
       {/* MODAL (UNCHANGED) */}
-      {showPendingModal && selectedBill && (
-        <div className="modal-overlay">
-          <div className="checkout-modal">
-            <h2>Collect Payment</h2>
+    
 
-            <input
+      {showPendingModal && selectedBill && (
+      <div className="modal-overlay">
+        <div className="checkout-modal">
+
+          <h2>Collect Pending Payment</h2>
+
+          <p>
+            Pending Amount:
+            ₹{selectedBill.pending_amount}
+          </p>
+
+          <input
               type="number"
+              min="1"
+              max={selectedBill.pending_amount}
+              placeholder="Enter Amount"
               value={collectedAmount}
-              onChange={(e) => setCollectedAmount(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value
+
+                if (
+                  value === "" ||
+                  Number(value) <= selectedBill.pending_amount
+                ) {
+                  setCollectedAmount(value)
+                }
+              }}
             />
 
-            <select
-              value={collectionMode}
-              onChange={(e) => setCollectionMode(e.target.value)}
-            >
-              <option value="cash">Cash</option>
-              <option value="upi">UPI</option>
-              <option value="card">Card</option>
-            </select>
+            {collectedAmount && (
+              <div
+                style={{
+                  marginTop: "10px",
+                  fontWeight: "600",
+                  color: "#ef4444"
+                }}
+              >
+                Remaining After Payment :
+                ₹
+                {(
+                  selectedBill.pending_amount -
+                  Number(collectedAmount)
+                ).toFixed(2)}
+              </div>
+            )}
 
-            <div className="modal-buttons">
-              <button onClick={collectPayment}>Save</button>
-              <button onClick={closePendingModal}>Cancel</button>
-            </div>
+          <select
+            value={collectionMode}
+            onChange={(e) =>
+              setCollectionMode(e.target.value)
+            }
+          >
+            <option value="cash">Cash</option>
+            <option value="upi">UPI</option>
+            <option value="card">Card</option>
+          </select>
+
+          <div className="modal-buttons">
+
+            <button
+              className="confirm-btn"
+              onClick={collectPayment}
+            >
+              Save Payment
+            </button>
+
+            <button
+              className="cancel-btn"
+              onClick={closePendingModal}
+            >
+              Cancel
+            </button>
+
           </div>
+
         </div>
-      )}
+      </div>
+    )}
 
     </div>
   )
