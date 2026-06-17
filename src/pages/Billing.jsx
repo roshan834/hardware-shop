@@ -31,15 +31,31 @@ const Billing = () => {
 
   useEffect(() => { loadAgents() }, [])
 
-  const loadCart = async () => {
-    if (!userId) return
-    const { data, error } = await supabase
-      .from("cart_items")
-      .select(`qty, products (*)`)
-      .eq("user_id", userId)
-    if (error) { console.log(error); return }
-    setCart(data?.map((item) => ({ ...item.products, qty: item.qty })) || [])
-  }
+    const loadCart = async () => {
+      if (!userId) return
+
+      const { data, error } = await supabase
+        .from("cart_items")
+        .select(`
+          id,
+          qty,
+          products (*)
+        `)
+        .eq("user_id", userId)
+        .order("id", { ascending: true })
+
+      if (error) {
+        console.log(error)
+        return
+      }
+
+      setCart(
+        data?.map((item) => ({
+          ...item.products,
+          qty: item.qty
+        })) || []
+      )
+    }
 
   useEffect(() => { loadCart() }, [userId])
 
