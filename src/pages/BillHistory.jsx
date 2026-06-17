@@ -167,18 +167,25 @@ const BillHistory = () => {
             <option value="partial">Partial</option>
           </select>
 
-          <div className="date-filter-group">
-            <input
-              type="date"
-              value={fromDate}
-              onChange={(e) => setFromDate(e.target.value)}
-            />
-            <input
-              type="date"
-              value={toDate}
-              onChange={(e) => setToDate(e.target.value)}
-            />
-          </div>
+            <div className="date-filter-group">
+              <div className="date-inline-field">
+                <label>From:</label>
+                <input
+                  type="date"
+                  value={fromDate}
+                  onChange={(e) => setFromDate(e.target.value)}
+                />
+              </div>
+
+              <div className="date-inline-field">
+                <label>To:</label>
+                <input
+                  type="date"
+                  value={toDate}
+                  onChange={(e) => setToDate(e.target.value)}
+                />
+              </div>
+            </div>
 
           <button
             className="clear-filter-btn"

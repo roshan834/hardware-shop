@@ -4062,3 +4062,71 @@ button {
     justify-content: center;
   }
 }
+
+.date-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 15px 0;
+}
+
+.date-inline-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  padding: 8px 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.date-inline-field label {
+  display: inline-block !important;
+  color: #374151 !important;
+  font-size: 14px;
+  font-weight: 600;
+  min-width: 40px;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.date-inline-field input[type="date"] {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: #111827;
+  min-width: 150px;
+  cursor: pointer;
+}
+
+.date-inline-field:focus-within {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Mobile View */
+@media (max-width: 768px) {
+  .date-filter-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .date-inline-field {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .date-inline-field label {
+    min-width: 45px;
+  }
+
+  .date-inline-field input[type="date"] {
+    flex: 1;
+    min-width: auto;
+    text-align: right;
+  }
+}
