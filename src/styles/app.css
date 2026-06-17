@@ -2749,51 +2749,100 @@ tbody tr:hover { background: var(--gray-50); }
 /* ==================admin dashboard =====================
  */
 
-/* =========================
-   BASE LAYOUT
-========================= */
+ .cards {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(220px, 1fr)
+    );
+  gap: 10px;
+}
+
+.chart-card {
+  margin-top: 20px;
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .card h3 {
+    font-size: 15px;
+  }
+
+  .card p {
+    font-size: 20px;
+  }
+
+  .chart-card {
+    padding: 10px;
+  }
+}
+
+
+
+.menu-item-with-badge {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.cart-badge {
+  background: #ef4444;
+  color: white;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
 .layout {
   display: flex;
   background: #f4f6ff;
   min-height: 100vh;
 }
 
+/* CONTENT */
 .content {
   flex: 1;
-  padding: 18px;
+  padding: 20px;
 }
 
-/* =========================
-   HEADER
-========================= */
+/* HEADER */
 .dashboard-header h1 {
-  font-size: 30px;
-  font-weight: 800;
   margin: 0;
+  font-size: 30px;
+  font-weight: 700;
   background: linear-gradient(90deg, #4f46e5, #06b6d4);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .dashboard-header p {
-  font-size: 14px;
-  color: #6b7280;
-  margin-top: 4px;
+  color: #666;
+  margin-top: 5px;
 }
 
-/* =========================
-   GRID (SMALL CARDS)
-========================= */
+/* GRID */
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-  gap: 12px;
-  margin-top: 16px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 20px;
 }
 
-/* =========================
-   CARD BASE
-========================= */
+/* BASE CARD */
 .card {
   border-radius: 14px;
   padding: 12px;
@@ -2806,10 +2855,10 @@ tbody tr:hover { background: var(--gray-50); }
 }
 
 .card:hover {
-  transform: translateY(-3px) scale(1.01);
+  transform: translateY(-5px) scale(1.02);
 }
 
-/* shine effect */
+/* SHINY EFFECT */
 .card::after {
   content: "";
   position: absolute;
@@ -2817,13 +2866,11 @@ tbody tr:hover { background: var(--gray-50); }
   left: -50%;
   width: 200%;
   height: 200%;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.1);
   transform: rotate(25deg);
 }
 
-/* =========================
-   COLORS (PROFESSIONAL)
-========================= */
+/* CARD COLORS (GRADIENT STYLE) */
 .kpi-card {
   background: linear-gradient(135deg, #6366f1, #3b82f6);
 }
@@ -2848,63 +2895,39 @@ tbody tr:hover { background: var(--gray-50); }
   background: linear-gradient(135deg, #ec4899, #f43f5e);
 }
 
-/* =========================
-   TEXT STYLES (SMALL + CLEAN)
-========================= */
+/* TEXT */
 .card-title {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.85);
-}
-
-.card-value {
-  font-size: 20px;
-  font-weight: 800;
-  margin-top: 6px;
-  color: #fff;
-}
-
-/* =========================
-   ICONS
-========================= */
-.card-top {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.card-icon {
-  font-size: 18px;
+  font-size: 13px;
   opacity: 0.9;
 }
 
-.blue { color: #2563eb; }
-.green { color: #16a34a; }
-.orange { color: #f59e0b; }
-.purple { color: #7c3aed; }
-.pink { color: #ec4899; }
-
-/* =========================
-   CHART
-========================= */
-.chart-card {
-  margin-top: 20px;
-  padding: 16px;
-  border-radius: 14px;
-  background: #fff;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.05);
+.card-value {
+  font-size: 26px;
+  font-weight: bold;
+  margin-top: 8px;
 }
 
-/* =========================
-   MOBILE RESPONSIVE
-========================= */
+/* CHART */
+.chart-card {
+  margin-top: 25px;
+  padding: 18px;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+/* ========================= */
+/* 📱 TABLET */
+/* ========================= */
 @media (max-width: 1024px) {
   .cards-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
+/* ========================= */
+/* 📱 MOBILE */
+/* ========================= */
 @media (max-width: 768px) {
   .layout {
     flex-direction: column;
@@ -2916,18 +2939,75 @@ tbody tr:hover { background: var(--gray-50); }
 
   .cards-grid {
     grid-template-columns: 1fr;
-    gap: 10px;
   }
 
   .card {
-    padding: 10px;
+    padding: 14px;
   }
 
   .card-value {
-    font-size: 18px;
-  }
-
-  .dashboard-header h1 {
-    font-size: 24px;
+    font-size: 22px;
   }
 }
+
+.card-top {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.card-icon {
+  font-size: 22px;
+  opacity: 0.9;
+}
+
+/* icon colors */
+.blue { color: #2563eb; }
+.green { color: #16a34a; }
+.orange { color: #f59e0b; }
+.purple { color: #7c3aed; }
+.pink { color: #ec4899; }
+
+
+.card-title {
+  font-size: 14px;   /* was 13px */
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.card-value {
+  font-size: 30px;   /* increased (important KPI size) */
+  font-weight: 800;
+  margin-top: 8px;
+  color: #111827;
+}
+
+.dashboard-header h1 {
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.dashboard-header p {
+  font-size: 15px;
+  color: #6b7280;
+}
+
+.card-title {
+  font-size: 28px;
+  font-weight: 600;
+  padding-left: 10px;
+  position: relative;
+  color: #03050a;
+}
+
+.card-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 28px;
+  border-radius: 4px;
+  background: #eaecf0; /* default blue */
+}
+
