@@ -23,31 +23,31 @@ const ProtectedRoute = ({
     roles.length > 0 &&
     !roles.includes(role)
   ) {
-    if (role === "agent") {
-      return (
-        <Navigate
-          to="/agent/dashboard"
-          replace
-        />
-      )
-    }
-    
-      if (role === "staff") {
-      return (
-        <Navigate
-          to="/products"
-          replace
-        />
-      )
-    }
-  
+    switch (role) {
+      case "agent":
+        return (
+          <Navigate
+            to="/agent/dashboard"
+            replace
+          />
+        )
 
-    return (
-      <Navigate
-        to="/dashboard"
-        replace
-      />
-    )
+      case "staff":
+        return (
+          <Navigate
+            to="/products"
+            replace
+          />
+        )
+
+      default:
+        return (
+          <Navigate
+            to="/dashboard"
+            replace
+          />
+        )
+    }
   }
 
   return children
