@@ -3550,38 +3550,21 @@ body {
   flex-wrap: wrap;
   gap: 12px;
   align-items: center;
-  margin-bottom: 16px;
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  position: relative;
+  z-index: 5;
 }
 
+/* make inputs always clickable */
 .search-input,
 .filter-select,
 .date-input {
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  outline: none;
-  font-size: 14px;
-  background: #fff;
-  transition: 0.2s;
+  pointer-events: auto;
+  position: relative;
+  z-index: 10;
 }
-
-.search-input:focus,
-.filter-select:focus,
-.date-input:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
-}
-
-.clear-filter-btn {
-  padding: 10px 14px;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: white;
-  cursor: pointer;
-  font-weight: 600;
-}
-
 /* =========================
    TABLE STYLING
 ========================= */
@@ -3752,3 +3735,214 @@ body {
   }
 }
 
+/* FORCE CLICKABILITY */
+.content {
+  position: relative;
+  z-index: 1;
+}
+
+/* prevent overlay blocking inputs */
+.filter-card {
+  position: relative;
+  z-index: 2;
+}
+
+/* inputs must always be clickable */
+input,
+select,
+button {
+  position: relative;
+  z-index: 3;
+}
+
+/* fix accidental overlay layers */
+.layout {
+  position: relative;
+  z-index: 0;
+}
+
+
+/* ======================billing history ==================== */
+
+
+.payment-cards {
+  display: none;
+}
+
+/* MOBILE VIEW */
+@media (max-width: 768px) {
+
+  .payment-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .payment-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 14px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  }
+
+  .payment-card-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #111827;
+  }
+
+  .payment-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px dashed #e5e7eb;
+    font-size: 13px;
+    color: #374151;
+  }
+
+  .payment-row span {
+    color: #6b7280;
+  }
+
+  .payment-card strong {
+    color: #16a34a;
+  }
+}
+
+
+/* =========================
+   OVERLAY (BACKGROUND BLUR)
+========================= */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 16px;
+}
+
+/* =========================
+   MODAL CARD
+========================= */
+
+.checkout-modal {
+  width: 100%;
+  max-width: 380px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  animation: popIn 0.25s ease-in-out;
+}
+
+/* animation */
+@keyframes popIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* =========================
+   TITLE
+========================= */
+
+.checkout-modal h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #111827;
+  text-align: center;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+.checkout-modal input,
+.checkout-modal select {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+  background: #f9fafb;
+}
+
+.checkout-modal input:focus,
+.checkout-modal select:focus {
+  border-color: #6366f1;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.modal-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.modal-buttons button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* SAVE BUTTON */
+.modal-buttons button:first-child {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+}
+
+/* CANCEL BUTTON */
+.modal-buttons button:last-child {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.modal-buttons button:hover {
+  transform: scale(1.03);
+}
+
+/* =========================
+   MOBILE FIX
+========================= */
+
+@media (max-width: 768px) {
+  .checkout-modal {
+    max-width: 95%;
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .modal-buttons {
+    flex-direction: column;
+  }
+}

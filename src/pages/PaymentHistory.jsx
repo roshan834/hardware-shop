@@ -283,64 +283,102 @@ const fetchBill = async () => {
             </div>
 
             {/* ── Payment Logs Card ── */}
-            <div className="card">
-              <h2 style={{ marginBottom: "16px", fontSize: "17px" }}>
-                Payment Logs
-              </h2>
+           <div className="card">
+  <h2 style={{ marginBottom: "16px", fontSize: "17px" }}>
+    Payment Logs
+  </h2>
 
-              {/* scroll wrapper fixes mobile overflow */}
-              <div className="table-wrapper">
-                <table className="bill-table">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Amount</th>
-                      <th>Mode</th>
-                      <th>Note</th>
-                      <th>Date</th>
-                    </tr>
-                  </thead>
+  {/* ================= DESKTOP TABLE ================= */}
+  <div className="table-wrapper desktop-only">
+    <table className="bill-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Amount</th>
+          <th>Mode</th>
+          <th>Note</th>
+          <th>Date</th>
+        </tr>
+      </thead>
 
-                  <tbody>
-                    {bill.payment_logs?.length > 0 ? (
-                      bill.payment_logs.map((log, index) => (
-                        <tr key={index}>
-                          <td>{index + 1}</td>
-                          <td style={{ fontWeight: 600, color: "var(--green-600)" }}>
-                            ₹{log.amount}
-                          </td>
-                          <td>
-                            <span className={`payment-badge ${log.payment_mode?.toLowerCase()}`}>
-                              {log.payment_mode}
-                            </span>
-                          </td>
-                          <td style={{ color: "var(--gray-500)" }}>
-                            {log.note || "—"}
-                          </td>
-                          <td style={{ color: "var(--gray-500)" }}>
-                            {new Date(log.date).toLocaleString()}
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td
-                          colSpan="5"
-                          style={{
-                            textAlign: "center",
-                            color: "var(--gray-400)",
-                            padding: "32px",
-                          }}
-                        >
-                          No payment logs recorded yet.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+      <tbody>
+        {bill.payment_logs?.length > 0 ? (
+          bill.payment_logs.map((log, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
 
-            </div>
+              <td style={{ fontWeight: 600, color: "green" }}>
+                ₹{log.amount}
+              </td>
+
+              <td>
+                <span className={`payment-badge ${log.payment_mode?.toLowerCase()}`}>
+                  {log.payment_mode}
+                </span>
+              </td>
+
+              <td style={{ color: "#6b7280" }}>
+                {log.note || "—"}
+              </td>
+
+              <td style={{ color: "#6b7280" }}>
+                {new Date(log.date).toLocaleString()}
+              </td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan="5" style={{ textAlign: "center", padding: "30px" }}>
+              No payment logs recorded yet.
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  </div>
+
+  {/* ================= MOBILE CARDS ================= */}
+  <div className="mobile-only payment-cards">
+
+    {bill.payment_logs?.length > 0 ? (
+      bill.payment_logs.map((log, index) => (
+        <div className="payment-card" key={index}>
+
+          <div className="payment-card-header">
+            <span>#{index + 1}</span>
+
+            <span className={`payment-badge ${log.payment_mode?.toLowerCase()}`}>
+              {log.payment_mode}
+            </span>
+          </div>
+
+          <div className="payment-row">
+            <span>Amount</span>
+            <strong style={{ color: "green" }}>
+              ₹{log.amount}
+            </strong>
+          </div>
+
+          <div className="payment-row">
+            <span>Note</span>
+            <span>{log.note || "—"}</span>
+          </div>
+
+          <div className="payment-row">
+            <span>Date</span>
+            <span>{new Date(log.date).toLocaleString()}</span>
+          </div>
+
+        </div>
+      ))
+    ) : (
+      <div style={{ textAlign: "center", padding: "20px", color: "#999" }}>
+        No payment logs recorded yet.
+      </div>
+    )}
+
+  </div>
+</div>
           </>
         )}
 
