@@ -14,6 +14,7 @@ const Products = () => {
   const [search, setSearch] = useState('')
   const [pageSize, setPageSize] = useState(10)
   const [categories, setCategories] = useState([])
+  
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -22,6 +23,49 @@ const Products = () => {
   const query = new URLSearchParams(location.search)
   const filter = query.get('filter') || ''
   const category = query.get('category') || ''
+
+  const [cartCount, setCartCount] = useState(0)
+
+    useEffect(() => {
+      loadCartCount()
+
+      const handleCartUpdate = () => {
+        loadCartCount()
+      }
+
+      window.addEventListener(
+        "cartUpdated",
+        handleCartUpdate
+      )
+
+      return () => {
+        window.removeEventListener(
+          "cartUpdated",
+          handleCartUpdate
+        )
+      }
+    }, [])
+
+    const loadCartCount = async () => {
+      const {
+        data: { user }
+      } = await supabase.auth.getUser()
+
+      if (!user) return
+
+      const { data } = await supabase
+        .from("cart_items")
+        .select("qty")
+        .eq("user_id", user.id)
+
+      const count =
+        data?.reduce(
+          (sum, item) => sum + Number(item.qty || 0),
+          0
+        ) || 0
+
+      setCartCount(count)
+    }
 
   const getImageUrl = (product) =>
     product.image_url ||
@@ -120,6 +164,16 @@ const ActionButtons = ({ product }) => (
       <Sidebar />
 
       <div className="content">
+
+
+        <Link to="/billing" className="mobile-cart-btn">
+          🛒
+          {cartCount > 0 && (
+            <span className="cart-badge">
+              {cartCount}
+            </span>
+          )}
+        </Link>
 
         <div className="page-header">
           <h1>Products</h1>

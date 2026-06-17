@@ -4021,3 +4021,44 @@ button {
     display: block;
   }
 }
+
+
+.mobile-cart-btn {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-cart-btn {
+    position: fixed;
+    top: 70px;
+    right: 15px;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    z-index: 999;
+    box-shadow: 0 4px 12px rgba(0,0,0,.2);
+  }
+
+  .cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    min-width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: red;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
