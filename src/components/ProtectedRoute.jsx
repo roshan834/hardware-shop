@@ -31,6 +31,16 @@ const ProtectedRoute = ({
         />
       )
     }
+    
+      if (role === "staff") {
+      return (
+        <Navigate
+          to="/products"
+          replace
+        />
+      )
+    }
+  
 
     return (
       <Navigate
