@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import Sidebar from "../components/Sidebar"
-import { supabase } from "../config/supabase"
+import Sidebar from "../../components/Sidebar"
+import { supabase } from "../../config/supabase"
 
 const AgentDashboard = () => {
   const [stats, setStats] = useState({

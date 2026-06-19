@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
-import Sidebar from "../components/Sidebar"
-import { supabase } from "../config/supabase"
+import Sidebar from "../../components/Sidebar"
+import { supabase } from "../../config/supabase"
 import { toast } from "react-toastify"
-import "../styles/users.css"
+import "../../styles/users.css"
 
 
 const Users = () => {

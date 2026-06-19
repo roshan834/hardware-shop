@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
-import Sidebar from "../components/Sidebar"
-import { supabase } from "../config/supabase"
+import Sidebar from "../../components/Sidebar"
+import { supabase } from "../../config/supabase"
 import { toast } from "react-toastify"
 import { useNavigate } from "react-router-dom"
 import { FaDownload } from "react-icons/fa"
-import PrintInvoice from "../components/PrintInvoice"
+import PrintInvoice from "../../components/PrintInvoice"
 
 const BillHistory = () => {
   const [bills, setBills] = useState([])
@@ -18,6 +18,10 @@ const BillHistory = () => {
   const [selectedBill, setSelectedBill] = useState(null)
   const [collectedAmount, setCollectedAmount] = useState("")
   const [collectionMode, setCollectionMode] = useState("cash")
+  const [currentPage, setCurrentPage] = useState(1)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  
+
 
   const navigate = useNavigate()
 
@@ -51,6 +55,12 @@ const BillHistory = () => {
     setLoading(false)
   }
 
+ 
+
+  useEffect(() => {
+  setCurrentPage(1)
+  }, [search, paymentFilter, fromDate, toDate])
+
   const openPendingModal = (bill) => {
     setSelectedBill(bill)
     setCollectedAmount("")
@@ -82,6 +92,16 @@ const BillHistory = () => {
 
     return searchMatch && paymentMatch && fromMatch && toMatch
   })
+
+  const totalPages = Math.ceil(filteredBills.length / rowsPerPage)
+
+  const indexOfLastBill = currentPage * rowsPerPage
+  const indexOfFirstBill = indexOfLastBill - rowsPerPage
+
+  const currentBills = filteredBills.slice(
+    indexOfFirstBill,
+    indexOfLastBill
+  )
 
   const collectPayment = async () => {
     if (!collectedAmount) return toast.error("Enter amount")
@@ -200,6 +220,23 @@ const BillHistory = () => {
           </button>
         </div>
 
+        <div className="pagination-top">
+        <label>Rows Per Page:</label>
+
+        <select
+          value={rowsPerPage}
+          onChange={(e) => {
+            setRowsPerPage(Number(e.target.value))
+            setCurrentPage(1)
+          }}
+        >
+          <option value={10}>10</option>
+          <option value={25}>25</option>
+          <option value={50}>50</option>
+          <option value={100}>100</option>
+        </select>
+      </div>
+
         <div className="bill-count">
           Total Bills: {filteredBills.length}
         </div>
@@ -232,7 +269,7 @@ const BillHistory = () => {
                 ) : filteredBills.length === 0 ? (
                   <tr><td colSpan="10">No Bills Found</td></tr>
                 ) : (
-                  filteredBills.map((bill) => (
+                  currentBills.map((bill) => (
                     <tr key={bill.id}>
                       <td>{bill.bill_no}</td>
                       <td>{bill.customer_name || "Walk-In"}</td>
@@ -303,7 +340,7 @@ const BillHistory = () => {
           ) : filteredBills.length === 0 ? (
             <p>No Bills Found</p>
           ) : (
-            filteredBills.map((bill) => (
+            currentBills.map((bill) => (
               <div className="bill-card" key={bill.id}>
 
                 <div className="bill-header">
@@ -365,6 +402,26 @@ const BillHistory = () => {
               </div>
             ))
           )}
+        </div>
+
+       <div className="pagination">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(currentPage - 1)}
+          >
+            Previous
+          </button>
+
+          <span>
+            Page {currentPage} of {totalPages || 1}
+          </span>
+
+          <button
+            disabled={currentPage === totalPages || totalPages === 0}
+            onClick={() => setCurrentPage(currentPage + 1)}
+          >
+            Next
+          </button>
         </div>
 
       </div>

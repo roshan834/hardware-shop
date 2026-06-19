@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import Sidebar from '../components/Sidebar'
-import { supabase } from '../config/supabase'
-import { useAuth } from '../context/AuthContext'
-import { uploadImage } from '../services/uploadService'
+import Sidebar from '../../components/Sidebar'
+import { supabase } from '../../config/supabase'
+import { useAuth } from '../../context/AuthContext'
+import { uploadImage } from '../../services/uploadService'
 import Webcam from 'react-webcam'
 
 const EditProduct = () => {
@@ -179,7 +179,7 @@ const EditProduct = () => {
 
       <div className="content">
 
-        <button className="btn-back" onClick={() => navigate('/products')}>
+        <button className="btn-back" onClick={() => navigate('/admin/products')}>
           ← Back
         </button>
 

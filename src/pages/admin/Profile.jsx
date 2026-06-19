@@ -1,6 +1,6 @@
 import { useState } from "react"
-import Sidebar from "../components/Sidebar"
-import "../styles/profile.css"
+import Sidebar from "../../components/Sidebar"
+import "../../styles/profile.css"
 
 const Profile = () => {
   const [user] = useState({

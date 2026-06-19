@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import Sidebar from "../components/Sidebar"
-import { supabase } from "../config/supabase"
+import Sidebar from "../../components/Sidebar"
+import { supabase } from "../../config/supabase"
 import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
 

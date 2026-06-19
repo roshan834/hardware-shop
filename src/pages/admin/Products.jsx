@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import Sidebar from '../components/Sidebar'
-import { getProducts, deleteProduct, getCategories } from '../services/productService'
-import { useAuth } from '../context/AuthContext'
+import Sidebar from '../../components/Sidebar'
+import { getProducts, deleteProduct, getCategories } from '../../services/websiteProductService'
+import { useAuth } from '../../context/AuthContext'
 import { toast } from "react-toastify"
-import { supabase } from "../config/supabase"
+import { supabase } from "../../config/supabase"
 
 const Products = () => {
 
@@ -144,7 +144,7 @@ const ActionButtons = ({ product }) => (
       🛒 Add
     </button>
     <Link
-      to={`/products/edit/${product.id}`}
+      to={`/admin/products/edit/${product.id}`}
       className="btn-primary"
       onClick={(e) => e.stopPropagation()}
     >
@@ -177,7 +177,7 @@ const ActionButtons = ({ product }) => (
 
         <div className="page-header">
           <h1>Products</h1>
-          <Link to="/products/add" className="btn-primary">
+          <Link to="/admin/products/add" className="btn-primary">
             Add Product
           </Link>
         </div>
@@ -193,7 +193,7 @@ const ActionButtons = ({ product }) => (
           />
           <select
             value={category}
-            onChange={(e) => navigate(`/products?category=${e.target.value.trim()}`)}
+            onChange={(e) => navigate(`/admin/products?category=${e.target.value.trim()}`)}
             className="toolbar-select"
           >
             <option value="">All Categories</option>
@@ -238,7 +238,7 @@ const ActionButtons = ({ product }) => (
                   {products.map(product => (
                     <tr
                       key={product.id}
-                      onClick={() => navigate(`/products/view/${product.id}`)}
+                      onClick={() => navigate(`/admin/products/view/${product.id}`)}
                       className="clickable-row"
                     >
                       <td><ProductImage product={product} /></td>
@@ -270,7 +270,7 @@ const ActionButtons = ({ product }) => (
                 <div
                   key={product.id}
                   className="product-card"
-                  onClick={() => navigate(`/products/view/${product.id}`)}
+                  onClick={() => navigate(`/admin/products/view/${product.id}`)}
                 >
                   {/* Top row: image + info */}
                   <div className="product-card-top">

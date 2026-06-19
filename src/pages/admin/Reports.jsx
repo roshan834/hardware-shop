@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import Sidebar from "../components/Sidebar"
-import { supabase } from "../config/supabase"
-import "../styles/reports.css"
+import Sidebar from "../../components/Sidebar"
+import { supabase } from "../../config/supabase"
+import "../../styles/reports.css"
 
 const Reports = () => {
   const [todaySales, setTodaySales] = useState(0)

@@ -114,3 +114,52 @@ export const getProductsByBarcode = async (barcode) => {
     .eq("is_active", true)
     .single()
 }
+
+export const getWebsiteProducts = async ({
+  page = 1,
+  pageSize = 12,
+  search = "",
+  category = "",
+  brand = ""
+}) => {
+
+  let query = supabase
+    .from("products")
+    .select("*", {
+      count: "exact"
+    })
+    .eq("is_active", true)
+
+  if (search) {
+    query = query.or(
+      `product_name.ilike.%${search}%,
+       product_code.ilike.%${search}%,
+       barcode.ilike.%${search}%`
+    )
+  }
+
+  if (category) {
+    query = query.eq(
+      "category",
+      category
+    )
+  }
+
+  if (brand) {
+    query = query.eq(
+      "brand",
+      brand
+    )
+  }
+
+  const from =
+    (page - 1) * pageSize
+
+  const to =
+    from + pageSize - 1
+
+  query = query.range(from, to)
+
+  return await query
+}
+

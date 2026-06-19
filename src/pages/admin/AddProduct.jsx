@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import Barcode from 'react-barcode'
 import Webcam from 'react-webcam'
 
-import Sidebar from '../components/Sidebar'
-import { addProduct } from '../services/productService'
-import { uploadImage } from '../services/uploadService'
-import { useAuth } from '../context/AuthContext'
+import Sidebar from '../../components/Sidebar'
+import { addProduct } from '../../services/productService'
+import { uploadImage } from '../../services/uploadService'
+import { useAuth } from '../../context/AuthContext'
 
 const AddProduct = () => {
 
@@ -150,7 +150,7 @@ const AddProduct = () => {
       }
 
       alert('Product Added Successfully')
-      navigate('/products')
+      navigate('/admin/products')
 
     } catch (err) {
       console.error(err)
@@ -165,7 +165,7 @@ const AddProduct = () => {
 
       <div className="content">
 
-        <button className="btn-back" onClick={() => navigate('/products')}>
+        <button className="btn-back" onClick={() => navigate('/admin/products')}>
           ← Back
         </button>
 

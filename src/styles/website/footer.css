@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Inter:wght@400;500&display=swap');
+
+:root {
+  --nk-footer-navy: #0a1626;
+  --nk-footer-orange: #ff6a1f;
+  --nk-footer-text: rgba(255, 255, 255, 0.72);
+  --nk-footer-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.website-footer {
+  position: relative;
+  background: var(--nk-footer-navy);
+  padding: 64px 20px 26px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(34px);
+  transition: opacity 0.8s var(--nk-footer-ease), transform 0.8s var(--nk-footer-ease);
+}
+.website-footer.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.footer-glow {
+  position: absolute;
+  top: -120px;
+  left: 50%;
+  width: 480px;
+  height: 240px;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(255, 106, 31, 0.22), transparent);
+  pointer-events: none;
+}
+
+.footer-content {
+  position: relative;
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footer-content h2 {
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 700;
+  font-size: 1.9rem;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0 0 8px;
+}
+
+.footer-tagline {
+  color: var(--nk-footer-orange);
+  font-size: 0.88rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0 0 30px;
+}
+
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 36px;
+}
+.footer-contact p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--nk-footer-text);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin: 0;
+}
+.footer-contact a {
+  color: var(--nk-footer-text);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.footer-contact a:hover { color: var(--nk-footer-orange); }
+
+.footer-icon { flex-shrink: 0; }
+
+.footer-bottom {
+  position: relative;
+  text-align: center;
+  padding-top: 22px;
+  margin-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.8rem;
+}
+
+@media (min-width: 768px) {
+  .footer-contact {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 28px;
+  }
+  .footer-contact p { font-size: 0.88rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .website-footer {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}

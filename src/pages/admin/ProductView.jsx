@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { supabase } from "../config/supabase";
-import Sidebar from "../components/Sidebar";
-import { useAuth } from "../context/AuthContext";
+import { supabase } from "../../config/supabase";
+import Sidebar from "../../components/Sidebar";
+import { useAuth } from "../../context/AuthContext";
 import Barcode from "react-barcode";
 import { toPng } from "html-to-image";
 import { useRef } from "react";
@@ -25,7 +25,26 @@ const ProductView = () => {
   link.download = `${product.product_code || "barcode"}.png`;
   link.href = dataUrl;
   link.click();
-};
+  };
+
+
+  const generateBarcode = async () => {
+  const { error } = await supabase
+    .from("products")
+    .update({
+      barcode: product.product_code
+    })
+    .eq("id", product.id);
+
+  if (!error) {
+    setProduct(prev => ({
+      ...prev,
+      barcode: prev.product_code
+    }));
+  }
+  };
+
+
 
 
   useEffect(() => {
@@ -60,6 +79,8 @@ const ProductView = () => {
   const imageUrl = //product.image_url ||
     `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/product-images/${product.product_code}.jpeg`
 
+    const barcodeValue = product.barcode || product.product_code;
+
     
   return (
     <div className="layout">
@@ -67,19 +88,28 @@ const ProductView = () => {
       <div className="content">
 
         <div className="page-header">
-          <button className="btn-back" onClick={() => navigate("/products")}>
+          <button className="btn-back" onClick={() => navigate("/admin/products")}>
             ← Back
           </button>
           <div style={{ display: "flex", gap: "10px" }}>
             <button
               className="btn-primary"
-              onClick={() => navigate(`/products/edit/${id}`)}
+              onClick={() => navigate(`/admin/products/edit/${id}`)}
             >
               Edit
             </button>
             <button className="btn-danger" onClick={handleDelete}>
               Delete
             </button>
+
+            {!product.barcode && (
+              <button
+                className="btn-success"
+                onClick={generateBarcode}
+              >
+                Generate Barcode
+              </button>
+            )}
             
           </div>
           
@@ -100,6 +130,7 @@ const ProductView = () => {
                 marginBottom: "25px"
             }}
             >
+
 
             {/* ================= PRODUCT IMAGE ================= */}
             <div style={{ textAlign: "center" }}>
@@ -132,15 +163,17 @@ const ProductView = () => {
                 >
                 📦
                 </div>
+
+
             </div>
 
             {/* ================= BARCODE ================= */}
-            {product.barcode && (
+            {(product.barcode || product.product_code) && (
                 <div
                   ref={barcodeRef}
                   onClick={() =>
                     setPreviewImage(
-                      `https://barcode.tec-it.com/barcode.ashx?data=${product.barcode}&code=Code128`
+                      `https://barcode.tec-it.com/barcode.ashx?data=${barcodeValue}&code=Code128`
                     )
                   }
                   style={{
@@ -153,15 +186,15 @@ const ProductView = () => {
                     cursor: "zoom-in",
                     }}
                 >
-                    <Barcode
-                    value={product.barcode}
+                   <Barcode
+                    value={barcodeValue}
                     width={1.5}
                     height={60}
                     fontSize={14}
-                    />
+                  />
 
                     <div style={{ marginTop: "5px", fontSize: "12px", color: "#666" }}>
-                    {product.barcode}
+                    {barcodeValue}
                     </div>
 
                     {/* ================= DOWNLOAD BUTTON ================= */}

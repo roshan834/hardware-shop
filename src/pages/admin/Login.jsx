@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { supabase } from "../config/supabase"
-import loginBack from "../assets/logincoverpage.jpeg"
+import { supabase } from "../../config/supabase"
+import loginBack from "../../assets/logincoverpage.jpeg"
 
 const Login = () => {
 const [email, setEmail] = useState("")
@@ -26,10 +26,25 @@ data: { session }
       .eq("id", session.user.id)
       .single()
 
-  if (userData?.role === "agent") {
-    navigate("/agent/dashboard")
-  } else {
-    navigate("/dashboard")
+    switch (userData?.role) {
+    case "customer":
+      navigate("/customer")
+      break
+
+    case "staff":
+      navigate("/admin/products")
+      break
+
+    case "agent":
+      navigate("/agent/dashboard")
+      break
+
+    case "admin":
+      navigate("/admin/dashboard")
+      break
+
+    default:
+      navigate("/")
   }
 }
 
@@ -63,11 +78,26 @@ const { data: userData } =
 
     console.log("Logged User Role:", userData?.role)
 
-if (userData?.role === "agent") {
-  navigate("/agent/dashboard")
-} else {
-  navigate("/dashboard")
-}
+  switch (userData?.role) {
+    case "customer":
+      navigate("/customer")
+      break
+
+    case "staff":
+      navigate("/admin/products")
+      break
+
+    case "agent":
+      navigate("/agent/dashboard")
+      break
+
+    case "admin":
+      navigate("/admin/dashboard")
+      break
+
+    default:
+      navigate("/")
+  }
 
 
 }

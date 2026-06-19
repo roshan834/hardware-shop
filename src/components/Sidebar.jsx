@@ -87,24 +87,24 @@ const Sidebar = () => {
             {role === "admin" && (
               <>
                 <Link
-                  className={isActive("/dashboard")}
-                  to="/dashboard"
+                  className={isActive("/admin/dashboard")}
+                  to="/admin/dashboard"
                   onClick={close}
                 >
                   📊 Dashboard
                 </Link>
 
                 <Link
-                  className={isActive("/products")}
-                  to="/products"
+                  className={isActive("/admin/products")}
+                  to="/admin/products"
                   onClick={close}
                 >
                   📦 Products
                 </Link>
 
                <Link
-              className={isActive("/billing")}
-              to="/billing"
+              className={isActive("/admin/billing")}
+              to="/admin/billing"
               onClick={close}
             >
               <div className="menu-item-with-badge">
@@ -119,32 +119,32 @@ const Sidebar = () => {
             </Link>
 
                 <Link
-                  className={isActive("/bills")}
-                  to="/bills"
+                  className={isActive("/admin/bills")}
+                  to="/admin/bills"
                   onClick={close}
                 >
                   📜 Bill History
                 </Link>
 
                 <Link
-                  className={isActive("/reports")}
-                  to="/reports"
+                  className={isActive("/admin/reports")}
+                  to="/admin/reports"
                   onClick={close}
                 >
                   📈 Reports
                 </Link>
 
                 <Link
-                  className={isActive("/users")}
-                  to="/users"
+                  className={isActive("/admin/users")}
+                  to="/admin/users"
                   onClick={close}
                 >
                   👥 Users
                 </Link>
 
                 <Link
-                  className={isActive("/profile")}
-                  to="/profile"
+                  className={isActive("/admin/profile")}
+                  to="/admin/profile"
                   onClick={close}
                 >
                   ⚙️ Profile
@@ -156,24 +156,24 @@ const Sidebar = () => {
             {role === "staff" && (
               <>
                 <Link
-                  className={isActive("/products")}
-                  to="/products"
+                  className={isActive("/admin/products")}
+                  to="/admin/products"
                   onClick={close}
                 >
                   📦 Products
                 </Link>
 
                 <Link
-                  className={isActive("/billing")}
-                  to="/billing"
+                  className={isActive("/admin/billing")}
+                  to="/admin/billing"
                   onClick={close}
                 >
                   🧾 Billing
                 </Link>
 
                 <Link
-                  className={isActive("/bills")}
-                  to="/bills"
+                  className={isActive("/admin/bills")}
+                  to="/admin/bills"
                   onClick={close}
                 >
                   📜 Bill History

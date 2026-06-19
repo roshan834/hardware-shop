@@ -1,21 +1,27 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
-import Login from "../pages/Login"
-import Dashboard from "../pages/Dashboard"
-import Products from "../pages/Products"
-import AddProduct from "../pages/AddProduct"
-import EditProduct from "../pages/EditProduct"
-import ProductView from "../pages/ProductView"
-import Billing from "../pages/Billing"
-import BillHistory from "../pages/BillHistory"
-import Reports from "../pages/Reports"
-import Users from "../pages/Users"
-import Profile from "../pages/Profile"
-import PaymentHistory from "../pages/PaymentHistory"
+import Login from "../pages/admin/Login"
+import Dashboard from "../pages/admin/Dashboard"
+import Products from "../pages/admin/Products"
+import AddProduct from "../pages/admin/AddProduct"
+import EditProduct from "../pages/admin/EditProduct"
+import ProductView from "../pages/admin/ProductView"
+import Billing from "../pages/admin/Billing"
+import BillHistory from "../pages/admin/BillHistory"
+import Reports from "../pages/admin/Reports"
+import Users from "../pages/admin/Users"
+import Profile from "../pages/admin/Profile"
+import PaymentHistory from "../pages/admin/PaymentHistory"
 
-import AgentDashboard from "../pages/AgentDashboard"
+import AgentDashboard from "../pages/agent/AgentDashboard"
 import AgentBills from "../pages/agent/AgentBills"
 import AgentCommission from "../pages/agent/AgentCommission"
+
+import CustomerDashboard from "../pages/customer/CustomerDashboard"
+import Home from "../pages/website/Home"
+import Shop from "../pages/website/Products"
+// import ProductDetails from "../pages/website/ProductDetails"
+// import Cart from "../pages/website/Cart"
 
 import ProtectedRoute from "../components/ProtectedRoute"
 
@@ -24,17 +30,39 @@ return ( <BrowserRouter> <Routes>
 
 
     {/* PUBLIC */}
-    <Route
-      path="/"
-      element={<Login />}
-    />
+   {/* WEBSITE */}
+
+      <Route
+        path="/"
+        element={<Home />}
+      />
+
+      <Route
+        path="/shop"
+        element={<Shop />}
+      />
+
+      {/* <Route
+        path="/product/:id"
+        element={<ProductDetails />}
+      />
+
+      <Route
+        path="/cart"
+        element={<Cart />}
+      /> */}
+
+      <Route
+        path="/login"
+        element={<Login />}
+      />
 
     {/* ADMIN + STAFF */}
     <Route
-      path="/dashboard"
+      path="/admin/dashboard"
       element={
         <ProtectedRoute
-          roles={["admin", "staff"]}
+          roles={["admin"]}
         >
           <Dashboard />
         </ProtectedRoute>
@@ -42,7 +70,7 @@ return ( <BrowserRouter> <Routes>
     />
 
     <Route
-      path="/products"
+      path="/admin/products"
       element={
         <ProtectedRoute
           roles={["admin", "staff"]}
@@ -53,7 +81,7 @@ return ( <BrowserRouter> <Routes>
     />
 
     <Route
-      path="/products/view/:id"
+      path="/admin/products/view/:id"
       element={
         <ProtectedRoute
           roles={["admin", "staff"]}
@@ -64,7 +92,7 @@ return ( <BrowserRouter> <Routes>
     />
 
     <Route
-      path="/products/add"
+      path="/admin/products/add"
       element={
         <ProtectedRoute
           roles={["admin", "staff"]}
@@ -75,7 +103,7 @@ return ( <BrowserRouter> <Routes>
     />
 
     <Route
-      path="/products/edit/:id"
+      path="/admin/products/edit/:id"
       element={
         <ProtectedRoute
           roles={["admin", "staff"]}
@@ -86,7 +114,7 @@ return ( <BrowserRouter> <Routes>
     />
 
     <Route
-      path="/billing"
+      path="/admin/billing"
       element={
         <ProtectedRoute
           roles={["admin", "staff"]}
@@ -97,7 +125,7 @@ return ( <BrowserRouter> <Routes>
     />
 
     <Route
-      path="/bills"
+      path="/admin/bills"
       element={
         <ProtectedRoute
           roles={["admin", "staff"]}
@@ -110,7 +138,7 @@ return ( <BrowserRouter> <Routes>
     {/* ADMIN ONLY */}
 
     <Route
-      path="/users"
+      path="/admin/users"
       element={
         <ProtectedRoute
           roles={["admin"]}
@@ -121,7 +149,7 @@ return ( <BrowserRouter> <Routes>
     />
 
     <Route
-      path="/reports"
+      path="/admin/reports"
       element={
         <ProtectedRoute
           roles={["admin"]}
@@ -132,7 +160,7 @@ return ( <BrowserRouter> <Routes>
     />
 
     <Route
-      path="/profile"
+      path="/admin/profile"
       element={
         <ProtectedRoute
           roles={["admin"]}
@@ -145,7 +173,7 @@ return ( <BrowserRouter> <Routes>
     {/* PAYMENT HISTORY */}
 
     <Route
-      path="/payment-history/:billId"
+      path="/admin/payment-history/:billId"
       element={
         <ProtectedRoute
           roles={["admin", "staff"]}
@@ -189,6 +217,21 @@ return ( <BrowserRouter> <Routes>
         </ProtectedRoute>
       }
     />
+
+
+    {/* =================customer route ====================== */}
+
+      <Route
+        path="/customer"
+        element={
+          <ProtectedRoute
+            roles={["customer"]}
+          >
+            <CustomerDashboard />
+          </ProtectedRoute>
+        }
+      />
+
 
   </Routes>
 </BrowserRouter>

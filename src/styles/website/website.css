@@ -1,0 +1,304 @@
+/* ==========================
+   GLOBAL
+========================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f8fafc;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+}
+
+/* ==========================
+   NAVBAR
+========================== */
+
+.website-navbar {
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.website-navbar-inner {
+  max-width: 1400px;
+  margin: auto;
+  padding: 15px 20px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.website-logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2563eb;
+}
+
+.website-links {
+  display: flex;
+  gap: 20px;
+}
+
+.website-links a {
+  font-weight: 600;
+}
+
+/* ==========================
+   HERO SECTION
+========================== */
+
+.hero-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background: white;
+  color: #2563eb;
+}
+
+.btn-secondary {
+  border: 2px solid white;
+  background: transparent;
+  color: white;
+}
+
+/* ==========================
+   FEATURES
+========================== */
+
+.feature-section {
+  max-width: 1400px;
+  margin: auto;
+
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fit, minmax(250px, 1fr));
+
+  gap: 20px;
+  padding: 60px 20px;
+}
+
+.feature-card {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  text-align: center;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+}
+
+.feature-card h3 {
+  margin-bottom: 10px;
+}
+
+/* ==========================
+   SHOP PAGE
+========================== */
+
+.shop-page {
+  max-width: 1400px;
+  margin: auto;
+  padding: 30px 20px;
+}
+
+.shop-title {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.products-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fill, minmax(250px, 1fr));
+
+  gap: 20px;
+}
+
+.product-card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+
+  transition: .3s;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+.product-image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.product-content {
+  padding: 15px;
+}
+
+.product-name {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.product-price {
+  color: #16a34a;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.add-cart-btn {
+  width: 100%;
+  margin-top: 12px;
+
+  background: #2563eb;
+  color: white;
+
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* ==========================
+   PRODUCT DETAILS
+========================== */
+
+.product-details {
+  max-width: 1200px;
+  margin: auto;
+  padding: 40px 20px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.product-details img {
+  width: 100%;
+  border-radius: 15px;
+}
+
+.product-info h2 {
+  margin-bottom: 15px;
+}
+
+.product-info .price {
+  color: #16a34a;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+/* ==========================
+   CART PAGE
+========================== */
+
+.cart-page {
+  max-width: 1200px;
+  margin: auto;
+  padding: 30px 20px;
+}
+
+.cart-item {
+  background: white;
+
+  display: flex;
+  gap: 20px;
+
+  padding: 15px;
+  margin-bottom: 15px;
+
+  border-radius: 12px;
+}
+
+.cart-item img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.cart-summary {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.checkout-btn {
+  width: 100%;
+  margin-top: 15px;
+
+  background: #16a34a;
+  color: white;
+
+  padding: 14px;
+  border-radius: 10px;
+}
+
+/* ==========================
+   FOOTER
+========================== */
+
+.website-footer {
+  background: #111827;
+  color: white;
+  text-align: center;
+  padding: 30px 20px;
+  margin-top: 50px;
+}
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media (max-width: 768px) {
+
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .website-navbar-inner {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .website-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .product-details {
+    grid-template-columns: 1fr;
+  }
+
+  .cart-item {
+    flex-direction: column;
+  }
+}

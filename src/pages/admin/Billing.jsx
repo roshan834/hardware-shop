@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import Sidebar from "../components/Sidebar"
-import BarcodeScanner from "../components/BarcodeScanner"
-import { supabase } from "../config/supabase"
-import PrintInvoice from "../components/PrintInvoice"
+import Sidebar from "../../components/Sidebar"
+import BarcodeScanner from "../../components/BarcodeScanner"
+import { supabase } from "../../config/supabase"
+import PrintInvoice from "../../components/PrintInvoice"
 import { FaTrashAlt } from "react-icons/fa"
 import { toast } from "react-toastify"
 
