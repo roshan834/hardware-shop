@@ -198,8 +198,10 @@ const ActionButtons = ({ product }) => (
           >
             <option value="">All Categories</option>
             {categories.map((cat, i) => (
-              <option key={i} value={cat.trim()}>{cat.trim()}</option>
-            ))}
+  <option key={i} value={cat.name}>
+    {cat.name}
+  </option>
+))}
           </select>
           <select
             value={pageSize}

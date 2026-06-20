@@ -20,8 +20,12 @@ import AgentCommission from "../pages/agent/AgentCommission"
 import CustomerDashboard from "../pages/customer/CustomerDashboard"
 import Home from "../pages/website/Home"
 import Shop from "../pages/website/Products"
+
+// import Login from "../pages/auth/Login"
+// import Register from "../pages/auth/Register"
+
 // import ProductDetails from "../pages/website/ProductDetails"
-// import Cart from "../pages/website/Cart"
+import Cart from "../pages/website/Cart"
 
 import ProtectedRoute from "../components/ProtectedRoute"
 
@@ -42,20 +46,31 @@ return ( <BrowserRouter> <Routes>
         element={<Shop />}
       />
 
-      {/* <Route
-        path="/product/:id"
-        element={<ProductDetails />}
-      />
-
-      <Route
-        path="/cart"
-        element={<Cart />}
-      /> */}
+     
 
       <Route
         path="/login"
         element={<Login />}
       />
+
+      <Route
+        path="/cart"
+        element={<Cart />}
+      /> 
+
+      {/* <Route
+        path="/register"
+        element={<Register />}
+      /> */}
+
+      {/* <Route
+        path="/product/:id"
+        element={<ProductDetails />}
+      />
+
+      */}
+
+     
 
     {/* ADMIN + STAFF */}
     <Route

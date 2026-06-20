@@ -102,6 +102,19 @@ const { data: userData } =
 
 }
 
+const loginWithGoogle = async () => {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: window.location.origin
+    }
+  })
+
+  if (error) {
+    console.error(error)
+  }
+}
+
 return (
 <div
 className="login-container"
@@ -121,6 +134,10 @@ backgroundImage: `url(${loginBack})`
         Inventory & Billing Management
       </p>
 
+      <button onClick={loginWithGoogle}>
+        Continue with Google
+      </button>
+  <h3>OR</h3>
       <form onSubmit={handleLogin}>
 
         <input
