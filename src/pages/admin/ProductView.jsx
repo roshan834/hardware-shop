@@ -60,7 +60,7 @@ const ProductView = () => {
 
     if (error) {
       console.error(error);
-      navigate("/products");
+      navigate("/admin/products");
     } else {
       setProduct(data);
     }
@@ -70,7 +70,7 @@ const ProductView = () => {
   const handleDelete = async () => {
     if (!window.confirm(`Delete "${product.product_name}"?`)) return;
     const { error } = await supabase.from("products").delete().eq("id", id);
-    if (!error) navigate("/products");
+    if (!error) navigate("/admin/products");
   };
 
   if (loading) return <div className="loader">Loading...</div>;

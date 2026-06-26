@@ -158,7 +158,7 @@ const EditProduct = () => {
     }
 
     alert('Product updated successfully')
-    navigate('/products')
+    navigate('/admin/products')
   }
 
   // LOADING

@@ -184,7 +184,7 @@ const Dashboard = () => {
   {/* Total Products */}
   <div
     className="card kpi-card clickable"
-    onClick={() => navigate("/products?filter=all")}
+    onClick={() => navigate("/admin/products?filter=all")}
   >
     <div className="card-top">
       <FiBox className="card-icon blue" />
@@ -196,7 +196,7 @@ const Dashboard = () => {
   {/* Low Stock */}
   <div
     className="card warning clickable"
-    onClick={() => navigate("/products?filter=lowstock")}
+    onClick={() => navigate("/admin/products?filter=lowstock")}
   >
     <div className="card-top">
       <FiAlertTriangle className="card-icon orange" />
@@ -208,7 +208,7 @@ const Dashboard = () => {
   {/* Today's Sales */}
   <div
     className="card success clickable"
-    onClick={() => navigate("/products?filter=today")}
+    onClick={() => navigate("/admin/products?filter=today")}
   >
     <div className="card-top">
       <FiDollarSign className="card-icon green" />
@@ -220,7 +220,7 @@ const Dashboard = () => {
   {/* Monthly Sales */}
   <div
     className="card primary clickable"
-    onClick={() => navigate("/products?filter=monthly")}
+    onClick={() => navigate("/admin/products?filter=monthly")}
   >
     <div className="card-top">
       <FiTrendingUp className="card-icon blue" />

@@ -296,7 +296,7 @@ const BillHistory = () => {
 
                       <td>
                         <div className="action-buttons">
-                          <button onClick={() => navigate(`/payment-history/${bill.id}`)}>
+                          <button onClick={() => navigate(`/admin/payment-history/${bill.id}`)}>
                             View
                           </button>
 
@@ -372,7 +372,7 @@ const BillHistory = () => {
 
                 <div className="bill-actions">
 
-                  <button onClick={() => navigate(`/payment-history/${bill.id}`)}>
+                  <button onClick={() => navigate(`/admin/payment-history/${bill.id}`)}>
                     View
                   </button>
 
