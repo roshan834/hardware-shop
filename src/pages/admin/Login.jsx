@@ -76,28 +76,28 @@ const { data: userData } =
     .eq("id", data.user.id)
     .single()
 
-    console.log("Logged User Role:", userData?.role)
+    const role = userData?.role?.trim().toLowerCase()
 
-  switch (userData?.role) {
-    case "customer":
-      navigate("/customer")
-      break
+switch (role) {
+  case "customer":
+    navigate("/customer")
+    break
 
-    case "staff":
-      navigate("/admin/products")
-      break
+  case "staff":
+    navigate("/admin/products")
+    break
 
-    case "agent":
-      navigate("/agent/dashboard")
-      break
+  case "agent":
+    navigate("/agent/dashboard")
+    break
 
-    case "admin":
-      navigate("/admin/dashboard")
-      break
+  case "admin":
+    navigate("/admin/dashboard")
+    break
 
-    default:
-      navigate("/")
-  }
+  default:
+    navigate("/")
+}
 
 
 }
@@ -115,61 +115,77 @@ const loginWithGoogle = async () => {
   }
 }
 
+
+
+const goBack = () => {
+  navigate("/")
+}
+
 return (
-<div
-className="login-container"
-style={{
-backgroundImage: `url(${loginBack})`
-}}
-> <div className="login-overlay">
+  <div
+    className="login-container"
+    style={{
+      backgroundImage: `url(${loginBack})`
+    }}
+  >
+    <div className="login-overlay">
 
+      <div className="login-card">
 
-    <div className="login-card">
-
-      <h2>
-        Hardware Shop Login
-      </h2>
-
-      <p>
-        Inventory & Billing Management
-      </p>
-
-      <button onClick={loginWithGoogle}>
-        Continue with Google
-      </button>
-  <h3>OR</h3>
-      <form onSubmit={handleLogin}>
-
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) =>
-            setEmail(e.target.value)
-          }
-        />
-
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
-        />
-
-        <button type="submit">
-          Login
+        {/* Back Button */}
+        <button
+          type="button"
+          onClick={goBack}
+          className="back-btn"
+        >
+          ← Back
         </button>
 
-      </form>
+<br /><br />
+        <h2>
+          Hardware Shop Login
+        </h2>
+
+        <p>
+          Inventory & Billing Management
+        </p>
+
+        <button onClick={loginWithGoogle}>
+          Continue with Google
+        </button>
+
+        <h3 className="or-text">OR</h3>
+
+        <form onSubmit={handleLogin}>
+
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
+          />
+
+          <button type="submit">
+            Login
+          </button>
+
+        </form>
+
+      </div>
 
     </div>
-
   </div>
-</div>
-
-
 )
 }
 

@@ -1,6 +1,7 @@
 import { Link, NavLink } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { supabase } from "../../config/supabase"
+import { useNavigate } from "react-router-dom"
 
 import "../../styles/website/header.css"
 
@@ -15,6 +16,8 @@ const WebsiteHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const [user, setUser] = useState(null)
   const [cartCount, setCartCount] = useState(0)
+
+  const navigate = useNavigate()
 
   // Fetch session and cart count
   useEffect(() => {
@@ -91,7 +94,16 @@ const WebsiteHeader = () => {
             <button
               className="logout-btn"
               onClick={async () => {
-                await supabase.auth.signOut()
+                try {
+                  await supabase.auth.signOut()
+
+                  setUser(null)
+                  setCartCount(0)
+
+                  navigate("/")
+                } catch (err) {
+                  console.error("Logout Error:", err)
+                }
               }}
             >
               Logout

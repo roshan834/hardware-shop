@@ -3,12 +3,16 @@ import { supabase } from "../../config/supabase"
 import WebsiteHeader from "../../components/website/WebsiteHeader"
 import WebsiteFooter from "../../components/website/WebsiteFooter"
 import "../../styles/website/cart.css"
+import { useNavigate } from "react-router-dom"
+
+
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [syncingIds, setSyncingIds] = useState(() => new Set())
   const [removingIds, setRemovingIds] = useState(() => new Set())
+  const navigate = useNavigate()
 
   // Holds pending debounce timers per cart item id, so rapid +/- clicks
   // only hit the database once the user pauses, instead of on every click.
@@ -312,7 +316,12 @@ const Cart = () => {
                     <span>Total</span>
                     <span>{formatINR(totalPrice())}</span>
                   </div>
-                  <button className="checkout-btn">Proceed to Checkout</button>
+                  <button
+                  className="checkout-btn"
+                  onClick={() => navigate("/checkout")}
+                >
+                  Proceed to Checkout
+                </button>
                   <p className="cart-summary-note">
                     GST invoice included · Pickup available at Kandivali West
                   </p>

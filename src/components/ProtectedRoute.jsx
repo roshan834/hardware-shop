@@ -15,55 +15,43 @@ const ProtectedRoute = ({
     return <div>Loading...</div>
   }
 
- if (!session) {
-  return <Navigate to="/login" replace />
-}
+  if (!session) {
+    return <Navigate to="/login" replace />
+  }
 
-      if (roles.length > 0 && !roles.includes(role) ) {
+  // Google users => customer
+  const currentRole = String(
+    session.user?.app_metadata?.provider === "google"
+      ? "customer"
+      : role || ""
+  )
+  .trim()
+  .toLowerCase()
 
-      switch (role) {
 
-        case "customer":
-          return (
-            <Navigate
-              to="/customer"
-              replace
-            />
-          )
 
-        case "staff":
-          return (
-            <Navigate
-              to="/admin/products"
-              replace
-            />
-          )
 
-        case "agent":
-          return (
-            <Navigate
-              to="/agent/dashboard"
-              replace
-            />
-          )
+  if (
+    roles.length > 0 &&
+    !roles.includes(currentRole)
+  ) {
+    switch (currentRole) {
+      case "customer":
+        return <Navigate to="/" replace />
 
-        case "admin":
-          return (
-            <Navigate
-              to="/admin/dashboard"
-              replace
-            />
-          )
+      case "staff":
+        return <Navigate to="/admin/products" replace />
 
-        default:
-          return (
-            <Navigate
-              to="/"
-              replace
-            />
-          )
-      }
+      case "agent":
+        return <Navigate to="/agent/dashboard" replace />
+
+      case "admin":
+        return <Navigate to="/admin/dashboard" replace />
+
+      default:
+        return <Navigate to="/" replace />
     }
+  }
 
   return children
 }

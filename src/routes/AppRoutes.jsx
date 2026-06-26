@@ -20,6 +20,8 @@ import AgentCommission from "../pages/agent/AgentCommission"
 import CustomerDashboard from "../pages/customer/CustomerDashboard"
 import Home from "../pages/website/Home"
 import Shop from "../pages/website/Products"
+import Checkout from "../pages/website/Checkout"
+import OrderSuccess from "../pages/website/OrderSuccess"
 
 // import Login from "../pages/auth/Login"
 // import Register from "../pages/auth/Register"
@@ -28,34 +30,59 @@ import Shop from "../pages/website/Products"
 import Cart from "../pages/website/Cart"
 
 import ProtectedRoute from "../components/ProtectedRoute"
+import WebsiteRoute from "../components/WebsiteRoute"
 
 const AppRoutes = () => {
 return ( <BrowserRouter> <Routes>
 
 
+    <Route
+      path="/order-success/:id"
+      element={<OrderSuccess />}
+    />
+
     {/* PUBLIC */}
    {/* WEBSITE */}
 
       <Route
-        path="/"
-        element={<Home />}
+      path="/"
+      element={
+        <WebsiteRoute>
+          <Home />
+        </WebsiteRoute>
+      }
+    />
+
+      <Route
+        path="/checkout"
+        element={
+          <ProtectedRoute roles={["customer"]}>
+            <Checkout />
+          </ProtectedRoute>
+        }
       />
 
       <Route
         path="/shop"
-        element={<Shop />}
+        element={
+         <WebsiteRoute>
+          <Shop />
+          </WebsiteRoute>}
       />
 
      
 
       <Route
         path="/login"
-        element={<Login />}
+        element={
+          <WebsiteRoute><Login /></WebsiteRoute>
+        }
       />
 
       <Route
         path="/cart"
-        element={<Cart />}
+        element={
+        <WebsiteRoute><Cart /></WebsiteRoute>}
       /> 
 
       {/* <Route

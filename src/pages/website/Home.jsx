@@ -11,13 +11,17 @@ const Home = () => {
     const [showWhatsappPopup, setShowWhatsappPopup] =
   useState(false)
 
-    useEffect(() => {
+  useEffect(() => {
+    // Show popup immediately
+    setShowWhatsappPopup(true)
+
+    // Hide after 30 seconds
     const timer = setTimeout(() => {
-        setShowWhatsappPopup(true)
+      setShowWhatsappPopup(false)
     }, 30000)
 
     return () => clearTimeout(timer)
-    }, [])
+  }, [])
 
 
   return (
@@ -204,41 +208,40 @@ const Home = () => {
       {/* WhatsApp Popup */}
 
         {showWhatsappPopup && (
-        <div className="whatsapp-popup">
+        <div className="popup-overlay">
+
+          <div className="popup-modal">
 
             <button
-            className="close-popup"
-            onClick={() =>
-                setShowWhatsappPopup(false)
-            }
+              className="close-popup"
+              onClick={() => setShowWhatsappPopup(false)}
             >
-            ✕
+              ✕
             </button>
 
-            <div className="popup-content">
-
-            <h3>
-                Need Help?
-            </h3>
+            <h2>Welcome to Neelkanth Enterprises</h2>
 
             <p>
-                Chat with us on WhatsApp for
-                product inquiries and support.
+              Hardware, Plumbing & Electrical Solutions
+            </p>
+
+            <p>
+              Need help choosing products or placing an order?
             </p>
 
             <a
-                href="https://wa.me/918286357442?text=Hi%20I%20need%20assistance"
-                target="_blank"
-                rel="noreferrer"
-                className="whatsapp-chat-btn"
+              href="https://wa.me/918286357442?text=Hi%20I%20need%20assistance"
+              target="_blank"
+              rel="noreferrer"
+              className="whatsapp-chat-btn"
             >
-                💬 Chat on WhatsApp
+              💬 Chat on WhatsApp
             </a>
 
-            </div>
+          </div>
 
         </div>
-        )}
+      )}
 
       <WebsiteFooter />
     </>
