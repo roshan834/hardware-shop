@@ -139,7 +139,7 @@ const ProductView = () => {
                   alt={product.product_name}
                   onClick={() => setPreviewImage(imageUrl)}
                   style={{
-                    width: "160px",
+                    
                     height: "160px",
                     objectFit: "cover",
                     borderRadius: "12px",

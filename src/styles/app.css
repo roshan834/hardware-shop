@@ -2282,14 +2282,7 @@ tbody tr:hover { background: var(--gray-50); }
    15. PRODUCT IMAGE
    ===================================================== */
 
-.product-image {
-  width: 48px;
-  height: 48px;
-  object-fit: cover;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--gray-200);
-  flex-shrink: 0;
-}
+
 
 .no-image {
   width: 48px;
@@ -3275,7 +3268,7 @@ tbody tr:hover { background: var(--gray-50); }
   border: 1px solid var(--gray-200);
 }
 
-.product-card-img .product-image {
+.product-card-img  {
   width: 70px;
   height: 70px;
   object-fit: cover;
