@@ -63,6 +63,7 @@ export const deleteProduct = async (id) => {
 }
 
 export const getCategories = async () => {
+  console.log("getCategories")
   return await supabase
     .from("products")
     .select("category")

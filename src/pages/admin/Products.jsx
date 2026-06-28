@@ -87,7 +87,10 @@ const Products = () => {
 
   const loadCategories = async () => {
     const { data } = await getCategories()
+  
     setCategories(data || [])
+
+
   }
 
   const addToCart = async (e, product) => {
@@ -191,18 +194,19 @@ const ActionButtons = ({ product }) => (
             onChange={(e) => { setCurrentPage(1); setSearch(e.target.value) }}
             className="toolbar-input"
           />
-          <select
-            value={category}
-            onChange={(e) => navigate(`/admin/products?category=${e.target.value.trim()}`)}
-            className="toolbar-select"
-          >
-            <option value="">All Categories</option>
-            {categories.map((cat, i) => (
-  <option key={i} value={cat.name}>
-    {cat.name}
-  </option>
-))}
-          </select>
+         <select
+          value={category}
+          onChange={(e) => navigate(`/admin/products?category=${e.target.value}`)}
+          className="toolbar-select"
+        >
+          <option value="">All Categories</option>
+
+          {categories.map((cat, i) => (
+            <option key={i} value={cat.category}>
+              {cat.category}
+            </option>
+          ))}
+        </select>
           <select
             value={pageSize}
             onChange={(e) => { setCurrentPage(1); setPageSize(Number(e.target.value)) }}

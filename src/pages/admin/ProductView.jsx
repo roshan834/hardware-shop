@@ -73,6 +73,14 @@ const ProductView = () => {
     if (!error) navigate("/admin/products");
   };
 
+  const handleBack = () => {
+            if (window.history.length > 1) {
+              navigate(-1);
+            } else {
+              navigate("/admin/products"); // fallback route
+            }
+          };
+
   if (loading) return <div className="loader">Loading...</div>;
   if (!product) return null;
   // build image URL from storage if image_url is empty
@@ -88,7 +96,7 @@ const ProductView = () => {
       <div className="content">
 
         <div className="page-header">
-          <button className="btn-back" onClick={() => navigate("/admin/products")}>
+          <button className="btn-back" onClick={handleBack}>
             ← Back
           </button>
           <div style={{ display: "flex", gap: "10px" }}>

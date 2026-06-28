@@ -35,6 +35,8 @@ const ProtectedRoute = ({
     roles.length > 0 &&
     !roles.includes(currentRole)
   ) {
+
+    console.log(currentRole)
     switch (currentRole) {
       case "customer":
         return <Navigate to="/" replace />
