@@ -52,15 +52,9 @@
     translateY(-5px);
 }
 
-.product-image {
-  height: 240px;
-}
 
-.product-image img {
- 
 
-  object-fit: cover;
-}
+
 
 .product-body {
   padding: 18px;
@@ -130,9 +124,7 @@
     flex-direction: column;
   }
 
-  .product-image {
-    height: 200px;
-  }
+ 
 
   .products-grid {
     grid-template-columns:
